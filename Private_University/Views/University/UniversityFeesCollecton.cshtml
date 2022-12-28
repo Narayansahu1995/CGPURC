@@ -1,0 +1,182 @@
+﻿@model IEnumerable<Private_University.Models.Challan_University>
+
+@{
+	ViewBag.Title = "UniversityFeesCollecton";
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>University Fees Collecton</h2>
+<div class="sb2-2-2">
+	<ul>
+		<li>
+			<a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+		</li>
+		<li class="active-bre">
+			<a href="#"> University Details</a>
+		</li>
+		<li class="page-back">
+			<a href="#"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+		</li>
+	</ul>
+</div>
+@foreach (var item in Model)
+{
+	<div class="sb2-2-3">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box-inn-sp admin-form">
+					<div class="inn-title">
+						<h4>STATEMENT OF FEES COLLECT</h4>
+					</div>
+					<div id="Printdiv" class="tab-inn" style="margin-bottom:20px;">
+						<h4>
+							<u>ANNEXURE-D</u>
+						</h4>
+						<h5><u>STATEMENT OF FEES COLLECTED & SENT TO THE REGULATORY COMMISSION</u></h5>
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>Name of the University</td>
+									<td colspan="5">@Html.DisplayFor(mitem => item.University_Name)</td>
+								</tr>
+								<tr>
+									<td>Address with Pin code</td>
+									<td colspan="4">@Html.DisplayFor(mitem => item.Address)</td>
+									<td colspan="1">@Html.DisplayFor(mitem => item.Pin_Code)</td>
+								</tr>
+								<tr>
+									<td>Phone No. with STD Code</td>
+									<td colspan="3">@Html.DisplayFor(mitem => item.Contact_Number)</td>
+									<td>Fax No.</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Statement No.</td>
+									<td>@Html.DisplayFor(mitem => item.Txn_Number)</td>
+									<td>Year</td>
+									<td>@Html.DisplayFor(mitem => item.Txn_Year)</td>
+									<td>E-mail</td>
+									<td>@Html.DisplayFor(mitem => item.Email_ID)</td>
+								</tr>
+							</tbody>
+						</table>
+						<h5>Name of the month for which the fee collection relates<span>____@Html.DisplayFor(mitem => item.Txn_Month_Name)_____</span></h5>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="text-center">S.No.</th>
+									<th class="text-center">Name of the Campus/Study Centre</th>
+									<th class="text-center">Address of Campus/Study Centre</th>
+									<th class="text-center">Name of Course</th>
+									<th class="text-center">Number of enrolled Students</th>
+									<th class="text-center">Rate of fees per month</th>
+									<th class="text-center">Total fees collected</th>
+									<th class="text-center">1% column No. 7</th>
+									<th class="text-center">Remark</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="text-center">(1)</td>
+									<td class="text-center">(2)</td>
+									<td class="text-center">(3)</td>
+									<td class="text-center">(4)</td>
+									<td class="text-center">(5)</td>
+									<td class="text-center">(6)</td>
+									<td class="text-center">(7)</td>
+									<td class="text-center">(8)</td>
+									<td class="text-center">(9)</td>
+								</tr>
+								@for (int i = 0; i < item.Challan_Detials.Count; i++)
+								{
+
+									<tr>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].count)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].University_Name)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].University_Address)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].Course_Name)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].Number_of_Students)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].Rate_Fees)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].Total_Fees)</td>
+										<td>@Html.DisplayFor(mitem => item.Challan_Detials[i].Percent_Total_Fees)</td>
+										<td></td>
+									</tr>
+								}
+
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+						</table>
+						<h5>Total of column 7: Rs. <span>___@Html.DisplayFor(mitem => item.Total_Amount)____</span>(in figure) Rs. <span>____@Html.DisplayFor(mitem => item.Total_Amount_Word)____</span>(in words)</h5>
+						<h5>Total of column 8: Rs. <span>___@Html.DisplayFor(mitem => item.Percent_Amount)____</span>(in figure) Rs. <span>___@Html.DisplayFor(mitem => item.Percent_Amount_word)____</span>(in words)</h5>
+						<h5>(1)  Name of the bank alongwith its branch which has issued the Demand Draft <span>_____@Html.DisplayFor(mitem => item.Draft_Bank)_____</span></h5>
+						<h5>(2)  Demand Draft No. <span>_____@Html.DisplayFor(mitem => item.Demand_Draft_No)_____</span></h5>
+						<h5>
+							(3)  Date of issue of Demand draft: <span>
+								_____@if (!string.IsNullOrEmpty(item.Demand_Draft_No))
+								{@Html.DisplayFor(mitem => item.Date_of_issue)}______
+							</span>
+						</h5>
+						<h5>Certified that the statement of fees collection as given here is verified by us and is correct</h5>
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<b>
+											Date: @if (!string.IsNullOrEmpty(item.Demand_Draft_No))
+											{@Html.DisplayFor(mitem => item.Paid_Date)}
+										</b>
+									</td>
+									<td></td>
+									<td><b>Registrar</b></td>
+									<td></td>
+									<td><b>Chief Finance & Accounts Officer</b></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td colspan="6"><b><u>Explantory Note</u></b></td>
+								</tr>
+								<tr>
+									<td colspan="2">(1)  Column No. 4: </td>
+									<td colspan="4">Mention name of the course for which the fee is collected from the student</td>
+								</tr>
+								<tr>
+									<td colspan="2">(2) Column No. 5: </td>
+									<td colspan="4">"Fee means" collection made by the University from the students<br /> by whatever name it may be called but which is not refundable</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+
+					<div>
+						<input type="button" value="Print" name="btn_print" class="waves-light light-btn waves-input-wrapper waves-button-input" onClick="printdiv('Printdiv');" />
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script language="javascript">
+		function printdiv(printpage) {
+			var headstr = "<html><head><title></title></head><body>";
+			var footstr = "</body>";
+			var newstr = document.all.item(printpage).innerHTML;
+			var oldstr = document.body.innerHTML;
+			document.body.innerHTML = headstr + newstr + footstr;
+			window.print();
+			document.body.innerHTML = oldstr;
+			return false;
+		}
+	</script>
+}

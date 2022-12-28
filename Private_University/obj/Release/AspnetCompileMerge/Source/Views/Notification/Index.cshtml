@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Private_University.Models.master_notification>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("Create","Notification")"><i class="fa fa-backward" aria-hidden="true"></i>Back to Add Notification</a>
+        </li>
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+
+    }
+}
+
+<!--== DASHBOARD INFO ==-->
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>NOTIFICATION LIST</h4>
+                    @*<p>All about courses, program structure, fees, best course lists (ranking), syllabus, teaching techniques and other details.</p>*@
+                </div>
+                <div class="tab-inn">
+                    <div class="row">
+                        <p class="col-lg-4 col-md-4 col-sm-6">
+                            @Html.ActionLink("Create New Notification", "Create", new { }, new { @class = "waves-effect waves-light light-btn waves-input-wrapper waves-button-input" })
+                        </p>
+                    </div>
+                    <div class="row">
+
+                        <div class="table-responsive table-desi">
+                            <table class="table table-hover" id="demoGrid">
+
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Notification_Head)
+                                            @*</th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Notification_Details)*@
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Notification_Date)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Notification_File)
+                                        </th>
+                                        <th>Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.count)
+                                            </td>
+                                            <td>
+                                                <a>
+                                                    <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Notification_Head)</span>
+                                                    <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Notification_Details)</span>
+                                                </a>
+                                                @Html.HiddenFor(modelItem => item.Notification_ID)
+
+                                                @*</td><td>*@
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Notification_Date)
+                                            </td>
+                                            <td>
+                                                @*@Html.ActionLink("View", "Action", new { controller = "Controller" }, new { target = "_blank" })*@
+                                                @*@Html.DisplayFor(modelItem => item.Notification_File)*@
+                                                <span class="label label-success">
+                                                    <a href="~/File_Notification/@item.Notification_File" target="_blank" style="color:white">view</a>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.Notification_ID }, new { @class = "ad-st-view", onclick = "return confirm('Are sure you wants to delete this reocrd..?');" })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

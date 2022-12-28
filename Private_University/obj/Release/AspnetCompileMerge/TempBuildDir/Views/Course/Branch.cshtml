@@ -1,0 +1,146 @@
+﻿@using Private_University.Models;
+@model Private_University.Models.university_sub_course_Insert
+@{
+    ViewBag.Title = "Branch";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style type="text/css">
+    .text-danger {
+        width: auto;
+        background-color: #dfe7f2;
+        box-shadow: 2px 2px 6px darkslategray;
+        color: navy;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: relative;
+        z-index: 1;
+        font-weight: bold;
+        top: 5px;
+        left: 5px;
+        display:none;        
+    }
+
+        .text-danger::after {
+            content: "";
+            padding: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 8%;
+            margin-left: -10px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent #dfe7f2 transparent;
+            font-size: 14pt;
+            font-weight: bold;
+        }
+</style>
+
+
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="@Url.Action("Index","Dashboard")"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="@Url.Action("Index","Dashboard")"> Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("Index","Course")"><i class="fa fa-backward" aria-hidden="true"></i> Back to List</a>
+        </li>
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+    }
+}
+
+<!--== DASHBOARD INFO ==-->
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form">
+                <div class="inn-title">
+                    <h4>NEW COURSE / SUB-COURSE / BRANCH </h4>
+                    @*<p>All about courses, program structure, fees, best course lists (ranking), syllabus, teaching techniques and other details.</p>*@
+                </div>
+                <div class="tab-inn">
+
+                    @using (Html.BeginForm("Branch", "Course", FormMethod.Post, new { enctype = "multipart/form-data", Class = "s12" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+                        <div class="form-horizontal">
+
+                            @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Univ_subCourse_Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Univ_subCourse_Name, new { @class = "validate" } )
+                                    @Html.ValidationMessageFor(model => model.Univ_subCourse_Name, "", new { @class = "text-danger", style = "display:none;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Univ_subCourse_Code, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Univ_subCourse_Code, new { @class = "validate" })
+                                    @Html.ValidationMessageFor(model => model.Univ_subCourse_Code, "", new { @class = "text-danger", style = "display:none;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Univ_Course_ID, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input type="text" value="@ViewBag.courseName_Get" class="validate" disabled />                                   
+                                    @*@Html.ValidationMessageFor(model => model.Univ_Course_ID, "", new { @class = "text-danger" })*@
+                                </div>
+                                @Html.HiddenFor(model => model.Univ_Course_ID, new { Value = ViewBag.courseID_Get })
+                                @Html.HiddenFor(model => model.University_ID, new { Value = ARespo.University_ID })
+                                @Html.HiddenFor(model => model.Entry_By, new { Value = ARespo.Login_ID })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-6 col-md-6">
+                                    <input type="submit" value="Branch" class="waves-effect waves-light light-btn waves-input-wrapper waves-button-input" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        for (var i = 0 ; i <= $('.text-danger').length ; i++) {
+
+            if($('.text-danger:eq('+i+')').text().length>0)
+            {
+                $('.text-danger:eq(' + i + ')').css("display", "initial");
+            }
+            else
+            {
+                $('.text-danger:eq(' + i + ')').css("display", "none");
+            }
+        }
+
+        $('.validate').change(function () {
+            var i = $(".validate").index($(this));
+            if($(".validate:eq(" + i + ")").val().length>0)
+            {
+                $('.text-danger:eq(' + i + ')').text("");
+                $('.text-danger:eq(' + i + ')').css("display", "none");
+            }
+        });
+
+       
+        });
+</script>
+
+

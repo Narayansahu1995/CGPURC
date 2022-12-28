@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CommName" xml:space="preserve">
+    <value>छत्तीसगढ़ निजी विश्वविद्यालय नियामक आयोग</value>
+  </data>
+  <data name="Objectives" xml:space="preserve">
+    <value>उद्देश्य</value>
+  </data>
+  <data name="PointFive" xml:space="preserve">
+    <value>यह सुनिश्चित करने के लिए कि निजी विश्वविद्यालय में नामांकित छात्रों का शोषण नहीं किया जाता है और उनसे अनुचित अत्यधिक शुल्क लेने के लिए कोई अनैतिक साधन नहीं अपनाया जाता है।</value>
+  </data>
+  <data name="PointFour" xml:space="preserve">
+    <value>यह सुनिश्चित करने के लिए कि निजी विश्वविद्यालय के कर्मचारियों की नियुक्ति यूजीसी और अन्य संबंधित सांविधिक निकायों द्वारा निर्धारित विधियों, अध्यादेशों और मानदंडों/दिशानिर्देशों के अनुरूप की जाती है।</value>
+  </data>
+  <data name="PointOne" xml:space="preserve">
+    <value>निजी विश्वविद्यालयों में शिक्षण, परीक्षा और अनुसंधान के मानकों के निर्धारण और रखरखाव के लिए आवश्यक सभी कदम उठाना।</value>
+  </data>
+  <data name="PointSeven" xml:space="preserve">
+    <value>संबंधित निजी विश्वविद्यालय के परामर्श से राज्य में विभिन्न स्थानों पर स्थापित अध्ययन केंद्रों को विनियमित करने के लिए।</value>
+  </data>
+  <data name="PointSix" xml:space="preserve">
+    <value>राज्य द्वारा एक निजी विश्वविद्यालय के समापन के संबंध में और उसके अनुसार कार्रवाई करने के लिए, जिसमें पाठ्यक्रम पूरा करने की व्यवस्था, परीक्षा आयोजित करना, डिग्री प्रदान करना आदि शामिल है, किसी अन्य राज्य विश्वविद्यालय को इस तरह से नौकरी सौंपना कि छात्रों के हितों पर प्रतिकूल प्रभाव नहीं पड़ता है। निजी विश्वविद्यालय के परिसमापन की प्रक्रिया के साथ-साथ छात्रों के लिए इन व्यवस्थाओं के लिए किए गए व्यय को बंदोबस्ती निधि और/या सामान्य निधि में जमा धन से पूरा किया जाएगा।</value>
+  </data>
+  <data name="PointThree" xml:space="preserve">
+    <value>यह सुनिश्चित करने के लिए कि विश्वविद्यालय के शिक्षकों के पास कम से कम यूजीसी या अन्य नियामक निकायों द्वारा निर्धारित न्यूनतम शैक्षणिक योग्यता है।</value>
+  </data>
+  <data name="PointTwo" xml:space="preserve">
+    <value>यह सुनिश्चित करने के लिए कि निजी विश्वविद्यालय केवल ऐसी फीस और अन्य शुल्क जमा करें जो उनके द्वारा प्रदान की जाने वाली शिक्षा की लागत को कवर करते हैं और उन्हें संपत्ति बनाए रखने और आगे विस्तार करने में सक्षम बनाने के लिए एक उचित अधिशेष भी देते हैं।</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>यह नियामक आयोग का सामान्य कर्तव्य होगा:</value>
+  </data>
+</root>

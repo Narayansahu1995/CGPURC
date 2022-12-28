@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Private_University.Models.StudentList>
+
+@{
+    ViewBag.Title = "StudentList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Student List</h2>
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#"> Student Details</a>
+        </li>
+        <li class="page-back">
+            <a href="AddStudent"><i class="fa fa-backward" aria-hidden="true"></i>Add Student</a>
+        </li>
+    </ul>
+</div>
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>Student Details</h4>
+                </div>
+                <div class="tab-inn">
+                    <div class="table-responsive table-desi">
+                        <table class="table table-hover" id="demoGrid">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.count)</th>
+                                    <th>Student Details</th>
+                                    <th>@Html.DisplayNameFor(model => model.Date_of_Birth)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Aadhar_Number)</th>
+                                    <th>Regisration Details</th>
+                                    <th>@Html.DisplayNameFor(model => model.Univ_Course_Name)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Mobile_Number_Stu)</th>
+                                    <th>Subject Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                 {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.count)
+                                        </td>
+                                        <td>
+                                            <b>@Html.DisplayNameFor(model => model.Student_Name) - </b> @Html.DisplayFor(modelItem => item.Student_Name)<br />
+                                            <b>@Html.DisplayNameFor(model => model.Father_Name) - </b>@Html.DisplayFor(modelItem => item.Father_Name)<br />
+                                            <b>@Html.DisplayNameFor(model => model.Address) - </b>@Html.DisplayFor(modelItem => item.Address)<br />
+                                            <b>@Html.DisplayNameFor(model => model.Mobile_Number_Father) - </b>@Html.DisplayFor(modelItem => item.Mobile_Number_Father)<br />
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Date_of_Birth)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Aadhar_Number)
+                                        </td>
+                                        <td>
+                                            <b>Enrollment No. - </b>@Html.DisplayFor(modelItem => item.Enrollment_Number)<br />
+                                            <b>Enrollment Date - </b>@Html.DisplayFor(modelItem => item.Date_of_Admission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Univ_Course_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Mobile_Number_Stu)
+                                        </td>
+                                        <td>
+                                            <b>Branch Name - </b>@Html.DisplayFor(modelItem => item.Univ_subCourse_Name)<br />
+                                        </td>       
+                                    </tr>
+                                 }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

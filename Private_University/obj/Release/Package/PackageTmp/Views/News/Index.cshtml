@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Private_University.Models.News>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("AddNews","News")"><i class="fa fa-backward" aria-hidden="true"></i>Back to Add Gallery</a>
+        </li>
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+
+    }
+}
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>News List</h4>
+                </div>
+                <div class="tab-inn">
+                    <div class="row">
+                        <p class="col-lg-4 col-md-4 col-sm-6">
+                            @Html.ActionLink("Add New News", "AddNews", new { }, new { @class = "waves-effect waves-light light-btn waves-input-wrapper waves-button-input" })
+                        </p>
+                    </div>
+                    <div class="row">
+
+                        <div class="table-responsive table-desi">
+                            <table class="table table-hover" id="demoGrid">
+
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                           News Subject and Description
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.News_File)
+                                        </th>
+                                        <th>Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.count)
+                                                @Html.HiddenFor(modelItem => item.news_ID)
+                                            </td>
+                                            <td>
+                                                <span class="list-enq-name">@Html.DisplayFor(modelItem => item.News_Title)</span>
+                                                <span class="list-enq-name">@Html.Raw(item.News_Descrip)</span>
+                                             
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">
+                                                    <a href="~/File_News/@item.News_File" target="_blank" style="color:white">view</a>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.news_ID }, new { @class = "ad-st-view", onclick = "return confirm('Are sure you wants to delete this reocrd..?');" })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

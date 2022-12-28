@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Private_University.Models.CommissionAddressUpdate>
+@using Private_University.Models;
+@{
+    ViewBag.Title = "GetAddress";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>GetAddress</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Addressss)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Contact_No)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email_ID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Addressss)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact_No)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email_ID)
+            </td>
+            <td>
+                @Html.ActionLink("Update", "UpdateAddress", new { id=item.Addressss })
+            </td>
+        </tr>
+    }
+
+</table>

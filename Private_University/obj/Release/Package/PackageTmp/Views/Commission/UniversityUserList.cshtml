@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Private_University.Models.UsersShow>
+
+@{
+    ViewBag.Title = "UniversityUserList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>UniversityUserList</h2>
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#"> User Details</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("AddUsers","Commission") "><i class="fa fa-backward" aria-hidden="true"></i>Add User</a>
+        </li>
+    </ul>
+</div>
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>User Details</h4>
+                </div>
+                <div class="tab-inn">
+                    <div class="table-responsive table-desi">
+                        <table class="table table-hover" id="demoGrid">
+                            <thead>
+                                <tr>
+                                    <th>
+                                       S.No.
+                                    </th>
+                                    <th>
+                                        University Name
+                                    </th>
+                                    <th>
+                                        User Details
+                                    </th>
+                                    <th>
+                                        Contact Details
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UserName)
+                                    </th>
+                                    @*<th>
+                                        @Html.DisplayNameFor(model => model.Password)
+                                    </th>*@
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Count)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.University_ID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                            <b>Role </b>: @Html.DisplayFor(modelItem => item.Role_ID)<br />
+                                            <b>Designation :</b> @Html.DisplayFor(modelItem => item.Designation)<br />
+                                        </td>
+                                        <td>
+                                            <b>Email ID :</b> @Html.DisplayFor(modelItem => item.Email_ID)<br />
+                                            <b> Contact:</b>  @Html.DisplayFor(modelItem => item.Mobile_Number)<br/>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserName)
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => item.Password)
+                                        </td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

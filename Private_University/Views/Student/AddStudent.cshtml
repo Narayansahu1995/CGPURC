@@ -1,0 +1,309 @@
+﻿@model Private_University.Models.Student
+@using Private_University.Models;
+@{
+	ViewBag.Title = "AddStudent";
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style type="text/css">
+    .text-danger {
+        width: auto;
+        background-color: #dfe7f2;
+        box-shadow: 2px 2px 6px darkslategray;
+        color: navy;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: relative;
+        z-index: 1;
+        font-weight: bold;
+        top: 5px;
+        left: 5px;
+        display: none;
+    }
+
+        .text-danger::after {
+            content: "";
+            padding: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 8%;
+            margin-left: -10px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent #dfe7f2 transparent;
+            font-size: 14pt;
+            font-weight: bold;
+        }
+</style>
+
+<div class="sb2-2-2">
+	<ul>
+		<li>
+			<a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+		</li>
+		<li class="active-bre">
+			<a href="#"> Student Details</a>
+		</li>
+		<li class="page-back">
+			<a href="StudentList"><i class="fa fa-backward" aria-hidden="true"></i>Back to Student List</a>
+		</li>
+	</ul>
+</div>
+<div class="sb2-2-3">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box-inn-sp admin-form">
+				<div class="inn-title">
+					<h4>Add Student Informations</h4>
+				</div>
+				<div class="tab-inn">
+
+					@using (Html.BeginForm("AddStudent", "Student", FormMethod.Post, new { Class = "s12" }))
+                    {
+						@Html.AntiForgeryToken()
+						AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+                    <div class="form-horizontal">
+                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Student_Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Student_Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Student_Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Father_Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Father_Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Father_Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9" style="display: flex;align-items: center;">
+                                @Html.RadioButtonFor(model => model.Gender, 1) @Html.Label("Male")
+                                @Html.RadioButtonFor(model => model.Gender, 2) @Html.Label("Female")
+                                @Html.RadioButtonFor(model => model.Gender, 3) @Html.Label("Transgender")
+                                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => Model.Gender, new SelectList(ViewBag.GenderList, "Value", "Text"), "--------------------Select Gender -----------------", new { @class = "form-control", @id = "Gender" })
+                                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Date_of_Birth, htmlAttributes: new { @class = "control-label col-md-3" })
+
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Date_of_Birth, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Date_of_Birth, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Aadhar_Number, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Aadhar_Number, new { Value = "", htmlAttributes = new { @class = "form-control", @maxlength = "12" } })
+                                    @Html.ValidationMessageFor(model => model.Aadhar_Number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Enrollment_Number, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Enrollment_Number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Enrollment_Number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Date_of_Admission, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Date_of_Admission, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Date_of_Admission, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Mobile_Number_Stu, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Mobile_Number_Stu, new { htmlAttributes = new { @class = "form-control", @maxlength = "10" } })
+                                    @Html.ValidationMessageFor(model => model.Mobile_Number_Stu, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Mobile_Number_Father, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Mobile_Number_Father, new { htmlAttributes = new { @class = "form-control", @maxlength = "10" } })
+                                    @Html.ValidationMessageFor(model => model.Mobile_Number_Father, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email_ID, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Email_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Email_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Univ_Course_ID, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+
+                                    @Html.DropDownListFor(model => Model.Univ_Course_ID, new SelectList(ViewBag.CourseList, "Value", "Text"), "--------------------Select Course-----------------", new { @class = "form-control", @id = "course" })
+                                    @Html.ValidationMessageFor(model => model.Univ_Course_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Univ_subCourse_ID, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => Model.Univ_subCourse_ID, new SelectList("Value", "Text"), "--------------------Select Sub Course-----------------", new { @class = "form-control", @id = "subCourse" })
+                                    @Html.ValidationMessageFor(model => model.Univ_subCourse_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Course_Mode_ID, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => Model.Course_Mode_ID, new SelectList("Value", "Text"), "--------------------Select Course Mode(Year/Semester)-----------------", new { @class = "form-control", @id = "CourseMode" })
+                                    @Html.ValidationMessageFor(model => model.Course_Mode_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Semester_Year, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => Model.Semester_Year, new SelectList("Value", "Text"), "--------------------Persuing (Year/Semester)-----------------", new { @class = "form-control", @id = "Year_Sem" })
+                                    @Html.ValidationMessageFor(model => model.Semester_Year, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                @Html.LabelFor(model => model.Session_ID, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => Model.Session_ID, new SelectList(ViewBag.SessionList, "Session_ID", "Session_Name"), "--------------------Select Session-----------------", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Session_ID, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+                            @Html.HiddenFor(model => model.Entry_By, new { Value = ARespo.Login_ID })
+                            @Html.HiddenFor(model => model.University_ID, new { Value = ARespo.University_ID })
+                            @Html.HiddenFor(model => model.Session_ID, new { Value = ARespo.Session_ID })
+                            <div class="form-group">
+                                <div class="col-md-offset-6 col-md-6">
+                                    <input type="submit" value="Submit" class="btn btn-primary" />
+                                </div>
+                            </div>
+                            @Html.Raw(TempData["msg"])
+                        </div>
+                        }
+                    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+		$("#subCourse").html("<option>----------Select Sub Course-----------</option>");
+		$("#CourseMode").html("<option>---------Select Course Mode (Year/Semester)-----------</option>");
+		$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+		for (var i = 0 ; i <= $('.text-danger').length ; i++) {
+
+		    if ($('.text-danger:eq(' + i + ')').text().length > 0) {
+		        $('.text-danger:eq(' + i + ')').css("display", "initial");
+		    }
+		    else {
+		        $('.text-danger:eq(' + i + ')').css("display", "none");
+		    }
+		}
+
+		$('#Aadhar_Number').keypress(function (evt) {
+		    var data = $('#Number_of_Year_Sem').val();
+		    if (evt.charCode >= 48 && evt.charCode <= 57) {		    
+		                $(".text-danger:eq(4)").text("");
+		                $(".text-danger:eq(4)").css("display", "none");	  
+		    }
+		    else {
+		        evt.preventDefault();
+		        $(".text-danger:eq(4)").text("Enter numbers only");
+		        $(".text-danger:eq(4)").css("display", "initial");
+		    }
+
+		});
+
+		$('#Mobile_Number_Stu').keypress(function (evt) {
+		    var data = $('#Number_of_Year_Sem').val();
+		    if (evt.charCode >= 48 && evt.charCode <= 57) {
+		        $(".text-danger:eq(7)").text("");
+		        $(".text-danger:eq(7)").css("display", "none");
+		    }
+		    else {
+		        evt.preventDefault();
+		        $(".text-danger:eq(7)").text("Enter numbers only");
+		        $(".text-danger:eq(7)").css("display", "initial");
+		    }
+
+		});
+		$('#Mobile_Number_Father').keypress(function (evt) {
+		    var data = $('#Number_of_Year_Sem').val();
+		    if (evt.charCode >= 48 && evt.charCode <= 57) {
+		        $(".text-danger:eq(8)").text("");
+		        $(".text-danger:eq(8)").css("display", "none");
+		    }
+		    else {
+		        evt.preventDefault();
+		        $(".text-danger:eq(8)").text("Enter numbers only");
+		        $(".text-danger:eq(8)").css("display", "initial");
+		    }
+
+		});
+
+
+		$("#course").change(function () {
+			var id1 = $(this).val();
+			$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+			$.get("Sub_Course", { Univ_Course_ID: id1 }, function (data) {
+				$("#subCourse").html(data);
+			});			
+		});
+
+		$("#course").change(function () {
+			var id1 = $(this).val();
+			$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+			$.get("Course_Mode_1", { Univ_Course_ID: id1 }, function (data) {
+				$("#CourseMode").html(data);
+			});
+		});
+
+		$("#CourseMode").change(function () {
+		    var id1 = $("#course").find('option:selected').val();
+			$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+			$.get("Course_Year_Sem", { Univ_Course_ID: id1 }, function (data) {
+				$("#Year_Sem").html(data);
+			});
+		});
+	});
+
+
+</script>

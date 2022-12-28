@@ -1,0 +1,136 @@
+﻿@model IEnumerable<Private_University.Models.University_Course_details>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CourseRpt</title>
+
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/jquery-1.7.1.min.js"></script>
+    <style type="text/css">
+        tr:hover {
+            background-color: #adff2f2e;
+        }
+        tr:first-child:hover{
+            background-color:#337ab7;
+        }  
+        
+        .Edit_Img
+        {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAkCAMAAAExyiHzAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGkUExURQAAAB4eHhAQECoqKhsbGxYWFhMTEwAAAAMDAwEBAS4uLgQEBFVVVRAQEAYGBpmZmRkZGQ0NDQkJCSEhIRQUFAAAABQUFAQEBFtbWw8PDw4ODgUFBSoqKg0NDQQEBAAAAP///wAAAAAAABEREUxMTBcXFwICAgcHBw8PDwAAABUVFQMDAwoKCi0tLQ0NDTU1NQUFBQAAABERETMzMxsbGxUVFR4eHicnJxcXFwAAAAgICBcXFxAQEBMTE2lpaQYGBgAAAA4ODhcXFxQUFCIiIjAwMAUFBQQEBAMDAw0NDf///xcXFxYWFgAAABAQEDo6Og4ODh0dHQkJCScnJwAAAAgICCAgIBQUFAAAABYWFg8PDx4eHgMDAyIiIg4ODgcHBwQEBB4eHgAAACIiIgAAABAQECkpKQ8PDwQEBAYGBlVVVQYGBgAAAAMDAygoKH9/fwcHBy0tLQYGBg4ODjAwMB8fHwUFBQAAABMTExkZGQAAAP///wEBAQAAAAAAABAQEAUFBSsrKwICAhMTEwgICAcHBwMDAwQEBBcXFwQEBBgYGAYGBje+CZsAAACMdFJOUwB8ex44UHPe/J0W6QOL/AU9iMZxlgVwpQ51kOYYhe6XAQKEkAqL/sByCm3+yzOCE/7VoDY3akIaYok7kG+NEeDSf1e7aBXV8Mp0A41njocjfE/oJwHKdVmeknFE/TR5x+pM5zzUeTeB8uoMlgb6LATEHN+ROgjn/0A7mAL/A0R+70f/dufB//9A7JTkVZZ6mgAAAAlwSFlzAAAXEQAAFxEByibzPwAAAdhJREFUKFONkolfTFEcxX8RQyREimKKhpe9ktBO2bNE1rEvNRFlOZhncKsp/NOd3713zHukOp/5vPc75/u7y7t3xCoQAR84o5WRAHC5pAUdkm7dpBUFBaSYFSQlYAZcZcK2Lo6zCSNt9WIv3hgiDY0i/tbYFsitfshRLcLXIj2u50+RQSsL1ZyNi8pn+Qiw7bLKzgrD3cBuUfbrkBrbocFxtYfkRyG4iZbaXxzEVVwwwYIqBqoMBz2zQfOgVSfw2aHlq24LH090fapEvgGnRBKh3Xa7PNe0URJ517xabYrc+Sa1PDbvLxWs93tpQ5EP3o/KW7VHvjqfxbQcSMo9eL8K4Wl2tRX8uE4R8V5PY/43l4j6buAjXwnjDmTwLB5pXPg+YKfaZetahXu/atgV05exK0xfhjB3ksqDhJ/eaXaY2Qq9cp7HRXaQ5/33eE05SqXu8m9B7i/VqirlIcw+9XF+7L6HMA9cEuWP8x7C9PoowifScnjG0rCOtnJgq6ZF/g47XkjZQ5hymoMb0MPTjfCVIxx5/b1UX1DXZv7mu79v3t43tOeG1gvxuBbh60/mcrnz4X95hjetOlevTnn8fLOTSteVOke+gH5udJT3e+L2P1r7ycOlJDIPnE/QKStcKnUAAAAASUVORK5CYII=') no-repeat;
+            display: block;           
+            height: 34px;
+            text-indent: -9999px; /* hides the link text */
+        }
+        .Delete_Img 
+        {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAfCAMAAAFWnHbnAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIHUExURQAAAAoKCqWlpQkJCTExMQYGBiUlJRwcHA4ODgoKCgcHBzw8PCsrKw0NDQgICAQEBA8PDw0NDSwsLBcXFzAwMDk5ORMTEw8PDxMTE01NTQYGBv///ygoKBISEhQUFBUVFTU1NQ8PDxoaGgwMDFRUVAgICBgYGBYWFg8PDycnJy8vL////ywsLEFBQV1dXQkJCRERESwsLAoKChAQENTU1BsbGxwcHAkJCRQUFAoKCkFBQVxcXBISEgQEBCUlJRsbGx0dHTs7OysrKyoqKiAgIFJSUhUVFRsbGyEhIRQUFCcnJxQUFGVlZTIyMgsLCxwcHEhISCgoKBAQEDs7OzExMTU1NQ8PDwkJCSYmJgcHBwoKCh0dHa6urh8fHyAgIBoaGuLi4hAQEBISEhAQEEtLSwoKCkRERC4uLicnJw4ODjk5ORcXFxkZGRUVFRkZGQgICBsbG////w8PDzg4OAQEBBISEhUVFSQkJCEhIU5OToqKig8PDyMjIzk5OUJCQhEREQgICFZWVhQUFP///ywsLCIiImBgYCsrKwsLCyQkJBwcHAgICA8PDwwMDMbGxhERERAQEEFBQSoqKgAAAA8PD3Nzcx4eHmBgYAEBAWpqaiEhIQICAhQUFB8fH1BQULKyshQUFAMDA1BQUAkJCRQUFAsLCxAQEGZmZiQkJImJiRUVFQQEBBsbG3sMokYAAACtdFJOUwDUEdyA/zaf39z/Kkzn//zMwTmsfVWppuor/AR/zMRVR9xY7BvxVZ7/qlwBbDop3tGa8ewGvI75yctCC//+gYO8YmmEhiijnpn/gasZUe65TZzeX2FRpetr4P6AE/r6qwnu5tsv+zyJaNhZsKil1vi7COBW/arIm/83GKdPQxvg9TLYBYOFHZ7tamT9yu0J8MpGbf/SFqUt/xiK/6/APArd/yn6yvLHCm8a3f+yT5fXrQAAAAlwSFlzAAAXEQAAFxEByibzPwAAAdZJREFUKFNtkYdXFDEYxMdyFlQ4xVOsBzZOEQuIWLAB9kZR7IqKYsNeEAtWVGzoWFZPgcXu8kc6yeUeeNzvvd3MfJPkS14AFOuzfGRcfw7XlygwMg+88hPNtKiQHOsjfPLU+RWa2WpXWMtmIy0JD2Qs5pzbGqeNZXSBxt8zOeOSxjaXTw2Hwy+M7JB4hMZz/WhMbpPgFRDnnmXMG8KRg8xa7ODWP4xEOWw8M2Q/8LTOHWXLWX6XfUNOpufxKvnMHGlzzFH20FhglEeOs2qRmo9Ri5ca3/3XlMh2pzFk29l9XHOTDA9wwynDdZwiK8nH5AFyE05qpxMB4j58lmOb3Gu5AB4LUSDXLVeqzp/MnZdMlzsqUQBNeD9B7q+cGoa4ytyKWfa9ilwzMiS3xV0vFptrzuYYqksaqp0XhxKVNBxOvnca+t42LQ0bbtUNZGLTHWW9botUjtcDFU6n0qt12wOJpejMpL8L7R69+VhnSquV9ZRKbMTd2QwiiMYZqsJeXTXYraxrhLK1WLnPZfvvY40qF9Yrw0Wp81Ow3GVFs5CvSk2XyT5L5RzEV5ct/IUSVXaaCLU+6b+9eZk80vOFvDc694eySps1PJdMJThjs8HHnO/Pt0nAP6z9My6JTQ4yAAAAAElFTkSuQmCC') no-repeat;
+            display: block;           
+            height: 34px;
+            text-indent: -9999px; /* hides the link text */
+        }
+             
+    </style>
+</head>
+<body>
+    @Html.Raw(TempData["FinalMsg"])
+    <h3 style="text-align:center;">Courses Details</h3>
+    <table class="table table-bordered" style="width:96%;margin:auto auto 20px auto;">
+        <tr class="bg-primary" style="position:sticky; top:-1px;">          
+            <th>
+                @Html.DisplayNameFor(model => model.count)
+            </th>           
+            <th>
+                Course ID
+            </th>
+            <th>
+               Course Name (Course Code) <br/>Course Duration
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubCourseName)<br/> (Branch Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoOfStudent)
+            </th>
+          @if(@Request.QueryString["Type"] == "1")
+           {
+            <th>Edit</th>
+            <th>Delete</th>
+           }
+        </tr>
+      @{ 
+          int RC = 0;
+      }
+        @foreach (var item in Model)
+        {
+      
+            <tr>                           
+                
+              @if(RC != item.count)
+              { 
+                <td rowspan="@item.NoOfBranches">
+                    @Html.DisplayFor(modelItem => item.count) 
+                </td>
+                    <td rowspan="@item.NoOfBranches">
+                        @Html.DisplayFor(modelItem => item.Univ_Course_ID)
+                    </td>
+                    <td rowspan="@item.NoOfBranches">
+                        <b>@Html.DisplayFor(modelItem => item.CourseName) </b>
+                        <b> (@Html.DisplayFor(modelItem => item.Univ_Course_Code))</b><br/>
+                        @Html.DisplayFor(modelItem => item.CourseDuration)
+                    </td>
+             
+              }
+            
+
+
+
+              
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.SubCourseName)</b><br/>
+                    (@Html.DisplayFor(modelitem => item.Univ_subCourse_Code))
+                </td>
+              
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoOfStudent)
+                </td>
+
+                @if (@Request.QueryString["Type"] == "1")
+                {
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { bid=item.Univ_subCourse_ID, cid = item.Univ_Course_ID  }, new { @class = "btn btn-primary btn-sm"})*@
+                    @Html.ActionLink("Edit", "Edit", new { bid = item.Univ_subCourse_ID, cid = item.Univ_Course_ID }, new { @class = "Edit_Img" })
+                    
+
+                </td>  
+                if (item.NoOfStudent == 0)
+                {
+                <td>
+                    @*@Html.ActionLink("Delete", "Delete", new { bid = item.Univ_subCourse_ID, cid = item.Univ_Course_ID }, new { @class = "btn btn-primary btn-sm" })*@                    
+                    @Html.ActionLink("Delete", "Delete", new { bid = item.Univ_subCourse_ID, cid = item.Univ_Course_ID }, new { @class = "Delete_Img" })
+
+                </td>
+                }
+                else
+                {
+                    <td>
+                        
+                    </td>
+                }
+                }
+            </tr>
+
+            RC = item.count;
+        }
+
+    </table>
+</body>
+</html>

@@ -1,0 +1,101 @@
+﻿@using Private_University.Models;
+@model Private_University.Models.master_notification_Insert
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("Index","Notification")"><i class="fa fa-backward" aria-hidden="true"></i>Back to Notification List</a>
+        </li>
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+
+    }
+}
+
+<!--== DASHBOARD INFO ==-->
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form">
+                <div class="inn-title">
+                    <h4>Add New Notification</h4>
+                    @*<p>All about courses, program structure, fees, best course lists (ranking), syllabus, teaching techniques and other details.</p>*@
+                </div>
+                <div class="tab-inn">
+
+                    @using (Html.BeginForm("Create", "Notification", FormMethod.Post, new { enctype = "multipart/form-data", Class = "s12" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Notification_Head, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Notification_Head, new { htmlAttributes = new { @class = "form - control validate" } })
+                                @Html.ValidationMessageFor(model => model.Notification_Head, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Notification_Details, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(model => model.Notification_Details, new { htmlAttributes = new { @class = "form - control materialize-textarea" } })
+                                @Html.ValidationMessageFor(model => model.Notification_Details, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Notification_Date, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Notification_Date, new { htmlAttributes = new { @class = "form - control validate" } })
+                                @Html.ValidationMessageFor(model => model.Notification_Date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Notification_File, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @*@Html.TextBoxFor(model => model.File_Upload, "", new { type = "file" })
+        @Html.ValidationMessageFor(model => model.File_Upload, "", new { @class = "text-danger" })*@
+
+                                <input type="file" name="File_Upload" required accept="image/jpg, image/jpeg, pdf" />
+                                @Html.ValidationMessageFor(model => model.File_Upload, "", new { @class = "text-danger" })
+                                @*@Html.TextBoxFor(model => model.Notification_Date, new { htmlAttributes = new { @class = "validate" } })*@
+
+
+                                @Html.HiddenFor(model => model.Entry_By, new { Value = ARespo.Login_ID })
+                                @Html.HiddenFor(model => model.Notification_File, new { Value = "FileName" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-6 col-md-6">
+                                <input type="submit" value="Create" class="waves-effect waves-light light-btn waves-input-wrapper waves-button-input" />
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

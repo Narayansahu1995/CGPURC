@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<meta name="description" content="">
+        <meta name="keyword" content="">*@ 
+    @{
+        var language = TempData["lang"];
+        ViewData["lang"] = language;
+    }
+
+    <title>@ViewBag.Title - Chhattisgarh Private Universities Regulatory Commission</title>
+
+    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />            
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />*@
+
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/materialize.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/MyCustom.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/style-mob.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700%7CJosefin+Sans:600,700" rel="stylesheet">
+    @*<script src="~/Scripts/modernizr-2.8.3.js"></script>*@
+    <style>
+        /*map css start*/
+        .highlight {
+            fill: #ec008c;
+            opacity: 1;
+        }
+
+        .show {
+            /* transform: rotate(-10deg) scale(1.05); */
+            transition: transform 0.3s ease;
+            transform: rotate(-1.2deg);
+            text-align: center;
+            filter: drop-shadow(0.25em 0.7em 0.95em rgba(0, 0, 0, 0.8));
+        }
+        /*map css end*/
+
+        /*layout custom css start*/
+        .email, .phone {
+            color: #a3adb9;
+            font-size: 12px;
+        }
+
+        .DepartmentName {
+            font-weight: 700;
+            line-height: 28px;
+            font-size: 30px;
+            margin-top: 0px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .Address {
+            font-weight: 600;
+            line-height: 24px;
+            font-size: 18px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            color: white;
+        }
+
+        .Footer-h4 {
+            font-size: 14px;
+            color: #d6d6d6;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .Footer-p {
+            font-size: 13px;
+            color: #fff;
+            line-height: 18px;
+        }
+        /*layout custom css end*/
+    </style>
+</head>
+<body>
+    <!-- MOBILE MENU -->
+    <section>
+        <div class="ed-mob-menu">
+            <div class="ed-mob-menu-con">
+                <div class="ed-mm-left">
+                    <div class="wed-logo">
+                        <a href="~/Home/Index">
+                            <img src="~/Content/images/logo_mob.png" alt="" />
+                        </a>
+                    </div>
+                </div>
+                <div class="ed-mm-right">
+                    <div class="ed-mm-menu">
+                        <a href="#!" class="ed-micon"><i class="fa fa-bars"></i></a>
+                        <div class="ed-mm-inn">
+                            <a href="#!" class="ed-mi-close"><i class="fa fa-times"></i></a>
+                            <h4>User Account</h4>
+                            <ul>
+                                <li>
+                                    @Html.ActionLink(Private_University.Resources.Global.SignIn, "Login", "Home")
+                                </li>
+                                <li>
+                                    @Html.ActionLink(Private_University.Resources.Global.ForgotPassword, "ForgetPassword", "Home")
+                                </li>
+                                <li>@Html.ActionLink("English", "Index", "Language", new { LanguageAbbrevation = "en" }, null)</li>
+                                <li>@Html.ActionLink("हिंदी", "Index", "Language", new { LanguageAbbrevation = "Hi" }, null)</li>
+                            </ul>
+                            @*@ViewBag.lang*@
+                            @*<ul>
+                              <li><a href="~/Home/Login">Sign In</a></li>
+                              </ul>*@
+                            <h4>All Pages</h4>
+                            <ul>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Home, "Index", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.AboutUs, "AboutUs", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.OfficeBearer, "OfficeBearers", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Universities, "Univsersities", "Home")</li> 
+                                <li>@Html.ActionLink(Private_University.Resources.Global.ActRulesAndRegulations, "RulesRegulations", "Home")</li>
+                                
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Notifications, "Notifications", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Rti, "RTI", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Gallery, "Gallery", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.News, "News", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Contact, "ContactUs", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Feedback, "Feedback", "Home")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--HEADER SECTION-->
+    <section>
+        <!-- TOP BAR -->
+        <div class="ed-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="ed-com-t1-left">
+                            <ul>
+                                <li>
+                                    <a href="#">@Html.Label(Private_University.Resources.Global.EmailId, new { @class = "email" }): cgpurc18@gmail.com</a>
+                                </li>
+                                <li>
+                                    <a href="#">@Html.Label(Private_University.Resources.Global.Phone, new { @class = "phone" }): +91-771-2277580</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ed-com-t1-right">
+                            <ul>
+                                <li>
+                                    @Html.ActionLink(Private_University.Resources.Global.SignIn, "Login", "Home")
+                                </li>
+                                <li>
+                                    @Html.ActionLink(Private_University.Resources.Global.ForgotPassword, "ForgetPassword", "Home")
+                                </li>
+                                <li><img src="~/Content/images/icon/english_lang.png" />@Html.ActionLink("English", "Index", "Language", new { LanguageAbbrevation = "en" }, null)</li>
+                                <li><img src="~/Content/images/icon/hindi_lang.png" />@Html.ActionLink("हिंदी", "Index", "Language", new { LanguageAbbrevation = "Hi" }, null)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="wed-logo">
+                            <a href="~/Home/Index">
+                                <img src="~/Content/images/purc_white_logo.png" class="img-circle" alt="" />
+                            </a>
+                            <div class="logo-text">
+                                @*<h2>Chhattisgarh Private University Regulatory Commission</h2>
+                                    <h4> Sector-24, Block 7B, Ground Floor, Nawa Raipur Atal Nagar, Raipur,Chhattisgarh</h4>*@
+                                <h2>@Html.Label(Private_University.Resources.Global.DepartmentName, new { @class = "DepartmentName" })</h2>
+                                <h4>@Html.Label(Private_University.Resources.Global.Address, new { @class = "Address" })</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- LOGO AND MENU SECTION -->
+        <div class="top-logo" data-spy="affix" data-offset-top="250">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="main-menu">
+                            <ul>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Home, "Index", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.AboutUs, "AboutUs", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.OfficeBearer, "OfficeBearers", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Universities, "Univsersities", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.ActRulesAndRegulations, "RulesRegulations", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Notifications, "Notifications", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Rti, "RTI", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Gallery, "Gallery", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.News, "News", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Contact, "ContactUs", "Home")</li>
+                                <li>@Html.ActionLink(Private_University.Resources.Global.Feedback, "Feedback", "Home")</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="all-drop-down-menu">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!--END HEADER SECTION-->
+    @RenderBody()
+    <!-- FOOTER -->
+    <section class="wed-hom-footer">
+        <div class="container">
+            <div class="row wed-foot-link">
+                <div class="col-md-4 foot-tc-mar-t-o">
+                    <h4>@Html.Label(Private_University.Resources.Global.TextContactUs, new { @class = "Footer-h4" })</h4>
+                    <p>@Html.Label(Private_University.Resources.Global.FooterAddress, new { @class = "Footer-p" })</p>
+                    <p>@Html.Label(Private_University.Resources.Global.FooterPhone, new { @class = "Footer-p" })</p>
+                    <p>@Html.Label(Private_University.Resources.Global.FooterEmail, new { @class = "Footer-p" })</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>@Html.Label(Private_University.Resources.Global.TextImportantLinks, new { @class = "Footer-h4" })</h4>
+                    <ul>
+                        <li><a href="https://rajbhavancg.gov.in/" target="_blank"><p>@Html.Label(Private_University.Resources.Global.FooterLinkRajBhawan, new { @class = "Footer-p" })</p></a></li>
+                        <li><a href="https://www.ugc.ac.in/" target="_blank"><p>@Html.Label(Private_University.Resources.Global.FooterLinkUGC, new { @class = "Footer-p" })</p></a></li>
+                        <li><a href="https://www.aicte-india.org/" target="_blank"><p>@Html.Label(Private_University.Resources.Global.FooterLinkAICTE, new { @class = "Footer-p" })</p></a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4>@Html.Label(Private_University.Resources.Global.TextImportantLinks, new { @class = "Footer-h4" })</h4>
+                    <ul>
+                        <li><a href="http://highereducation.cg.gov.in/hi" target="_blank"><p>@Html.Label(Private_University.Resources.Global.FooterLinkHigherEducation, new { @class = "Footer-p" })</p></a></li>
+                        <li><a href="http://www.barcouncilofindia.org/" target="_blank"><p>@Html.Label(Private_University.Resources.Global.FooterLinkBarCouncilofIndia, new { @class = "Footer-p" })</p></a></li>
+                        <li><a href="http://ncte-india.org/ncte_new/" target="_blank"><p>@Html.Label(Private_University.Resources.Global.FooterLinkNcte, new { @class = "Footer-p" })</p></a></li>
+                        <li>
+                            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            @*<div class="row wed-foot-link-1">
+                   <div class="col-md-4 wed-foot-link-1">
+                        <h4>SOCIAL MEDIA</h4>
+                        <ul>
+                            <li>
+                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>*@
+        </div>
+    </section>
+    <!-- COPY RIGHTS -->
+    <section class="wed-rights">
+        <div class="container">
+            <div class="row">
+                <div class="copy-right">
+                    <a href="http://chips.gov.in/" target="_blank">
+                        <img class="text-center img img-responsive" style="margin:auto;" src="~/Content/images/chips.png" height="20" />
+                        <p>
+                            @Html.Label(Private_University.Resources.Global.FooterCopyright, new { @class = "Footer-p" }) © @System.DateTime.Now.Year.ToString().@Html.Label(Private_University.Resources.Global.FooterCopyName, new { @class = "Footer-p" })
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="~/Content/js/main.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/materialize.min.js"></script>
+    <script src="~/Content/js/custom.js"></script>
+    @*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>*@
+    <script>
+        $(".u").hide();
+        $("#l1").mouseover(function () {
+            $("#u1").addClass("show").show();
+        });
+        $("#l1").mouseout(function () {
+            $("#u1").removeClass("show").hide();
+        });
+        $("#l2").mouseover(function () {
+            $("#u2").addClass("show").show();
+        });
+        $("#l2").mouseout(function () {
+            $("#u2").removeClass("show").hide();
+        });
+        $("#l31").mouseover(function () {
+            $("#b1").addClass("show").show();
+        });
+        $("#l31").mouseout(function () {
+            $("#b1").removeClass("show").hide();
+        });
+        $("#l32").mouseover(function () {
+            $("#b2").addClass("show").show();
+        });
+        $("#l32").mouseout(function () {
+            $("#b2").removeClass("show").hide();
+        });
+        $("#bl1").mouseover(function () {
+            $("#bh").addClass("show").show();
+        });
+        $("#bl1").mouseout(function () {
+            $("#bh").removeClass("show").hide();
+        });
+        $("#bl2").mouseover(function () {
+            $("#d1,#d2,#d3").addClass("show").show();
+        });
+        $("#bl2").mouseout(function () {
+            $("#d1,#d2,#d3").removeClass("show").hide();
+        });
+        $("#rl1").mouseover(function () {
+            $("#r1").addClass("show").show();
+        });
+        $("#rl1").mouseout(function () {
+            $("#r1").removeClass("show").hide();
+        });
+        $("#rl2").mouseover(function () {
+            $("#r2").addClass("show").show();
+        });
+        $("#rl2").mouseout(function () {
+            $("#r2").removeClass("show").hide();
+        });
+        $("#rl3").mouseover(function () {
+            $("#r3").addClass("show").show();
+        });
+        $("#rl3").mouseout(function () {
+            $("#r3").removeClass("show").hide();
+        });
+        $("#rl4").mouseover(function () {
+            $("#r4").addClass("show").show();
+        });
+        $("#rl4").mouseout(function () {
+            $("#r4").removeClass("show").hide();
+        });
+        $("#rl5").mouseover(function () {
+            $("#r5").addClass("show").show();
+        });
+        $("#rl5").mouseout(function () {
+            $("#r5").removeClass("show").hide();
+        });
+        $("#rl6").mouseover(function () {
+            $("#r6,#r7").addClass("show").show();
+        });
+        $("#rl6").mouseout(function () {
+            $("#r6,#r7").removeClass("show").hide();
+        });
+    </script>
+</body>
+</html>

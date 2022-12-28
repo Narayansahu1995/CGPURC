@@ -1,0 +1,127 @@
+﻿@using Private_University.Models;
+@model Private_University.Models.UniversityUpdate
+
+@{
+    ViewBag.Title = "AddUniversity";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#"> University Details</a>
+        </li>
+        <li class="page-back">
+            <a href="#"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+        </li>
+    </ul>
+</div>
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form">
+                <div class="inn-title">
+                    <h4>Add University Informations</h4>
+                </div>
+                <div class="tab-inn">
+                    @using (Html.BeginForm("AddUniversity", "University", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.University_Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.University_Name, new { Value = ViewBag.University_Name, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.University_Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Contact_Number, htmlAttributes: new { @class = "control-label   col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Contact_Number, new { Value = ViewBag.Contact_Number, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Contact_Number, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email_ID, htmlAttributes: new { @class = "control-label  col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Email_ID, new { Value = ViewBag.Email_ID, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Email_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Address, new { Value = ViewBag.Address, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Establishment_Year, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Establishment_Year, new { Value = ViewBag.Establishment_Year, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Establishment_Year, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Registration_Number, htmlAttributes: new { @class = "control-label  col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Registration_Number, new { Value = ViewBag.Registration_Number, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Registration_Number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Pin_Code, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Pin_Code, new { Value = ViewBag.Pin_Code, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Pin_Code, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Website_URL, htmlAttributes: new { @class = "control-label  col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Website_URL, new { Value = ViewBag.Website_URL, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Website_URL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Univsersity_Logo, htmlAttributes: new { @class = "control-label col-md-3" })
+                                @*@Html.TextBoxFor(model => model.Univsersity_Logo, new { htmlAttributes = new { @class = "form-control col-md-6" } })
+                                    @Html.ValidationMessageFor(model => model.Univsersity_Logo, "", new { @class = "text-danger" })*@
+                                <div class="col-md-9">
+                                    <input type="file" name="UploadFile" id="file" class="form-control" required accept="image/jpg, image/jpeg, image/png" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.University_Details, htmlAttributes: new { @class = "control-label   col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.University_Details, new { Value = ViewBag.University_Details, htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.University_Details, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.HiddenFor(model => model.Updated_By, new { Value = ARespo.Login_ID })
+                                @Html.HiddenFor(model => model.University_ID, new { Value = ARespo.University_ID })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-6 col-md-6">
+                                    <input type="submit" value="Submit" class="waves-effect waves-light light-btn waves-input-wrapper waves-button-input" />
+                                </div>
+                            </div>
+                            @Html.Raw(TempData["msg"])
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

@@ -1,0 +1,337 @@
+﻿@using Private_University.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Page.Title</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<meta name="description" content="">
+        <meta name="keyword" content="">*@
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700%7CJosefin+Sans:600,700" rel="stylesheet">
+    <!-- FONTAWESOME ICONS -->
+    <link rel="stylesheet" href="~/Content/css/font-awesome.min.css">
+    <!-- ALL CSS FILES -->
+    <link href="~/Content/css/materialize.css" rel="stylesheet">
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    <!-- RESPONSIVE.CSS ONLY FOR MOBILE AND TABLET VIEWS -->
+    <link href="~/Content/css/style-mob.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-1.7.1.min.js"></script>
+
+
+    <script src="~/ckeditor/ckeditor.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Content/css/datatables.min.css" />
+
+    
+
+</head>
+@{
+	//   if (Session["AuthResponse"] == null)
+	//   return RedirectResult("Index", "Dashboard");
+	AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+<body>
+    <div class="container-fluid sb1">
+        <div class="row">
+            <!--== LOGO ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6 sb1-1">
+                <a href="#" class="btn-close-menu"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <a href="#" class="atab-menu"><i class="fa fa-bars tab-menu" aria-hidden="true"></i></a>
+                <a href="#" class="logo">
+                    <img src="~/Content/images/logo1.png" alt="" />
+                </a>
+                
+            </div>
+           
+            <!--== SEARCH ==-->
+            <div class="col-md-6 col-sm-6 mob-hide">
+                @*<form class="app-search">
+                        <input type="text" placeholder="Search..." class="form-control">
+                        <a href=""><i class="fa fa-search"></i></a>
+                    </form>*@
+              
+            </div>
+            <!--== NOTIFICATION ==-->
+            <div class="col-md-2 tab-hide">
+
+            </div>
+            <!--== MY ACCCOUNT ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6">
+                <!-- Dropdown Trigger -->
+                <a class='waves-effect dropdown-button top-user-pro' href='#' data-activates='top-menu'>
+                    <img src="~/Content/images/user/MyACLogo.png" alt="" />My Account <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+
+                <!-- Dropdown Structure -->
+                <ul id='top-menu' class='dropdown-content top-menu-sty'>
+                    @*<li>
+                            <a href="#" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Admin Setting</a>
+                        </li>
+                        <li class="divider"></li>*@
+                  
+                    <li>
+                        <a href="~/ChangePassword/Index" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Change Password</a>
+                    </li>                                 
+                    <li>
+                        <a href="~/home/Logout" class="ho-dr-con-last waves-effect"><i class="fa fa-sign-in" aria-hidden="true"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--== BODY CONTNAINER ==-->
+    <div class="container-fluid sb2">
+        <div class="row">
+            <div class="sb2-1">
+                <!--== USER INFO ==-->
+                <div class="sb2-12">
+                    @{
+                        if (Session["AuthResponse"] != null)
+                        {
+                            <ul>
+                                <li>
+                                    <i class="fa fa-user-secret fa-3x"></i>
+                                </li>
+                                <li>
+                                    <h5>@ARespo.Name <span> @ARespo.Designation</span></h5>
+
+                                </li>
+                            </ul>
+                            <h5>Academic Session {@ARespo.Academic_Session} </h5>
+
+                        }
+                    }
+                </div>
+                <div class="sb2-13">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        @if ((Session["AuthResponse"] != null) && (@ARespo.Role_ID == 1))
+                        {
+                            <li>
+                                <a href="~/Dashboard" class="menu-active"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-cogs" aria-hidden="true"></i> Masters</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/academic_session">Academic Session</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Notification">Notification</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Office_bearer">Office Bearer</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Commission/UpdateAddress">Update Address</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-cogs" aria-hidden="true"></i> University & User </a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/Commission/AddMasterUniversity">Add University</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Commission/AddUsers">Add Users</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-cogs" aria-hidden="true"></i>News & Gallery</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/Gallery/AddGallery">Add Photo Gallery</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/News/AddNews">Add News</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                        else if ((Session["AuthResponse"] != null) && (@ARespo.Role_ID == 2))
+                        {
+                            <li>
+                                <a href="~/Dashboard" class="menu-active"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-cogs" aria-hidden="true"></i> University Masters</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/Course"> Course & Branches</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Course/CourseRpt?type=1" target="_blank"> Edit & Delete Course </a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Subject">Add Subjects</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/fees">Update Fees</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/University/UniversityOfficeBearer">Office Bearer</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            @*<li>
+                                <a href="~/Student/AddStudent"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Add Student</a>
+                            </li>*@
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-users" aria-hidden="true"></i> Students</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/Student/AddStudent">Add Student</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Student/UploadStudentData">Upload Students Data</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Student/EditStudent">Edit Student Detail</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Student/StudentsRpt" target="_blank">Delete & Cancel</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/FeesCollect">Collect Fees</a>
+                                        </li>
+                                        @*<li>
+                                                <a href="~/Promote">Promote Student</a>
+                                         </li>*@
+
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="~/University/UpdateUniversityProfile"><i class="fa fa-university" aria-hidden="true"></i> University Profile</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-inr" aria-hidden="true"></i>Fees Details Report</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/University/UniversityFeesCollectonList">Fees Collection</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/University/UniversityPenalFeesCollecton">Fees Penalty Collection</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-file" aria-hidden="true"></i> Reports</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/Course/CourseRpt?type=0" target="_blank">Courses & Branches</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/Student/StudentList">Student List</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/University/UniversityOfficeBearerShow">Bearer List</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/FeesCollect/StudentFeesList" target="_blank">Fees Details</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            @*<li>
+                                <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-user" aria-hidden="true"></i> My Accounts</a>
+                                <div class="collapsible-body left-sub-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="~/ChangePassword/Index">Change Password</a>
+                                        </li>
+                                        <li>
+                                            <a href="~/home/Logout">Logout</a>
+                                        </li>                                      
+                                    </ul>
+                                </div>
+                            </li>*@
+
+                        }
+                        else if ((Session["AuthResponse"] != null) && (@ARespo.Role_ID == 3))
+                        {
+<li>
+                                <a href="~/Dashboard" class="menu-active"><i class="fa fa-bar-chart" aria-hidden="true"></i> Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="~/Student/AddStudent"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Add Student</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!--== BODY INNER CONTAINER ==-->
+            <div class="sb2-2">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            try {
+                $("input[type='text']").each(function(){
+                    $(this).attr("autocomplete","off");
+                });
+            }
+            catch (e)
+            { }
+
+            // ---------------- Disable Inspect element from page -----------
+            //document.addEventListener('contextmenu', function (e) {
+            //    e.preventDefault();
+            //});
+            //document.onkeydown = function (e) {
+            //    if (event.keyCode == 123) {
+            //        return false;
+            //    }
+            //    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            //        return false;
+            //    }
+            //    if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+            //        return false;
+            //    }
+            //    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            //        return false;
+            //    }
+            //    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            //        return false;
+            //    }
+            //}
+
+        });
+    </script>
+    <!--Import jQuery before materialize.js-->
+    <script src="~/Content/js/main.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/materialize.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script type="text/javascript" src="~/Content/js/datatables.min.js"></script>
+    <script>
+        $('#demoGrid').dataTable({
+        });
+    </script>
+   
+</body>
+}
+</html>

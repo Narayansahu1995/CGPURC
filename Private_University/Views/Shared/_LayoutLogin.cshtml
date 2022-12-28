@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<meta name="description" content="">
+        <meta name="keyword" content="">*@
+
+    <title>@ViewBag.Title - Chhattisgarh Private Universities Regulatory Commission</title>
+
+    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />*@
+
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/materialize.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/style-mob.css" rel="stylesheet" type="text/css" />
+    @*<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700%7CJosefin+Sans:600,700" rel="stylesheet">*@
+    @*<script src="~/Scripts/modernizr-2.8.3.js"></script>*@
+    <style type="text/css">
+        .text-danger {
+            width: auto;
+            background-color: #dfe7f2;
+            box-shadow: 2px 2px 6px darkslategray;
+            color: #ad1515;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            top: 5px;
+            float:left;
+            display: none;
+        }
+
+            .text-danger::after {
+                content: "";
+                padding: 0;
+                position: absolute;
+                bottom: 100%;
+                left: 10%;
+                margin-left: -10px;
+                border-width: 10px;
+                border-style: solid;
+                border-color: transparent transparent #dfe7f2 transparent;
+                font-size: 14pt;
+                font-weight: bold;
+            }
+    </style>
+
+</head>
+<body>
+    <section>
+        <div class="ad-log-main" style="overflow:auto;">
+            <div class="ad-log-in">
+                @RenderBody()
+
+            </div>
+        </div>
+    </section>
+    <script src="~/Content/js/main.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/materialize.min.js"></script>
+    <script src="~/Content/js/custom.js"></script>
+    <script type="text/javascript">
+        //$(function () {
+        //    $("#submit").click(function () {
+        //        var session_id = $("#session_id");
+        //        if (session_id.val() == "") {
+        //            alert("Please select Academic Session!");
+        //            return false;
+        //        }
+        //        return true;
+        //    });
+        //});
+    </script>
+</body>
+</html>

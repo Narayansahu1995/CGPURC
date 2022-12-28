@@ -1,0 +1,95 @@
+﻿@model Private_University.Models.Authentication
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<!--SECTION START-->
+<div class="ad-log-in-con">
+    <div class="log-in-pop-right">
+        <div class="ad-log-in-logo">
+            <a href="Index"><img src="~/Content/images/cgpurc_logo_Sm.png" alt=""></a>
+        </div>
+        <h4>Login</h4>
+
+        @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @id = "login", Class = "s12" }))
+        {
+            @Html.AntiForgeryToken()
+            @*@Html.ValidationSummary(true, "", new { Class = "text-danger" })*@
+
+            if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.Message
+                </div>
+            }
+            <div>
+                <div class="input-field s12">
+                    @Html.DropDownListFor(model => Model.Session_ID, new SelectList(ViewBag.SessionList, "Session_ID", "Session_Name"), "Select Academic Session", new { @id = "session_id", Class = "validate"})
+                    @Html.ValidationMessageFor(a => a.Session_ID, "", new { Class = "text-danger" })
+                </div>
+            </div>
+            <div>
+                <div class="input-field s12">
+                    @Html.TextBoxFor(a => a.UserName, new { Class = "validate" })
+                    @Html.LabelFor(a => a.UserName)
+                    @Html.ValidationMessageFor(a => a.UserName, "", new { Class = "text-danger" })
+                </div>
+            </div>
+            <div>
+                <div class="input-field s12">
+                    @Html.PasswordFor(a => a.Password, new { Class = "validate" })
+                    @Html.LabelFor(a => a.Password)
+                    @Html.ValidationMessageFor(a => a.Password, "", new { Class = "text-danger" })
+                </div>
+            </div>
+            @*<div>
+                    <div class="input-field s12">
+                        @Html.TextBoxFor(a => a.captchaValue, new { Class = "validate" })
+                        @Html.LabelFor(a => a.captchaValue)
+                        @Html.ValidationMessageFor(a => a.captchaValue, "", new { Class = "text-danger" })
+                    </div>
+                </div>*@
+
+            <div>
+                <div class="s12 log-ch-bx">
+                    <p>
+                        @Html.HiddenFor(a => a.captchaValue, new { Value = "1234" })
+                        @Html.HiddenFor(a => a.IpAddress, new { Value = Request.UserHostAddress.ToString() })
+                        <input type="checkbox" id="test5">
+                        @*<label for="test5">Remember me</label>*@
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div class="input-field s4">
+                    <i class="waves-effect waves-light log-in-btn waves-input-wrapper" style=""><input type="submit" value="Login" class="waves-button-input" id="submit"></i>
+                </div>
+            </div>
+            <div>
+                <div class="input-field s12"> @*<a href="forgetpassword">Forget Password</a>|*@  <a href="index">Home</a> </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="~/Content/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#session_id").val(3);
+
+        for (var i = 0 ; i <= $('.text-danger').length ; i++) {
+
+            if ($('.text-danger:eq(' + i + ')').text().length > 0) {
+                $('.text-danger:eq(' + i + ')').css("display", "initial");
+            }
+            else {
+                $('.text-danger:eq(' + i + ')').css("display", "none");
+            }
+        }
+
+    });
+</script>
+
+
+

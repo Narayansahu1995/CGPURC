@@ -1,0 +1,79 @@
+﻿@using CaptchaMvc.HtmlHelpers
+@using CaptchaMvc;
+@model Private_University.Models.Feedback
+
+@{
+    ViewBag.Title = "Feedback";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section style=" margin-top: 50px;">
+        @{
+            if (TempData["Msg"] != null)
+            {
+                @Html.Raw(TempData["Msg"])
+
+            }
+        }
+        <div class="container com-sp pad-all-20">
+            <div class="row">
+                <div class="con-title">
+                    <h2>@Html.Label(Private_University.Resources.Feedbackform.Feedback, new { @class = "con-title-h2" })<span> @Html.Label(Private_University.Resources.Feedbackform.Form, new { @class = "con-title-h2-span" })</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="container card" style=" position: relative; background-color: white; width: 70%; border-radius: 5px; box-shadow: 0px 0px 25px rgb(0 0 0 / 29%); border: 1px #1f4363; border-style: dashed; /* overflow: hidden; */ padding-bottom: 15px;">
+            <div class=" footer-part footer-part-form">
+                <div class="map-head">
+                    <p>@Html.Label(Private_University.Resources.Feedbackform.SendUsNow, new { @class = "ho-ex-title-h4",@style= "margin-top: 10px;" })</p>
+                </div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <!-- ENQUIRY FORM -->
+                <form id="contact_form" name="contact_form" action="send.php.html">
+                    <ul>
+                        <li class="col-md-6 col-sm-6 col-xs-12 contact-input-spac">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </li>
+                        <li class="col-md-6 col-sm-6 col-xs-12 contact-input-spac">
+                            @Html.LabelFor(model => model.Contact_Number, htmlAttributes: new { @class = "control-label col-md-6" })
+                            @Html.EditorFor(model => model.Contact_Number, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Contact_Number, "", new { @class = "text-danger" })
+                        </li>
+                        <li class="col-md-6 col-sm-6 col-xs-12 contact-input-spac">
+                            @Html.LabelFor(model => model.Email_ID, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.EditorFor(model => model.Email_ID, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email_ID, "", new { @class = "text-danger" })
+                        </li>
+                        <li class="col-md-6 col-sm-6 col-xs-12 contact-input-spac">
+                            @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                        </li>
+                        <li class="col-md-12 col-sm-12 col-xs-12 contact-input-spac">
+                            @Html.LabelFor(model => model.Feedback_data, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.EditorFor(model => model.Feedback_data, new { htmlAttributes = new { @class = "form-control", @style = "height:120px;" } })
+                            @Html.ValidationMessageFor(model => model.Feedback_data, "", new { @class = "text-danger" })
+                        </li>
+                        <li>
+                            Captcha
+                            @*@Html.MathCaptcha()*@
+                            @Html.Captcha(refreshText: Private_University.Resources.Feedbackform.TryAnother, inputText:Private_University.Resources.Feedbackform.CaptchaText, length: 4, requiredMessageText: "Is Required Field", addValidationSpan: true)
+                            @*@Html.Captcha(3)*@
+                            <br />
+
+                            <p class="Error">  @ViewBag.ErrMessage </p>
+                        </li>
+                        <li class="col-md-6">
+                            <input type="submit" value="SUBMIT"/>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </section>
+}

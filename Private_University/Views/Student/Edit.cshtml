@@ -1,0 +1,281 @@
+﻿@model Private_University.Models.StudentEdit
+@using Private_University.Models;
+@using Newtonsoft.Json;
+@{
+    Layout = null;
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit</title>
+
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-1.7.1.min.js"></script>
+    <script src="~/ckeditor/ckeditor.js"></script>
+
+
+    <style type="text/css">
+        .text-danger {
+            width: auto;
+            background-color: #dfe7f2;
+            box-shadow: 2px 2px 6px darkslategray;
+            color: navy;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            top: 5px;
+            left: 5px;
+            display: none;
+        }
+
+            .text-danger::after {
+                content: "";
+                padding: 0;
+                position: absolute;
+                bottom: 100%;
+                left: 8%;
+                margin-left: -10px;
+                border-width: 10px;
+                border-style: solid;
+                border-color: transparent transparent #dfe7f2 transparent;
+                font-size: 14pt;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+    <h3 style="text-align:center;">Edit Student Information</h3>
+
+    @using (Html.BeginForm("Edit", "Student", FormMethod.Post, new { Class = "s12" }))
+    {
+        @Html.AntiForgeryToken()
+        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+        <table class="table table-condensed" style="width:auto;margin:auto;">
+            <tr>
+                <td> @Html.LabelFor(model => model.Enrollment_Number)</td>
+                <td>
+                    @Html.EditorFor(model => model.Enrollment_Number, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Enrollment_Number, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Student_Name)</td>
+                <td>
+                    @Html.EditorFor(model => model.Student_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Student_Name, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td> @Html.LabelFor(model => model.Father_Name)</td>
+                <td>
+                    @Html.EditorFor(model => model.Father_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Father_Name, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td> @Html.LabelFor(model => model.Gender)</td>
+                <td>
+                    @Html.DropDownListFor(model => Model.Gender, new SelectList(ViewBag.GenderList, "Value", "Text", 0), "--Select Gender ---", new { @id = "Gender", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Date_of_Birth)</td>
+                <td>
+                    @Html.EditorFor(model => model.Date_of_Birth, new { htmlAttributes = new { @class = "form-control" } })
+
+                    @Html.ValidationMessageFor(model => model.Date_of_Birth, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Aadhar_Number)</td>
+                <td>
+                    @Html.EditorFor(model => model.Aadhar_Number, new { Value = "", htmlAttributes = new { @class = "form-control", @maxlength = "12" } })
+                    @Html.ValidationMessageFor(model => model.Aadhar_Number, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Date_of_Admission)</td>
+                <td>
+                    @Html.EditorFor(model => model.Date_of_Admission, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Date_of_Admission, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.Mobile_Number_Stu)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.Mobile_Number_Stu, new { htmlAttributes = new { @class = "form-control", @maxlength = "10" } })
+                    @Html.ValidationMessageFor(model => model.Mobile_Number_Stu, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Mobile_Number_Father)</td>
+                <td>
+                    @Html.EditorFor(model => model.Mobile_Number_Father, new { htmlAttributes = new { @class = "form-control", @maxlength = "10" } })
+                    @Html.ValidationMessageFor(model => model.Mobile_Number_Father, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td> @Html.LabelFor(model => model.Email_ID)</td>
+                <td>
+                    @Html.EditorFor(model => model.Email_ID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email_ID, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Address)</td>
+                <td>
+                    @Html.TextAreaFor(model => model.Address, 2, 48, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td> @Html.LabelFor(model => model.Univ_Course_ID, htmlAttributes: new { @class = "col-auto" })</td>
+                <td>
+                    @Html.DropDownListFor(model => Model.Univ_Course_ID, new SelectList(ViewBag.CourseList, "Value", "Text", 0), "---Select Course---", new { @class = "form-control", @id = "course" })
+                    @Html.ValidationMessageFor(model => model.Univ_Course_ID, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td> @Html.LabelFor(model => model.Univ_subCourse_ID)</td>
+                <td>
+                    @*@Html.DropDownListFor(model => Model.Univ_subCourse_ID, new SelectList(ViewBag.BranchList, "Value", "Text", 0), "---Select Sub Course---", new { @class = "form-control", @id = "subCourse" })*@
+                    @Html.DropDownListFor(model => Model.Univ_subCourse_ID, new SelectList("Value", "Text"), "---Select Sub Course---", new { @class = "form-control", @id = "subCourse" })
+                    @Html.ValidationMessageFor(model => model.Univ_subCourse_ID, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Course_Mode_ID)</td>
+                <td>
+                    @Html.TextBox("Course_Mode_ID", (string)ViewBag.CourseMode, new { @id = "Course_Mode_ID", @class = "form-control", @readonly = true })
+                    @Html.ValidationMessageFor(model => model.Course_Mode_ID)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Semester_Year)</td>
+                <td>
+                    @Html.DropDownListFor(model => Model.Semester_Year, new SelectList("Value", "Text"), "---Select (Year/Semester)---", new { @class = "form-control", @id = "Year_Sem" })
+                    @Html.ValidationMessageFor(model => model.Semester_Year, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="Save" class="btn btn-default" id="btn" />
+                </td>
+                <td>
+                    @Html.ActionLink("Back to List", "StudentsRpt")
+                </td>
+            </tr>
+        </table>
+    }
+
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            @*$('#Year_Sem').empty();
+            for (var i = 1; i <= @ViewBag.NoSY; i++) {
+                if (i == @Model.Semester_Year) {
+                    $('#Year_Sem').append("<option selected='selected' value=" + i + ">" + i + "</option>");
+                        }
+            
+                }
+                else {
+                    $('#Year_Sem').append("<option value=" + i + ">" + i + "</option>");
+                }
+            }*@
+
+            for (var i = 0; i <= $('.text-danger').length; i++) {
+
+                if ($('.text-danger:eq(' + i + ')').text().length > 0) {
+                    $('.text-danger:eq(' + i + ')').css("display", "initial");
+                }
+                else {
+                    $('.text-danger:eq(' + i + ')').css("display", "none");
+                }
+            }
+
+
+            $('#Aadhar_Number').keypress(function (evt) {
+                if (evt.charCode >= 48 && evt.charCode <= 57) {
+                    $(".text-danger:eq(5)").text("");
+                    $(".text-danger:eq(5)").css("display", "none");
+                }
+                else {
+                    evt.preventDefault();
+                    $(".text-danger:eq(5)").text("Enter numbers only");
+                    $(".text-danger:eq(5)").css("display", "initial");
+                }
+
+            });
+
+            $('#Mobile_Number_Stu').keypress(function (evt) {
+                if (evt.charCode >= 48 && evt.charCode <= 57) {
+                    $(".text-danger:eq(7)").text("");
+                    $(".text-danger:eq(7)").css("display", "none");
+                }
+                else {
+                    evt.preventDefault();
+                    $(".text-danger:eq(7)").text("Enter numbers only");
+                    $(".text-danger:eq(7)").css("display", "initial");
+                }
+            });
+
+            $('#Mobile_Number_Father').keypress(function (evt) {
+                if (evt.charCode >= 48 && evt.charCode <= 57) {
+                    $(".text-danger:eq(8)").text("");
+                    $(".text-danger:eq(8)").css("display", "none");
+                }
+                else {
+                    evt.preventDefault();
+                    $(".text-danger:eq(8)").text("Enter numbers only");
+                    $(".text-danger:eq(8)").css("display", "initial");
+                }
+
+            });
+
+            $("#course").change(function () {
+                debugger;
+                var id1 = $(this).val();
+                $.get("Sub_Course", { Univ_Course_ID: id1 }, function (data) {
+                   // $("#subCourse").html(data);
+                    alert(data);
+                });
+
+                    //$.get('/Student/Sub_Course/' + $(this).val(), {},
+                    //function (data, status) {
+                    //    if (!data.success) {
+                    //        alert('User ID is invalid!');
+                    //    }
+                    //    else {
+                    //        alert(data);
+                    //    }
+
+                    //});
+
+
+            });
+
+
+
+        });
+
+
+    </script>  
+</body>
+</html>

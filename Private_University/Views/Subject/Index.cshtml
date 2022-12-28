@@ -1,0 +1,225 @@
+﻿@model IEnumerable<Private_University.Models.Course>
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="sb2-2-2">
+	<ul>
+		<li>
+			<a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+		</li>
+		<li class="active-bre">
+			<a href="#"> Dashboard</a>
+		</li>
+		<li class="page-back">
+			<a href="#"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+		</li>
+	</ul>
+</div>
+@{
+	if (TempData["Msg"] != null)
+	{
+		@Html.Raw(TempData["Msg"])
+
+	}
+}
+
+<div class="sb2-2-3">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box-inn-sp">
+				<div class="inn-title">
+					<h4>COURSE & SUBJECT LIST</h4>
+					@*<p>All about courses, program structure, fees, best course lists (ranking), syllabus, teaching techniques and other details.</p>*@
+				</div>
+				<div class="tab-inn">
+					@*<div class="row">
+							<p class="col-lg-4 col-md-4 col-sm-6">
+								@Html.ActionLink("Add Subject", "Create", new { }, new { @class = "waves-effect waves-light light-btn waves-input-wrapper waves-button-input" })
+							</p>
+						</div>*@
+					<div class="row">
+
+						<div class="table-responsive table-desi">
+							<table class="table table-hover" id="demoGrid">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>
+											@Html.DisplayNameFor(model => model.Univ_Course_Name)
+										</th>
+										<th>
+										</th>
+										<th>
+											@Html.DisplayNameFor(model => model.Sub_course)
+										</th>
+										<th>
+											Subjects
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model)
+									{
+										if (item.Sub_course.Count > 1)
+										{
+											<tr>
+												<td rowspan="@Html.DisplayFor(modelItem => item.Sub_course.Count)">
+													@Html.DisplayFor(modelItem => item.count)
+												</td>
+												<td rowspan="@Html.DisplayFor(modelItem => item.Sub_course.Count)">
+													<a>
+														<span class="list-enq-name">@Html.DisplayFor(modelItem => item.Univ_Course_Name)</span>
+														<span class="list-enq-city">@Html.DisplayFor(modelItem => item.Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)'s. </span>
+													</a>
+													@Html.HiddenFor(modelItem => item.Univ_Course_ID)
+												</td>
+
+												@for (int i = 0; i < item.Sub_course.Count; i++)
+												{
+													if (i == 0)
+													{
+														<td>
+															@Html.DisplayFor(modelItemsub => item.Sub_course[i].count)
+														</td>
+														<td>
+															<a>
+																<span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Name)</span>
+																<span class="list-enq-city">
+																	@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Code)
+																</span>
+															</a>
+															@Html.HiddenFor(modelItemsub => item.Sub_course[i].Univ_subCourse_ID)
+														</td>
+														<td>
+															@for (int j = 0; j < item.Sub_course[i].semesters.Count; j++)
+															{
+																<span class="list-enq-name">
+																	@Html.DisplayFor(modelItemsubSem => item.Sub_course[i].semesters[j].Sementer_Year)  |
+																	@Html.ActionLink("Add Subject", "Create", new { Univ_Course_ID = item.Univ_Course_ID, Univ_subCourse_ID = item.Sub_course[i].Univ_subCourse_ID, Sem_year = item.Sub_course[i].semesters[j].count }, new { @class = "ad-st-view", data_toggle = "tooltip", title = "Add New Subject for Semester/Year on this course" })
+																</span>
+																<span class="list-enq-city">
+																	<ol>
+																		@for (int k = 0; k < item.Sub_course[i].semesters[j].Subjects.Count; k++)
+																		{
+																			<li>@Html.DisplayFor(modelItemsubSem => item.Sub_course[i].semesters[j].Subjects[k].Subject_Name) [@Html.DisplayFor(modelItemsubSem => item.Sub_course[i].semesters[j].Subjects[k].Subject_Code)]</li>
+																		}
+																	</ol>
+																</span>
+															}
+														</td>
+													}
+													else
+													{
+													<tr>
+														<td>
+															@Html.DisplayFor(modelItemsub => item.Sub_course[i].count)
+														</td>
+														<td>
+															<a>
+																<span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Name)</span>
+																<span class="list-enq-city">
+																	@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Code)
+																</span>
+															</a>
+															@Html.HiddenFor(modelItemsub => item.Sub_course[i].Univ_subCourse_ID)
+														</td>
+														<td>
+															@for (int j = 0; j < item.Sub_course[i].semesters.Count; j++)
+															{
+																<span class="list-enq-name">
+																	@Html.DisplayFor(modelItemsubSem => item.Sub_course[i].semesters[j].Sementer_Year)  |
+																	@Html.ActionLink("Add Subject", "Create", new { Univ_Course_ID = item.Univ_Course_ID, Univ_subCourse_ID = item.Sub_course[i].Univ_subCourse_ID, Sem_year = item.Sub_course[i].semesters[j].count }, new { @class = "ad-st-view", data_toggle = "tooltip", title = "Add New Subject for Semester/Year on this course" })
+																</span>
+																<span class="list-enq-city">
+																	<ol>
+																		@for (int k = 0; k < item.Sub_course[i].semesters[j].Subjects.Count; k++)
+																		{
+																			<li>@Html.DisplayFor(modelItemsubSem => item.Sub_course[i].semesters[j].Subjects[k].Subject_Name) [@Html.DisplayFor(modelItemsubSem => item.Sub_course[i].semesters[j].Subjects[k].Subject_Code)]</li>
+																		}
+																	</ol>
+																</span>
+															}
+														</td>
+													</tr>
+												}
+											}
+												</tr>
+											}
+											else if (item.Sub_course.Count == 1)
+											{
+												<tr>
+													<td>
+														@Html.DisplayFor(modelItem => item.count)
+													</td>
+													<td>
+														<a>
+															<span class="list-enq-name">@Html.DisplayFor(modelItem => item.Univ_Course_Name)</span>
+															<span class="list-enq-city">@Html.DisplayFor(modelItem => item.Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)'s. </span>
+														</a>
+														@Html.HiddenFor(modelItem => item.Univ_Course_ID)
+													</td>
+
+													@foreach (var subc in item.Sub_course)
+													{
+														<td>
+															@Html.DisplayFor(modelItemsub => subc.count)
+														</td>
+														<td>
+															<a>
+																<span class="list-enq-name">@Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Name)</span>
+																<span class="list-enq-city">@Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Code)</span>
+															</a>
+															@Html.HiddenFor(modelItemsub => subc.Univ_subCourse_ID)
+														</td>
+														<td>
+															@for (int j = 0; j < subc.semesters.Count; j++)
+															{
+																<span class="list-enq-name">
+																	@Html.DisplayFor(modelItemsubSem => subc.semesters[j].Sementer_Year)  |
+																	@Html.ActionLink("Add Subject", "Create", new { Univ_Course_ID = item.Univ_Course_ID, Univ_subCourse_ID = subc.Univ_subCourse_ID, Sem_year = subc.semesters[j].count }, new { @class = "ad-st-view", data_toggle = "tooltip", title = "Add New Subject for Semester/Year on this course" })
+																</span>
+																<span class="list-enq-city">
+																	<ol>
+																		@for (int k = 0; k < subc.semesters[j].Subjects.Count; k++)
+																		{
+																			<li>@Html.DisplayFor(modelItemsubSem => subc.semesters[j].Subjects[k].Subject_Name) [@Html.DisplayFor(modelItemsubSem => subc.semesters[j].Subjects[k].Subject_Code)]</li>
+																		}
+																	</ol>
+																</span>
+															}
+														</td>
+													}
+
+												</tr>
+											}
+											else if (item.Sub_course.Count == 0)
+											{
+												<tr>
+													<td>
+														@Html.DisplayFor(modelItem => item.count)
+													</td>
+													<td>
+														<a>
+															<span class="list-enq-name">@Html.DisplayFor(modelItem => item.Univ_Course_Name)</span>
+															<span class="list-enq-city">@Html.DisplayFor(modelItem => item.Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)'s. </span>
+														</a>
+														@Html.HiddenFor(modelItem => item.Univ_Course_ID)
+													</td>
+													<td colspan="2"></td>
+												</tr>
+											}
+										}
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

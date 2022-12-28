@@ -1,0 +1,143 @@
+﻿@model Private_University.Models.University_Course_details
+@using Private_University.Models;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Edit</title>
+
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-1.7.1.min.js"></script>
+    <script src="~/ckeditor/ckeditor.js"></script>
+    <style type="text/css">
+        .CC {
+          
+        }
+    </style>
+</head>
+<body>
+    <h3 style="text-align:center;">Modify Course Information</h3>
+
+    @using (Html.BeginForm("Edit", "Course", FormMethod.Post, new { Class = "s12" }))
+    {
+        @Html.AntiForgeryToken()
+        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+    <table class="table table-condensed" style="width:auto;margin:auto;">
+        <tr>
+            <td>Course ID</td>
+            <td>
+                @Html.DisplayFor(model => model.Univ_Course_ID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Univ_Course_ID, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        @if (Model.Univ_subCourse_ID > 0)
+        {
+            <tr>
+                <td> Choose what to modify ?</td>
+                <td style="line-height:20px; align-items:center;">
+                    Branch
+                    @Html.RadioButton("MType", 1, new { @checked = true, @class = "MT" })
+                    Course
+                    @Html.RadioButton("MType", 2, new { @class = "MT" })
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>@Html.LabelFor(model => model.CourseName)</td>
+            <td>
+                @Html.EditorFor(model => model.CourseName, new { htmlAttributes = new { @class = "form-control CC" } })
+                @Html.ValidationMessageFor(model => model.CourseName, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <td>Course Code</td>
+            <td>
+                @Html.EditorFor(model => model.Univ_Course_Code, new { htmlAttributes = new { @class = "form-control CC" } })
+                @Html.ValidationMessageFor(model => model.Univ_Course_Code, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>@Html.LabelFor(model => model.CourseMode)</td>
+            <td>
+                @Html.DropDownListFor(model => Model.CourseMode, new SelectList(ViewBag.ModeList, "Value", "Text"), "--Select Mode --", new { @class = "form-control CC" })
+                @Html.ValidationMessageFor(model => model.CourseMode, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <td>No of Semesters/Years</td>
+            <td>@Html.EditorFor(model => model.NOYS, new { htmlAttributes = new { @class = "form-control CC" } })</td>
+        </tr>
+        @if (Model.Univ_subCourse_ID > 0)
+        {
+            <tr>
+                <td>@Html.LabelFor(model => model.SubCourseName)</td>
+                <td>
+                    @Html.EditorFor(model => model.SubCourseName, new { htmlAttributes = new { @class = "form-control BC" } })
+                    @Html.ValidationMessageFor(model => model.SubCourseName, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>Branch Code</td>
+                <td>
+                    @Html.EditorFor(model => model.Univ_subCourse_Code, new { htmlAttributes = new { @class = "form-control BC", style = "width:400px" } })
+                    @Html.ValidationMessageFor(model => model.Univ_subCourse_Code, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            @Html.Hidden("ModifyType", 1);
+        }
+        else
+        {
+            @Html.Hidden("ModifyType", 2);
+        }
+        <tr>
+            <td>
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </td>
+            <td>
+                @Html.ActionLink("Back to List", "CourseRpt", new { Type = 1}, new { @class = "btn btn-success" })
+                
+            </td>
+        </tr>
+    </table>
+        @Html.HiddenFor(model => model.Univ_subCourse_ID);
+        @Html.HiddenFor(model => model.Univ_Course_ID);
+       
+
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (@Model.Univ_subCourse_ID> 0) {
+                $('.CC').prop("disabled", true);               
+            }
+            
+
+           
+            $('.MT').change(function () {
+                if (this.value == 1) {
+                    $('.CC').prop("disabled", true);
+                    $('.BC').prop("disabled", false);                  
+                }
+                else if (this.value == 2) {
+                    $('.CC').prop("disabled", false);
+                    $('.BC').prop("disabled", true);                   
+                }
+                $('#ModifyType').val(this.value);               
+               
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Private_University.Models.university_course>
+@{
+    ViewBag.Title = "UniversityCourseList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section>
+    <div class="container com-sp pad-bot-70">
+        <div class="row">
+            <div class="cor about-sp">
+                <div class="ed-about-tit">
+                    <div class="con-title">
+                        <h2>University<span> Course List</span></h2>
+                    </div>
+                </div>
+                <div class="ed-about-sec1">
+                    <div class="ed-advan">
+                        @foreach (var item in Model)
+                        {
+                            <ul>
+                                <li style="margin:0; padding:0;">
+                                    <div class="ed-ad-dec" style="height:300px; width:100%; overflow-y:auto;">
+                                        @if (item.Sub_course.Count > 1)
+                                        {
+                                            <h4 style="position:sticky; top:0; background-color: #dfdfdf;">@Html.DisplayFor(modelItem => item.count) -@Html.DisplayFor(modelItem => item.Univ_Course_Name) ( @Html.DisplayFor(modelItem => item.Univ_Course_Code))</h4>
+                                            <p>Duration of Course: @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)</p>
+                                            <a href="#">Sub Course</a>
+                                            for (int i = 0; i < item.Sub_course.Count; i++)
+                                            {
+                                                if (i == 0)
+                                                {
+                                                    <p>@Html.DisplayFor(modelItemsub => item.Sub_course[i].count). @Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Name)</p>
+
+                                                }
+                                                else
+                                                {
+                                                    <p>@Html.DisplayFor(modelItemsub => item.Sub_course[i].count). @Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Name)</p>
+
+                                                }
+                                            }
+                                        }
+                                        else if (item.Sub_course.Count == 1)
+                                        {
+                                            <h4 style="position:sticky; top:0; background-color: #dfdfdf;">@Html.DisplayFor(modelItem => item.count)- @Html.DisplayFor(modelItem => item.Univ_Course_Name) (@Html.DisplayFor(modelItem => item.Univ_Course_Code))</h4>
+                                            <p>Duration of Course: @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)</p>
+                                            <a href="#">Sub Course</a>
+                                            foreach (var subc in item.Sub_course)
+                                            {
+                                                <p>
+                                                    @Html.DisplayFor(modelItemsub => subc.count). @Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Name)
+                                                </p>
+                                            }
+                                        }
+                                        else if (item.Sub_course.Count == 0)
+                                        {
+                                            <h4 style="position:sticky; top:0; background-color: #dfdfdf;">@Html.DisplayFor(modelItem => item.count)- @Html.DisplayFor(modelItem => item.Univ_Course_Name) (@Html.DisplayFor(modelItem => item.Univ_Course_Code))</h4>
+                                            <a href="#">Sub Course</a>
+                                            <p>
+                                                Duration of Course: @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)
+                                            </p>
+                                        }
+                                    </div>
+                                </li>
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

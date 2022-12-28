@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Private_University.Models.News>
+
+@{
+    ViewBag.Title = "News";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="pop-cour">
+    <div class="container">
+        <div class="row">
+            <div class="cor about-sp">
+                <div class="ed-about-tit">
+                    <div class="con-title" style="margin-top: 40px;">
+                        <h2>@Private_University.Resources.News.Title</h2>
+                        <p>@Private_University.Resources.News.CommName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container com-sp">
+        <div class="row">
+            <div class="cor about-sp">
+                <div class="ed-about-tit">
+                        <div class="ho-event pg-eve-main">
+                            <ul>
+                                @foreach (var item in Model)
+                                {
+                                    <li>
+                                        <div class="ho-ev-date pg-eve-date">
+                                            <span>News</span>
+                                        </div>
+                                        <div class="ho-ev-link pg-eve-desc">
+                                            <a>
+                                                <h4>@Html.DisplayFor(modelItem => item.News_Title)</h4>
+                                            </a>
+                                            <p>@Html.Raw(item.News_Descrip)</p>
+                                        </div>
+                                        <div class="pg-eve-reg">
+                                            <a href="~/File_News/@item.News_File" target="_blank">View</a>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                    </div>
+                    @*<div class="pg-pagina">
+                        <ul class="pagination">
+                            <li class="disabled"><a href="#!"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
+                            <li class="active"><a href="#!">1</a></li>
+                            <li class="waves-effect"><a href="#!">2</a></li>
+                            <li class="waves-effect"><a href="#!">3</a></li>
+                            <li class="waves-effect"><a href="#!">4</a></li>
+                            <li class="waves-effect"><a href="#!">5</a></li>
+                            <li class="waves-effect"><a href="#!"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--SECTION END-->
+@*<section>
+        <div class="ed-res-bg">
+            <div class="container pad-bot-70 ed-res-bg">
+                <div class="row">
+                    <div class="cor about-sp h-gal ed-pho-gal">
+                        <table class="table table-bordered table-responsive">
+                            <thead>
+                                <tr class="text-center text-capitalize">
+                                    <th>S.No.</th>
+                                    <th>News Title and Description</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.count)
+                                        </td>
+                                        <td>
+                                            <span>@Html.DisplayFor(modelItem => item.News_Title)</span>
+                                            <span>@Html.DisplayFor(modelItem => item.News_Descrip)</span>
+                                        </td>
+                                        <td>
+                                            <a href="~/File_News/@item.News_File" target="_blank" class="btn btn-sm btn-warning">view File</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>*@
+

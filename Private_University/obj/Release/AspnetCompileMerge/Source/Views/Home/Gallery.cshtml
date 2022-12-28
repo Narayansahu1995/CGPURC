@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Private_University.Models.Gallery>
+
+@{
+    ViewBag.Title = "Gallery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="pop-cour">
+    <div class="container">
+        <div class="row">
+            <div class="cor about-sp">
+                <div class="ed-about-tit">
+                    <div class="con-title" style="margin-top: 40px;">
+                        <h2>@Private_University.Resources.Gallery.Photo <span>@Private_University.Resources.Gallery.GalleryTitle</span></h2>
+                        <p>@Private_University.Resources.Gallery.CommName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--SECTION START-->
+<section>
+    <div class="ed-res-bg">
+        <div class="container pad-bot-70 ed-res-bg">
+            <div class="row">
+                <div class="cor about-sp h-gal ed-pho-gal">
+                    <ul>
+                        @foreach (var item in Model)
+                        {
+                            <li>
+                                <img src="@Url.Content("~/File_Gallery/" + item.Picture)" class="materialboxed" style="height: 260px;" />
+                                <p class="text-center">@Html.DisplayFor(modelItem => item.Name)</p>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--SECTION END-->

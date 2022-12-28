@@ -1,0 +1,142 @@
+﻿@model IEnumerable<Private_University.Models.StudentList>
+@using Private_University.Models;
+@{    
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentsRpt</title>
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    @Html.Raw(TempData["FinalMsg"])  
+    <h3 style="text-align:center;">Students Report</h3> 
+    <hr/>
+    <table class="table table-bordered">  @*table table-bordered style="width:auto;margin:auto;*@
+        <tr class="bg-primary">
+            <th>
+                @Html.DisplayNameFor(model => model.count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment_Number)
+            </th> 
+            <th>
+                Student ID
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Father_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date_of_Birth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aadhar_Number)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Date_of_Admission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile_Number_Stu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile_Number_Father)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email_ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Univ_Course_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Univ_subCourse_Name)
+            </th>            
+            <th>
+                @Html.DisplayNameFor(model => model.Course_Mode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Semester_Year)
+            </th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Admission Cancel</th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Enrollment_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Father_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td style="white-space:nowrap;">
+                @Html.DisplayFor(modelItem => item.Date_of_Birth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Aadhar_Number)
+            </td>
+           
+            <td style="white-space:nowrap;">
+                @Html.DisplayFor(modelItem => item.Date_of_Admission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile_Number_Stu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile_Number_Father)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>           
+            <td>
+                @Html.DisplayFor(modelItem => item.Univ_Course_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Univ_subCourse_Name)
+            </td>           
+            <td>
+                @Html.DisplayFor(modelItem => item.Course_Mode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Semester_Year)
+            </td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id = item.Student_ID }, new { @class = "btn btn-primary btn-sm" })</td>
+            <td>@Html.ActionLink("Delete", "Delete", new { id = item.Student_ID }, new { @class = "btn btn-primary btn-sm" })</td>
+            <td>@Html.ActionLink("Admission Cancel","CancelAdmission", new { id = item.Student_ID }, new { @class = "btn btn-primary btn-sm" })</td>                  
+           
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

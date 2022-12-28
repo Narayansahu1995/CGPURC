@@ -1,0 +1,339 @@
+﻿@model IEnumerable<Private_University.Models.UniversityDetailsWithFeesDetails>
+@{
+    ViewBag.Title = "UniversityFees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    @@media only screen and (max-width : 960px) {
+        #fees {
+            display: none;
+        }
+
+        #fees_mob {
+            display: block;
+        }
+    }
+
+    @@media only screen and (min-width : 960px) {
+        #fees {
+            display: block;
+        }
+
+        #fees_mob {
+            display: none;
+        }
+    }
+</style>
+<!--SECTION START-->
+@foreach (var item in Model)
+{
+    <section>
+        <div class="search-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center" style="color:white;">@item.University_Name</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--END HEADER SECTION-->
+    <div class="container" id="fees">
+        <div class="row">
+            <div class="table-responsive table-desi">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                Course Name
+                            </th>
+                            <th></th>
+                            <th>
+                                Sub-Course Name
+                            </th>
+                            <th>Semester's / Year's Fees Amount </th>
+                        </tr>
+                    </thead>
+                    @for (int i = 0; i < item.Course_Fees_Data.Count; i++)
+                    {
+                        <tbody>
+                            @if (item.Course_Fees_Data[i].Sub_course.Count > 1)
+                            {
+                                <tr>
+                                    <td rowspan="@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Sub_course.Count)">
+                                        @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].count)
+                                    </td>
+                                    <td rowspan="@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Sub_course.Count)">
+                                        <a>
+                                            <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Name)</span>
+                                            <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Number_of_Year_Sem)'s. </span>
+                                        </a>
+                                        @Html.HiddenFor(modelItem => item.Course_Fees_Data[i].Univ_Course_ID)
+                                    </td>
+
+                                    @for (int k = 0; k < item.Course_Fees_Data[i].Sub_course.Count; k++)
+                                    {
+                                        if (k == 0)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].count)
+                                            </td>
+                                            <td>
+                                                <a>
+                                                    <span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Name)</span>
+                                                    <span class="list-enq-city">
+                                                        @Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Code)
+                                                    </span>
+                                                </a>
+                                                @Html.HiddenFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_ID)
+                                            </td>
+                                            <td>
+                                                @for (int j = 0; j < item.Course_Fees_Data[i].Sub_course[k].semesters.Count; j++)
+                                                {
+                                                    <span class="list-enq-name">
+                                                        @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Sementer_Year)  |  @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Fees)
+                                                    </span>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].count)
+                                            </td>
+                                            <td>
+                                                <a>
+                                                    <span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Name)</span>
+                                                    <span class="list-enq-city">
+                                                        @Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Code)
+                                                    </span>
+                                                </a>
+                                                @Html.HiddenFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_ID)
+                                            </td>
+                                            <td>
+                                                @for (int j = 0; j < item.Course_Fees_Data[i].Sub_course[k].semesters.Count; j++)
+                                                {
+                                                    <span class="list-enq-name">
+                                                        @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Sementer_Year)  |  @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Fees)
+                                                    </span>
+
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                    </tr>
+                                }
+                                else if (item.Course_Fees_Data[i].Sub_course.Count == 1)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].count)
+                                        </td>
+                                        <td>
+                                            <a>
+                                                <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Name)</span>
+                                                <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Number_of_Year_Sem)'s. </span>
+                                            </a>
+                                            @Html.HiddenFor(modelItem => item.Course_Fees_Data[i].Univ_Course_ID)
+                                        </td>
+
+                                        @foreach (var subc in item.Course_Fees_Data[i].Sub_course)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItemsub => subc.count)
+                                            </td>
+                                            <td>
+                                                <a>
+                                                    <span class="list-enq-name">@Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Name)</span>
+                                                    <span class="list-enq-city">@Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Code)</span>
+                                                </a>
+                                                @Html.HiddenFor(modelItemsub => subc.Univ_subCourse_ID)
+                                            </td>
+                                            <td>
+                                                @for (int j = 0; j < subc.semesters.Count; j++)
+                                                {
+                                                    <span class="list-enq-name">
+                                                        @Html.DisplayFor(modelItemsubSem => subc.semesters[j].Sementer_Year)  |  @Html.DisplayFor(modelItemsubSem => subc.semesters[j].Fees)
+
+                                                    </span>
+                                                }
+                                            </td>
+                                        }
+
+                                    </tr>
+                                }
+                                else if (item.Course_Fees_Data[i].Sub_course.Count == 0)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].count)
+                                        </td>
+                                        <td>
+                                            <a>
+                                                <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Name)</span>
+                                                <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Number_of_Year_Sem)'s. </span>
+                                            </a>
+                                            @Html.HiddenFor(modelItem => item.Course_Fees_Data[i].Univ_Course_ID)
+                                        </td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                }
+
+                        </tbody>
+                    }
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="container" id="fees_mob">
+        <div class="row">
+            @* mobile view show start *@
+
+            <div class="col-lg-5 col-xl-4 grid-margin grid-margin-xl-0 stretch-card" id="fees_mob">
+
+                @for (int i = 0; i < item.Course_Fees_Data.Count; i++)
+                {
+                    <div class="card">
+                        <div class="card-body mb-3">
+                            <div class="d-flex flex-column">
+                                <div class="w-100">
+
+                                    <table class="table">
+                                        <tbody>
+                                            @if (item.Course_Fees_Data[i].Sub_course.Count > 1)
+                                            {
+                                                <tr>
+                                                    <td rowspan="@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Sub_course.Count)">
+                                                        <a>
+                                                            <span class="list-enq-name">Course Name - @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Name)</span>
+                                                            <span class="list-enq-city">Course Code - @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Number_of_Year_Sem)'s. </span>
+                                                        </a>
+                                                        @Html.HiddenFor(modelItem => item.Course_Fees_Data[i].Univ_Course_ID)
+                                                    </td>
+                                                </tr>
+                                                <tr></tr>
+                                                <tr></tr>
+                                                <tr>
+                                                    @for (int k = 0; k < item.Course_Fees_Data[i].Sub_course.Count; k++)
+                                                    {
+                                                        if (k == 0)
+                                                        {
+                                                        <tr>
+                                                            <td>
+                                                                <a>
+                                                                    <span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Name)</span>
+                                                                    <span class="list-enq-city">
+                                                                        @Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Code)
+                                                                    </span>
+                                                                </a>
+                                                                @Html.HiddenFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_ID)
+
+                                                                @for (int j = 0; j < item.Course_Fees_Data[i].Sub_course[k].semesters.Count; j++)
+                                                                {
+                                                                    <span class="list-enq-name">
+                                                                        @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Sementer_Year)  |  @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Fees)
+                                                                    </span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <tr>
+                                                            <td>
+                                                                <a>
+                                                                    <span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Name)</span>
+                                                                    <span class="list-enq-city">
+                                                                        @Html.DisplayFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_Code)
+                                                                    </span>
+                                                                </a>
+                                                                @Html.HiddenFor(modelItemsub => item.Course_Fees_Data[i].Sub_course[k].Univ_subCourse_ID)
+
+                                                                @for (int j = 0; j < item.Course_Fees_Data[i].Sub_course[k].semesters.Count; j++)
+                                                                {
+                                                                    <span class="list-enq-name">
+                                                                        @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Sementer_Year)  |  @Html.DisplayFor(modelItemsubSem => item.Course_Fees_Data[i].Sub_course[k].semesters[j].Fees)
+                                                                    </span>
+
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                                    </tr>
+
+                                                }
+                                                else if (item.Course_Fees_Data[i].Sub_course.Count == 1)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <a>
+                                                                <span class="list-enq-name">Course Name - @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Name)</span>
+                                                                <span class="list-enq-city">Course Code - @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Number_of_Year_Sem)'s. </span>
+                                                            </a>
+                                                            @Html.HiddenFor(modelItem => item.Course_Fees_Data[i].Univ_Course_ID)
+
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td>
+                                                            @foreach (var subc in item.Course_Fees_Data[i].Sub_course)
+                                                            {
+
+                                                                <a>
+                                                                    <span class="list-enq-name">Sub Course Name - @Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Name)</span>
+                                                                    <span class="list-enq-city">Sub Course Code - @Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Code)</span>
+                                                                </a>
+                                                                @Html.HiddenFor(modelItemsub => subc.Univ_subCourse_ID)
+
+                                                                @*<td>*@
+                                                                <b>Semester/Year and Fees</b>
+                                                                for (int j = 0; j < subc.semesters.Count; j++)
+                                                                {
+                                                                    <span class="list-enq-name">
+                                                                        @Html.DisplayFor(modelItemsubSem => subc.semesters[j].Sementer_Year)  |  @Html.DisplayFor(modelItemsubSem => subc.semesters[j].Fees)
+
+                                                                    </span>
+                                                                }
+                                                                @*</td>*@
+                                                            }
+                                                        </td>
+
+                                                        </tr>
+                                                    }
+                                                    else if (item.Course_Fees_Data[i].Sub_course.Count == 0)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <a>
+                                                                    <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Name)</span>
+                                                                    <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Course_Fees_Data[i].Number_of_Year_Sem)'s. </span>
+                                                                </a>
+                                                                @Html.HiddenFor(modelItem => item.Course_Fees_Data[i].Univ_Course_ID)
+                                                            </td>
+                                                            <td colspan="2"></td>
+                                                        </tr>
+                                                    }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @* mobile view show end *@
+        </div>
+    </div>
+
+}
+

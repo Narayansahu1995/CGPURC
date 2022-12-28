@@ -1,0 +1,96 @@
+﻿@model Private_University.Models.University_office_bearer_Insert
+@using Private_University.Models;
+@{
+    ViewBag.Title = "UniversityOfficeBearer";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("UniversityOfficeBearerShow","University")"><i class="fa fa-backward" aria-hidden="true"></i>Back to Office Bearer List</a>
+        </li>
+
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+    }
+}
+
+<!--== DASHBOARD INFO ==-->
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form">
+                <div class="inn-title">
+                    <h4>ADD NEW OFFICE BEARER</h4>
+                    @*<p>All about courses, program structure, fees, best course lists (ranking), syllabus, teaching techniques and other details.</p>*@
+                </div>
+                <div class="tab-inn">
+
+                    @using (Html.BeginForm("UniversityOfficeBearer", "University", FormMethod.Post, new { enctype = "multipart/form-data", Class = "s12" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+                        <div class="form-horizontal">
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Name, new { htmlAttributes = new { @class = "validate" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Designation, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextAreaFor(model => model.Designation, new { htmlAttributes = new { @class = "materialize-textarea" } })
+                                    @Html.ValidationMessageFor(model => model.Designation, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Other, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Other, new { htmlAttributes = new { @class = "validate" } })
+                                    @Html.ValidationMessageFor(model => model.Other, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Picture, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <input type="file" name="File_Upload" required accept="image/jpg, image/jpeg" />
+                                    @Html.ValidationMessageFor(model => model.Picture, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.Entry_By, new { Value = ARespo.Login_ID })
+                                    @Html.HiddenFor(model => model.University_ID, new { Value = ARespo.University_ID })
+                                    @Html.HiddenFor(model => model.Picture, new { Value = "FileName" })
+                                    
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-6 col-md-6">
+                                    <input type="submit" value="Create" class="waves-effect waves-light light-btn waves-input-wrapper waves-button-input" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div>
+                        @Html.ActionLink("Back to List", "Index")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

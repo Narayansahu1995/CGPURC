@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Private_University.Models.UniversityShow>
+
+@{
+    ViewBag.Title = "UniversityList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>UniversityList</h2>
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#"> University Details</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("AddMasterUniversity","Commission") "><i class="fa fa-backward" aria-hidden="true"></i>Add University</a>
+        </li>
+    </ul>
+</div>
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>University Details</h4>
+                </div>
+                <div class="tab-inn">
+                    <div class="table-responsive table-desi">
+                        <table class="table table-hover" id="demoGrid">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.count)
+                                    </th>
+                                    <th>
+                                        University Details
+                                    </th>
+                                    <th>
+                                        Contact Details
+                                    </th>
+                                    <th>
+                                        Address Details
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.count)
+                                    </td>
+                                    <td>
+                                        <b>University :</b>@Html.DisplayFor(modelItem => item.University_Name)<br/>
+                                        <b>Establish Year: </b> @Html.DisplayFor(modelItem => item.Establishment_Year)<br/>
+                                        <b>Registration No.: </b>@Html.DisplayFor(modelItem => item.Registration_Number)<br/>
+                                    </td>
+                                    <td>
+                                        <b> Contact:</b>  @Html.DisplayFor(modelItem => item.Contact_Number)<br />
+                                        <b>Email ID :</b> @Html.DisplayFor(modelItem => item.Email_ID)<br />
+                                        <b>Website:</b> @Html.DisplayFor(modelItem => item.Website_URL)<br />
+                                    </td>
+                                    <td>
+                                        <b>Address </b>: @Html.DisplayFor(modelItem => item.Address)<br />
+                                        <b>PIN Code :</b> @Html.DisplayFor(modelItem => item.Pin_Code)<br />
+                                    </td>
+
+
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,183 @@
+﻿@model IEnumerable<Private_University.Models.university_course>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@*<script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>*@
+
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="#"> Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="#"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+        </li>
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+
+    }
+}
+
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>COURSE & SUBJECT LIST</h4>
+                    @*<p>All about courses, program structure, fees, best course lists (ranking), syllabus, teaching techniques and other details.</p>*@
+                </div>
+                <div class="tab-inn">
+                    <div class="row">
+                        <p class="col-lg-4 col-md-4 col-sm-6">
+                            @Html.ActionLink("Create Course", "Create", new { }, new { @class = "waves-effect waves-light light-btn waves-input-wrapper waves-button-input" })
+                        </p>
+                    </div>
+                    <div class="row">
+
+                        <div class="table-responsive table-desi">
+                            <table class="table table-hover" id="demoGrid">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Univ_Course_Name)
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                        <th>
+
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Sub_course)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        if (item.Sub_course.Count > 1)
+                                        {
+                                            <tr>
+                                                <td rowspan="@Html.DisplayFor(modelItem => item.Sub_course.Count)">
+                                                    @Html.DisplayFor(modelItem => item.count)
+                                                </td>
+                                                <td rowspan="@Html.DisplayFor(modelItem => item.Sub_course.Count)">
+                                                    <a>
+                                                        <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Univ_Course_Name)</span>
+                                                        <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)'s. </span>
+                                                    </a>
+                                                    @Html.HiddenFor(modelItem => item.Univ_Course_ID)
+                                                </td>
+                                                <td rowspan="@Html.DisplayFor(modelItem => item.Sub_course.Count)">
+                                                    @Html.ActionLink("Add New", "Branch", new { id = item.Univ_Course_ID }, new { @class = "ad-st-view", onclick = "return confirm('Are sure you wants to Add new COURSE/SUB-COURSE/BRANCH..?');", data_toggle = "tooltip", title = "Add New COURSE / SUB-COURSE / BRANCH" })
+                                                </td>
+                                                @for (int i = 0; i < item.Sub_course.Count; i++)
+                                                {
+                                                    if (i == 0)
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItemsub => item.Sub_course[i].count)
+                                                        </td>
+                                                        <td>
+                                                            <a>
+                                                                <span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Name)</span>
+                                                                <span class="list-enq-city">@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Code)</span>
+                                                            </a>
+                                                            @Html.HiddenFor(modelItemsub => item.Sub_course[i].Univ_subCourse_ID)
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItemsub => item.Sub_course[i].count)
+                                                        </td>
+                                                        <td>
+                                                            <a>
+                                                                <span class="list-enq-name">@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Name)</span>
+                                                                <span class="list-enq-city">@Html.DisplayFor(modelItemsub => item.Sub_course[i].Univ_subCourse_Code)</span>
+                                                            </a>
+                                                            @Html.HiddenFor(modelItemsub => item.Sub_course[i].Univ_subCourse_ID)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                                </tr>
+                                            }
+                                            else if (item.Sub_course.Count == 1)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.count)
+                                                    </td>
+                                                    <td>
+                                                        <a>
+                                                            <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Univ_Course_Name)</span>
+                                                            <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)'s. </span>
+                                                        </a>
+                                                        @Html.HiddenFor(modelItem => item.Univ_Course_ID)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Add New", "Branch", new { id = item.Univ_Course_ID }, new { @class = "ad-st-view", onclick = "return confirm('Are sure you wants to Add new COURSE/SUB-COURSE/BRANCH..?');", data_toggle = "tooltip", title = "Add New COURSE / SUB-COURSE / BRANCH" })
+                                                    </td>
+                                                    @foreach (var subc in item.Sub_course)
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItemsub => subc.count)
+                                                        </td>
+                                                        <td>
+                                                            <a>
+                                                                <span class="list-enq-name">@Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Name)</span>
+                                                                <span class="list-enq-city">@Html.DisplayFor(modelItemsub => subc.Univ_subCourse_Code)</span>
+                                                            </a>
+                                                            @Html.HiddenFor(modelItemsub => subc.Univ_subCourse_ID)
+                                                        </td>
+                                                    }
+
+                                                </tr>
+                                            }
+                                            else if (item.Sub_course.Count == 0)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.count)
+                                                    </td>
+                                                    <td>
+                                                        <a>
+                                                            <span class="list-enq-name">@Html.DisplayFor(modelItem => item.Univ_Course_Name)</span>
+                                                            <span class="list-enq-city">@Html.DisplayFor(modelItem => item.Univ_Course_Code) | Duration of Course : @Html.DisplayFor(modelItem => item.Number_of_Year_Sem)'s. </span>
+                                                        </a>
+                                                        @Html.HiddenFor(modelItem => item.Univ_Course_ID)
+                                                    </td>
+                                                    <td colspan="3">
+                                                        @Html.ActionLink("Add New", "Branch", new { id = item.Univ_Course_ID }, new { @class = "ad-st-view", onclick = "return confirm('Are sure you wants to Add new COURSE/SUB-COURSE/BRANCH..?');", data_toggle = "tooltip", title = "Add New COURSE / SUB-COURSE / BRANCH" })
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

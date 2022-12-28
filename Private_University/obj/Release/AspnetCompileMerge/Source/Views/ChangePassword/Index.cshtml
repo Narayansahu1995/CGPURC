@@ -1,0 +1,326 @@
+﻿@using Private_University.Models;
+@using Private_University.App_Code;
+@model Private_University.Models.ChangePassword
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    
+    
+}
+<style type="text/css">
+    .text-danger {
+        width: auto;
+        background-color: #dfe7f2;
+        box-shadow: 2px 2px 6px darkslategray;
+        color: navy;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: relative;
+        z-index: 1;
+        font-weight: bold;
+        top: 5px;
+        left: 5px; 
+        display:none;       
+    }
+
+        .text-danger::after {
+            content: "";
+            padding: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 8%;
+            margin-left: -10px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent #dfe7f2 transparent;
+            font-size: 14pt;
+            font-weight: bold;
+        }
+
+    .PWDValidation {
+        border: 1px dotted darkgray;
+        /*width: 80%;*/
+        padding-left: 20px;
+        border-radius: 0px 0px 10px 10px;
+        font-weight: bold;
+        line-height: 20px;
+    }
+
+        .PWDValidation > OL > li {
+            position: relative;
+            left: 5%;
+        }
+
+    .Valid {
+        color: green;
+    }
+
+        .Valid:before {
+            position: absolute;
+            left: -10%;
+            content: "✔";
+        }
+
+    .invalid {
+        color: red;
+    }
+
+        .invalid:before {
+            position: absolute;
+            left: -10%;
+            content: "✖";
+        }
+</style>
+
+@{if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"]);
+        
+    }
+}
+
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form">
+                <div class="inn-title">
+                    <h4>CHANGE PASSWORD </h4>
+                </div>
+                <div class="tab-inn">
+
+                   
+
+                    @using (Html.BeginForm("Index", "ChangePassword", FormMethod.Post, new { Class = "s12" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+                        @Html.HiddenFor(c => c.Login_ID, new { Value = ARespo.Login_ID })
+
+
+                    <div class="form-horizontal">
+
+                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.CurrentPassword, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.PasswordFor(c => c.CurrentPassword, new { @class = "validate" })
+                                @Html.ValidationMessageFor(c => c.CurrentPassword, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.NewPassword, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.PasswordFor(c => c.NewPassword, new {  @class = "validate" })
+                                @Html.ValidationMessageFor(c => c.NewPassword, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group PWDValidation">
+                            <span style="width: inherit; text-align: center;">Password must contain the following:</span>
+                            <ol>
+                                <li class="LowerCase">A Lowercase letter [a-z]</li>
+                                <li class="UpperCase">A Capital (Uppercase) letter [A-Z]</li>
+                                <li class="Numbers">A Number [0-9]</li>
+                                <li class="SpclChar">A Special Characters [!,%,&,@@,#,$,^,*,?,_,~]</li>
+                                <li class="MinLngt">Minimum 8 characters</li>
+                            </ol>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.ConfirmPassword, htmlAttributes: new {  @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.PasswordFor(c => c.ConfirmPassword, new { @class = "validate" })
+                                @Html.ValidationMessageFor(c => c.ConfirmPassword, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="s12 log-ch-bx">
+                            <p>
+                                @*@Html.HiddenFor(a => a.captchaValue, new { Value = "1234" })*@
+                                @*@Html.HiddenFor(a => a.IpAddress, new { Value = Request.UserHostAddress.ToString() })*@
+                            </p>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-6 col-md-6">
+                                @*class="waves-effect waves-light light-btn waves-input-wrapper waves-button-input"*@
+                                <input type="submit" value="Change Password" id="ChangePWDBtn" class="waves-effect waves-light light-btn waves-input-wrapper waves-button-input"/>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    }
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+
+    $(document).ready(function () {
+        for (var i = 0; i <= $('.text-danger').length; i++) {
+            if ($('.text-danger:eq(' + i + ')').text().length > 0) {
+                $('.text-danger:eq(' + i + ')').css("display", "initial");
+            }
+            else {
+                $('.text-danger:eq(' + i + ')').css("display", "none");
+            }
+        }
+      
+
+        $('.validate').change(function () {
+            var i = $(".validate").index($(this));
+            if ($(".validate:eq(" + i + ")").val().length > 0) {
+                $('.text-danger:eq(' + i + ')').text("");
+                $('.text-danger:eq(' + i + ')').css("display", "none");
+            }
+        });
+
+
+
+        $("#CurrentPassword").focusout(function () {
+            if ($(this).val().length == 0)
+            {
+                $(".text-danger:eq(0)").text("Enter current Password");
+                $(".text-danger:eq(0)").css("display", "initial");
+            }
+        });
+
+        $("#NewPassword").keyup(function () {
+                if ($(this).val().match(/[a-z]/g)) {
+                    $(".LowerCase").removeClass("invalid");
+                    $(".LowerCase").addClass("Valid");
+                }
+                else {
+                    $(".LowerCase").removeClass("Valid");
+                }
+
+                if ($(this).val().match(/[A-Z]/g)) {
+                    $(".UpperCase").removeClass("invalid");
+                    $(".UpperCase").addClass("Valid");
+                }
+                else {
+
+                    $(".UpperCase").removeClass("Valid");
+                }
+
+                if ($(this).val().match(/[0-9]/g)) {
+                    $(".Numbers").removeClass("invalid");
+                    $(".Numbers").addClass("Valid");
+                }
+                else {
+                    $(".Numbers").removeClass("Valid");
+                }
+
+                if ($(this).val().length >= 8) {
+                    $(".MinLngt").removeClass("invalid");
+                    $(".MinLngt").addClass("Valid");
+                }
+                else {
+                    $(".MinLngt").removeClass("Valid");
+                }
+
+                if ($(this).val().match(/([!,%,&,@@,#,$,^,*,?,_,~])/)) {
+                    $(".SpclChar").removeClass("invalid");
+                    $(".SpclChar").addClass("Valid");
+                }
+                else {
+                    $(".SpclChar").removeClass("Valid");
+                }
+           
+            if ($(this).val() != $("#ConfirmPassword").val() && $("#ConfirmPassword").val().length > 0) {
+                $(".text-danger:eq(2)").text("Confirm password does not match");
+                $(".text-danger:eq(2)").css("display", "initial");
+            }
+            else {
+                $(".text-danger:eq(1)").text("");
+                $(".text-danger:eq(1)").css("display", "none");
+            }
+            PWDpolicyCheck();
+
+            });
+
+        $("#NewPassword").focusout(function () {
+
+                if (!$(this).val().match(/[a-z]/g)) {
+                    $(".LowerCase").addClass("invalid");
+                }
+                if (!$(this).val().match(/[A-Z]/g)) {
+                    $(".UpperCase").addClass("invalid");
+                }
+
+                if (!$(this).val().match(/[0-9]/g)) {
+                    $(".Numbers").addClass("invalid");
+                }
+
+                if ($(this).val().length < 8) {
+                    $(".MinLngt").addClass("invalid");
+                }
+
+                if (!$(this).val().match(/([!,%,&,@@,#,$,^,*,?,_,~])/)) {
+                    $(".SpclChar").addClass("invalid");
+                }
+                if ($(this).val().length == 0)
+                {
+                    $(".text-danger:eq(1)").text("Enter New Password");
+                    $(".text-danger:eq(1)").css("display", "initial");
+                }
+                if ($(this).val() == $("#CurrentPassword").val())
+                {
+                    $(".text-danger:eq(1)").text("New password can not be same as current password !");
+                    $(".text-danger:eq(1)").css("display", "initial");
+                }
+               
+                PWDpolicyCheck();
+
+            });
+
+        $("#ConfirmPassword").keyup(function () {                
+            PWDpolicyCheck();
+            });
+
+        $("#ConfirmPassword").focusout(function () {
+            if ($(this).val() != $("#NewPassword").val() && $("#NewPassword").val().length > 0)
+            {
+                $(".text-danger:eq(2)").text("Confirm password does not match");
+                $(".text-danger:eq(2)").css("display", "initial");
+            }
+            else
+            {
+                $(".text-danger:eq(2)").text("");
+                $(".text-danger:eq(2)").css("display", "none");
+            }
+            if ($(this).val().length == 0)
+            {
+                $(".text-danger:eq(2)").text("Enter confirm password");
+                $(".text-danger:eq(2)").css("display", "initial");
+            }
+
+
+            PWDpolicyCheck();
+        });
+
+        function PWDpolicyCheck() {
+            if ($("#NewPassword").val().match(/[a-z]/g) &&
+              $("#NewPassword").val().match(/[A-Z]/g) &&
+              $("#NewPassword").val().match(/[0-9]/g) &&
+              $("#NewPassword").val().length >= 8 &&
+              $("#NewPassword").val().match(/([!,%,&,@@,#,$,^,*,?,_,~])/) &&
+              $("#NewPassword").val() == $("#ConfirmPassword").val()) {
+                $("#ChangePWDBtn").attr("disabled", false);
+            }
+            else {
+                $("#ChangePWDBtn").attr("disabled", true);
+            }
+        }
+    });
+</script>
+

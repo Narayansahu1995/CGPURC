@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AAFTUniversity" xml:space="preserve">
+    <value>एएएफटी विश्वविद्यालय</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>अधिक </value>
+  </data>
+  <data name="AMITYUniversity" xml:space="preserve">
+    <value>एमिटी विश्वविद्यालय</value>
+  </data>
+  <data name="AnnualDetails" xml:space="preserve">
+    <value>वार्षिक विवरण</value>
+  </data>
+  <data name="AnnualReport" xml:space="preserve">
+    <value>वार्षिक रिपोर्ट</value>
+  </data>
+  <data name="AntiHarassment" xml:space="preserve">
+    <value>उत्पीड़न - विरोधी</value>
+  </data>
+  <data name="AntiRagging" xml:space="preserve">
+    <value>रैगिंग के विरोध</value>
+  </data>
+  <data name="BhartiUniversity" xml:space="preserve">
+    <value>भारती विश्वविद्यालय</value>
+  </data>
+  <data name="Bilaspur" xml:space="preserve">
+    <value>बिलासपुर</value>
+  </data>
+  <data name="CGPURC" xml:space="preserve">
+    <value>छग निजी विवि नियामक आयोग</value>
+  </data>
+  <data name="DevSanskriti" xml:space="preserve">
+    <value>देव संस्कृति</value>
+  </data>
+  <data name="DrCVRamanUniversity" xml:space="preserve">
+    <value>डॉ. सी.वी. रमन विश्वविद्यालय</value>
+  </data>
+  <data name="Durg" xml:space="preserve">
+    <value>दुर्ग</value>
+  </data>
+  <data name="Gariyaband" xml:space="preserve">
+    <value>गरियाबंद</value>
+  </data>
+  <data name="GovName" xml:space="preserve">
+    <value>सुश्री अनुसुइया उइके</value>
+  </data>
+  <data name="GovPost" xml:space="preserve">
+    <value>माननीय राज्यपाल, छत्तीसगढ़</value>
+  </data>
+  <data name="ICFAIUniversity" xml:space="preserve">
+    <value>आईसीएफएआई विश्वविद्यालय</value>
+  </data>
+  <data name="ISBMUniversity" xml:space="preserve">
+    <value>आईएसबीएम विश्वविद्यालय</value>
+  </data>
+  <data name="ITMUniversity" xml:space="preserve">
+    <value>आईटीएम विश्वविद्यालय</value>
+  </data>
+  <data name="KalingaUniversity" xml:space="preserve">
+    <value>कलिंगा विश्वविद्यालय</value>
+  </data>
+  <data name="KKModiUniversity" xml:space="preserve">
+    <value>केके मोदी यूनिवर्सिटी</value>
+  </data>
+  <data name="KotaBilaspur" xml:space="preserve">
+    <value>कोटा बिलासपुर</value>
+  </data>
+  <data name="LatestNews" xml:space="preserve">
+    <value>ताजा खबर</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value> का स्थान</value>
+  </data>
+  <data name="MaharshiUniversity" xml:space="preserve">
+    <value>महर्षि विश्वविद्यालय</value>
+  </data>
+  <data name="MATSUniversity" xml:space="preserve">
+    <value>मैट्स यूनिवर्सिटी</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value> जानकारी</value>
+  </data>
+  <data name="NavaRaipur" xml:space="preserve">
+    <value>नवा रायपुर</value>
+  </data>
+  <data name="Objectives" xml:space="preserve">
+    <value>उद्देश्य</value>
+  </data>
+  <data name="OPJindalUniversity" xml:space="preserve">
+    <value>ओपी जिंदल विश्वविद्यालय</value>
+  </data>
+  <data name="OrgStruct" xml:space="preserve">
+    <value>संगठन संरचना</value>
+  </data>
+  <data name="OurValues" xml:space="preserve">
+    <value>हमारे आदर्श</value>
+  </data>
+  <data name="PreventionRagging" xml:space="preserve">
+    <value>रैगिंग की रोकथाम</value>
+  </data>
+  <data name="Raigarh" xml:space="preserve">
+    <value>रायगढ़</value>
+  </data>
+  <data name="Raipur" xml:space="preserve">
+    <value>रायपुर</value>
+  </data>
+  <data name="SexualHarassmentPrevention" xml:space="preserve">
+    <value>यौन उत्पीड़न की रोकथाम</value>
+  </data>
+  <data name="ShriRawatpuraSarkar" xml:space="preserve">
+    <value>श्री रावतपुरा सरकार</value>
+  </data>
+  <data name="ShriShankaracharyaProfessional" xml:space="preserve">
+    <value>श्री शंकराचार्य प्रोफेशनल</value>
+  </data>
+  <data name="TildaRaipur" xml:space="preserve">
+    <value>तिल्दा रायपुर</value>
+  </data>
+  <data name="Universities" xml:space="preserve">
+    <value>विश्वविद्यालयों</value>
+  </data>
+  <data name="UniversityBhilai" xml:space="preserve">
+    <value>विश्वविद्यालय भिलाई</value>
+  </data>
+  <data name="UniversityDurg" xml:space="preserve">
+    <value>विश्वविद्यालय दुर्ग</value>
+  </data>
+  <data name="UniversityRaipur" xml:space="preserve">
+    <value>विश्वविद्यालय रायपुर</value>
+  </data>
+  <data name="VCName" xml:space="preserve">
+    <value>प्रो (डॉ) कर्नल उमेश कुमार मिश्रा</value>
+  </data>
+  <data name="VCPost" xml:space="preserve">
+    <value>अध्यक्ष छग  निजी  विवि  विनियामक आयोग (पूर्व कुलपति)</value>
+  </data>
+  <data name="WorldRecord" xml:space="preserve">
+    <value>विश्व रिकार्ड</value>
+  </data>
+</root>

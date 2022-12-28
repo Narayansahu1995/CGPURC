@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutUs" xml:space="preserve">
+    <value>हमारे बारे में</value>
+  </data>
+  <data name="ActRulesAndRegulations" xml:space="preserve">
+    <value>अधिनियम नियम और विनियम</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>सेक्टर-24, ब्लॉक 7बी, ग्राउंड फ्लोर, नवा रायपुर अटल नगर, रायपुर, छत्तीसगढ़</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>संपर्क करें</value>
+  </data>
+  <data name="DepartmentName" xml:space="preserve">
+    <value>छत्तीसगढ़ निजी विश्वविद्यालय नियामक आयोग</value>
+  </data>
+  <data name="EmailId" xml:space="preserve">
+    <value>ईमेल आईडी</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>प्रतिपुष्टि</value>
+  </data>
+  <data name="FooterAddress" xml:space="preserve">
+    <value>पता- सेक्टर-24, ब्लॉक 7बी, ग्राउंड फ्लोर, नवा रायपुर अटल नगर, रायपुर, छत्तीसगढ़, भारत</value>
+  </data>
+  <data name="FooterCopyName" xml:space="preserve">
+    <value>विभाग द्वारा प्रबंधित सामग्री तथा चिप्स द्वारा डिजाइन और विकसित</value>
+  </data>
+  <data name="FooterCopyright" xml:space="preserve">
+    <value>कॉपीराइट</value>
+  </data>
+  <data name="FooterEmail" xml:space="preserve">
+    <value>ईमेल- cgpurc18[at]gmail[dot]com</value>
+  </data>
+  <data name="FooterLinkAICTE" xml:space="preserve">
+    <value>अखिल भारतीय तकनीकी शिक्षा परिषद्</value>
+  </data>
+  <data name="FooterLinkBarCouncilofIndia" xml:space="preserve">
+    <value>बार काउंसिल ऑफ इंडिया</value>
+  </data>
+  <data name="FooterLinkHigherEducation" xml:space="preserve">
+    <value>उच्च शिक्षा विभाग, छत्तीसगढ़</value>
+  </data>
+  <data name="FooterLinkNcte" xml:space="preserve">
+    <value>राष्ट्रीय अध्यापक शिक्षा परिषद्</value>
+  </data>
+  <data name="FooterLinkRajBhawan" xml:space="preserve">
+    <value>राजभवन, छत्तीसगढ़</value>
+  </data>
+  <data name="FooterLinkUGC" xml:space="preserve">
+    <value>विश्वविद्यालय अनुदान आयोग</value>
+  </data>
+  <data name="FooterPhone" xml:space="preserve">
+    <value>फ़ोन - +91-771-2277580</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>पासवर्ड भूल गए</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>गैलरी</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>मुख्य पृष्ठ</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>भाषा</value>
+  </data>
+  <data name="News" xml:space="preserve">
+    <value>समाचार</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>सूचनाएं</value>
+  </data>
+  <data name="OfficeBearer" xml:space="preserve">
+    <value>पदाधिकारी</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>दूरभाष क्र</value>
+  </data>
+  <data name="Rti" xml:space="preserve">
+    <value>सूचना का अधिकार</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>साइन इन</value>
+  </data>
+  <data name="TextContactUs" xml:space="preserve">
+    <value>संपर्क करें</value>
+  </data>
+  <data name="TextImportantLinks" xml:space="preserve">
+    <value>महत्वपूर्ण लिंक</value>
+  </data>
+  <data name="Universities" xml:space="preserve">
+    <value>विश्वविद्यालय</value>
+  </data>
+</root>

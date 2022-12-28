@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Private_University.Models.StudentFeesDetails>
+@using Private_University.Models;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentFeesList</title>
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+</head>
+
+<body>
+  
+        <h2 style="text-align:center;"> Students Fees Details</h2>
+     
+    <div>
+        <table class="table table-bordered" style="width:auto;margin:auto;">
+            <thead>
+                <tr>
+                    <th>SNo </th>
+                    <th>Student Name</th>
+                    <th>Enrollment No</th>
+                    <th>Pursuing Year/Semester</th>
+                    <th>Bill No</th>
+                    <th>Bill Date</th>
+                    <th>Narration</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() != 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.count)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Student_Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Enrollment_Number)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PYS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bill_Number)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bill_Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Narration)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" style="text-align:center;">
+                            @Html.Label("------------No Records Found -----------")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+   
+
+
+</body>
+</html>
