@@ -315,6 +315,10 @@ namespace Private_University.Controllers
             return View(appClass.Fees_Files_for_University(ARespo.University_ID, ARespo.Session_ID));
         }
 
+
+    
+
+
         [HttpGet]
         [SessionCheck]
         public ActionResult RptUploadedFeesData()
@@ -348,6 +352,72 @@ namespace Private_University.Controllers
                 Msg = "Error in deleting File !!";
             }
             return Msg;
+        }
+
+        [HttpPost]
+        public ActionResult ValidateExcelFile(HttpPostedFileBase file)
+        {
+            // Step 2.1: Check if file is selected
+            if (file == null || file.ContentLength == 0)
+            {
+                TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
+                return View();
+            }
+
+            // Step 2.2: Prepare list to collect invalid records
+            List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
+
+            try
+            {
+                // Step 2.3: Read Excel using EPPlus
+                using (var package = new ExcelPackage(file.InputStream))
+                {
+                    var worksheet = package.Workbook.Worksheets[0]; // first sheet
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    // Step 2.4: Loop through each row (skip header)
+                    for (int row = 2; row <= rowCount; row++)
+                    {
+                        string dateStr = worksheet.Cells[row, 1].Text.Trim();        // Date column
+                        string enrollmentNo = worksheet.Cells[row, 2].Text.Trim();   // Enrollment column
+                        string issues = "";
+
+                        // Step 2.5: Validate date format (DD/MM/YYYY)
+                        if (!DateTime.TryParseExact(dateStr, "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                        {
+                            issues += "Invalid Date Format; ";
+                        }
+
+                        // Step 2.6: Check enrollment number exists in DB
+                        bool exists = appClass.CheckEnrollmentExists(enrollmentNo);
+                        if (!exists)
+                        {
+                            issues += "Enrollment No not found; ";
+                        }
+
+                        // Step 2.7: Add invalid record to list
+                        if (!string.IsNullOrEmpty(issues))
+                        {
+                            invalidRecords.Add(new ExcelValidationResult
+                            {
+                                RowNumber = row,
+                                EnrollmentNo = enrollmentNo,
+                                DateValue = dateStr,
+                                Issues = issues.TrimEnd(' ', ';')
+                            });
+                        }
+                    }
+                }
+
+                // Step 2.8: Return view with invalid records
+                return View("InvalidRecords", invalidRecords);
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
+                return View();
+            }
         }
 
     }
