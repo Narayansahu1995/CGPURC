@@ -259,7 +259,7 @@ namespace Private_University.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to News.
+        ///   Looks up a localized string similar to Notification.
         /// </summary>
         public static string News {
             get {

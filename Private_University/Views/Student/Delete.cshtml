@@ -1,4 +1,6 @@
-﻿@model Private_University.Models.StudentDelete
+﻿
+
+@model Private_University.Models.StudentDelete
 @using Private_University.Models;
 @{
     Layout = null;
@@ -90,7 +92,7 @@
                     }
                 </td>
                 <td>
-                    @Html.ActionLink("Back to List", "StudentsRpt", "", new { @class = "btn btn-success" })
+                    @Html.ActionLink("Back to List", "StudentsRpt", new { Type = 1}, new { @class = "btn btn-success" })
                 </td>
             </tr>
         </table>

@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using Private_University.Models;
 using Private_University.App_Code;
 using System.IO;
+using Razorpay.Api;
+using Razorpay.Api.Errors;
+using System.Configuration;
 
 namespace Private_University.Controllers
 {
@@ -288,7 +291,9 @@ namespace Private_University.Controllers
 					University_ID = Convert.ToInt32(form["hf_University_ID"].ToString()),
 					RequestString = PG_URL,
 					Txn_Number = R.txnID,
-					ReqStringData = R.UnEncryptedURLData
+					ReqStringData = R.UnEncryptedURLData,
+                    Amount = R.Amount
+                    
 				};
 
 				appClass.Insert_payment_string(i);
@@ -322,7 +327,149 @@ namespace Private_University.Controllers
 			return View(aTxnL);
 		}
 
-		[SessionCheck]
+
+        [SessionCheck]
+        public ActionResult FCLforHDFCPG()
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            ModelState.Clear();
+            List<PG_txn_List> PUTxnL = appClass.Get_PU_txn_List(ARespo.University_ID);         
+            return View(PUTxnL);
+        }
+
+       
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [SessionCheck]
+        public ActionResult GoToPay_old(PG_txn_List PGTL)
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+
+            int RNo = new Random().Next(100, 999);
+            String Receipt_Id = "PU" + System.DateTime.Now.ToString("yyyyMMddhhmmss") + RNo;
+
+            RazorpayClient client = new RazorpayClient("rzp_test_e6PwERqvUunUHR", "JZH6W5L2EBFUCOSycfEVaIR6");
+
+
+            //Inputs for the order
+
+            Dictionary<string, object> Input = new Dictionary<string, object>();
+            Input.Add("amount", PGTL.Payble_Amt*100); // amount in the smallest currency unit
+            Input.Add("receipt", Receipt_Id);
+            Input.Add("currency", "INR");
+
+
+            //Order creation            
+            Order TxnOrder = client.Order.Create(Input);
+
+            //ViewBag.OrderId = "order_QgT98ObHLQMoKF";
+            ViewBag.OrderId = TxnOrder["id"].ToString();
+            ViewBag.Key = "rzp_test_e6PwERqvUunUHR";
+            
+
+            RazorPG_Request RPG = new RazorPG_Request
+            {
+                TxnID = Receipt_Id,
+                Order_ID = ViewBag.OrderId,
+                One_Percent_Amt = PGTL.One_Percent_Amt,
+                Penal_Interest = PGTL.Penal_Interest,
+                Payble_Amt = PGTL.Payble_Amt,
+                UniversityID = Convert.ToInt32(PGTL.University_ID.ToString()),
+                UniversityName = PGTL.UniversityName.ToString(),
+                UniversityEmail = PGTL.UniversityEmail.ToString(),
+                UniversityMobile = PGTL.UniversityMobile.ToString(),
+                BillingAddress = PGTL.BillingAddress.ToString(),
+                BillingMonth = PGTL.Txn_Month.ToString(),
+                BillingYear = PGTL.Txn_Year.ToString(),
+                TxnDate = System.DateTime.Now
+            };
+
+            if (ModelState.IsValid)
+            {
+                appClass.Insert_RP_Txn_Details(RPG);      
+            }
+
+            return View(RPG);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [SessionCheck]
+        public ActionResult GoToPay(int University_ID, int Txn_Month, int Txn_Year)
+        {
+            try
+            {
+                AppClass appClass = new AppClass();
+
+                // ✅ Get transaction details from DB
+                PG_txn_List PGTL = appClass.Get_PU_txn_ByMonthYear(University_ID, Txn_Month, Txn_Year);
+
+                if (PGTL == null)
+                {
+                    return HttpNotFound("No pending transaction found for the given month/year.");
+                }
+            
+
+                // ✅ Generate secure receipt id
+                string receiptId = "PU" + DateTime.Now.ToString("yyyyMMddHHmmss") + new Random().Next(100, 999);
+
+                // ✅ Load Razorpay keys from Web.config
+                //string key = ConfigurationManager.AppSettings["RazorpayKey"];
+                //string secret = ConfigurationManager.AppSettings["RazorpaySecret"];
+
+                RazorpayClient client = new RazorpayClient("rzp_test_e6PwERqvUunUHR", "JZH6W5L2EBFUCOSycfEVaIR6");
+
+                // ✅ Amount in paise
+           
+                // ✅ Create Razorpay order
+                var options = new Dictionary<string, object>();
+                options.Add("amount", Convert.ToInt32(PGTL.Payble_Amt * 100)); // paise
+                options.Add("currency", "INR");
+                options.Add("receipt", receiptId);
+
+                Order order = client.Order.Create(options);
+
+                // ✅ Store order ID for verification
+                Session["OrderId"] = order["id"].ToString();
+                ViewBag.Key = "rzp_test_e6PwERqvUunUHR";
+
+                // ✅ Prepare request model for View
+                RazorPG_Request RPG = new RazorPG_Request
+                {
+                    TxnID = receiptId,
+                    Order_ID = order["id"].ToString(),
+                    One_Percent_Amt = PGTL.One_Percent_Amt,
+                    Penal_Interest = PGTL.Penal_Interest,
+                    Payble_Amt = PGTL.Payble_Amt,
+                    UniversityID = PGTL.University_ID,
+                    UniversityName = PGTL.UniversityName,
+                    UniversityEmail = PGTL.UniversityEmail,
+                    UniversityMobile = PGTL.UniversityMobile,
+                    BillingAddress = PGTL.BillingAddress,
+                    BillingMonth = PGTL.Txn_Month.ToString(),
+                    BillingYear = PGTL.Txn_Year.ToString(),
+                    TxnDate = DateTime.Now,
+                   // RazorpayKey = key
+                };
+
+                // ✅ Insert txn in DB for tracking (optional)
+                appClass.Insert_RP_Txn_Details(RPG);
+
+                return View("GoToPay", RPG);
+            }
+            catch (Exception ex)
+            {
+                TempData["FinalMsg"] = "Error while initializing payment: " + ex.Message;
+                return RedirectToAction("PaymentFailed");
+            }
+        }
+
+        [SessionCheck]
 		public ActionResult UniversityFeesCollecton(int id)
 		{
 			AppClass appClass = new AppClass();
@@ -405,6 +552,168 @@ namespace Private_University.Controllers
 			return View();//RedirectToAction("UniversityFeesCollectonList");
 		}
 
+        public ActionResult RazorPayResponse_old()
+        {
+            String TxnStatus_ID = "";
+            AppClass appClass = new AppClass();
+            string PaymentId = Request.Form["razorpay_payment_id"];
+            string Razorpay_Order_Id = Request.Form["razorpay_order_id"];
+            string Razorpay_Signature = Request.Form["razorpay_signature"];
 
+            TxnCheck TC = new TxnCheck();
+            TC = appClass.PGTxnCheck(Razorpay_Order_Id);
+
+            ViewBag.TxnNumber = TC.TxnNumber;
+            ViewBag.TxnAmt = TC.TxnAmount;
+            ViewBag.OrderId = Razorpay_Order_Id;
+
+
+            //Dictionary<string, object> input = new Dictionary<string, object>();
+            //input.Add("amount", 100); // this amount should be same as transaction amount
+
+
+            string key = "rzp_test_e6PwERqvUunUHR";
+            string secret = "JZH6W5L2EBFUCOSycfEVaIR6";
+
+            RazorpayClient client = new RazorpayClient(key, secret);
+            String generated_signature = appClass.HMAC_Sha256(Razorpay_Order_Id + "|" + PaymentId, secret);
+
+            try
+            {
+                Dictionary<string, string> options = new Dictionary<string, string>();
+                options.Add("razorpay_order_id", Razorpay_Order_Id);
+                options.Add("razorpay_payment_id", PaymentId);
+                options.Add("razorpay_signature", Razorpay_Signature);
+
+                //Console.WriteLine("Before signature verification");
+                Utils.verifyPaymentSignature(options);
+                //Console.WriteLine("After signature verification");
+            }
+            catch (Razorpay.Api.Errors.SignatureVerificationError ex)
+            {
+                Console.WriteLine("Exception caught: " + ex.Message);
+                TxnStatus_ID = "2";
+                ViewBag.TxnStatus = "Failed";
+            }
+            //catch (Exception ex)
+            //{
+            //    TxnStatus_ID = "2";
+            //    ViewBag.TxnStatus = "Failed";
+            //}
+
+
+            if (generated_signature == Razorpay_Signature)
+            {
+                ViewBag.TxnStatus = "Success";
+                TxnStatus_ID = "3";
+                appClass.Update_Fees_txn(TC.UniversityId, TC.FMonth, TC.FYear);
+
+            }
+            else
+            {
+                ViewBag.TxnStatus = "Failed";
+                TxnStatus_ID = "2";
+            }
+
+
+            RazorPG_Update RPU = new RazorPG_Update
+            {
+                OrderId = Razorpay_Order_Id,
+                PG_Status_id = TxnStatus_ID,
+                razorpay_payment_id = PaymentId,
+                RP_signature = Razorpay_Signature,
+            };
+
+            appClass.Update_RP_Txn_Details(RPU);
+            return View();
+        }
+
+
+        [HttpPost]
+       
+        public JsonResult RazorPayResponseJson(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature)
+        {
+            string TxnStatus_ID = "2"; // default failed
+            AppClass appClass = new AppClass();
+
+            TxnCheck TC = appClass.PGTxnCheck(razorpay_order_id);
+
+            string key = "rzp_test_e6PwERqvUunUHR";
+            string secret = "JZH6W5L2EBFUCOSycfEVaIR6";
+
+            RazorpayClient client = new RazorpayClient(key, secret);
+
+            string generated_signature = appClass.HMAC_Sha256(razorpay_order_id + "|" + razorpay_payment_id, secret);
+
+            try
+            {
+                Dictionary<string, string> options = new Dictionary<string, string>
+        {
+            { "razorpay_order_id", razorpay_order_id },
+            { "razorpay_payment_id", razorpay_payment_id },
+            { "razorpay_signature", razorpay_signature }
+        };
+
+                Utils.verifyPaymentSignature(options);
+            }
+            catch
+            {
+                TxnStatus_ID = "2";
+                return Json(new
+                {
+                    TxnStatus = "Failed (Signature Mismatch)",
+                    OrderId = razorpay_order_id,
+                    TxnNumber = TC?.TxnNumber ?? "",
+                    TxnAmt = TC?.TxnAmount ?? ""
+                });
+            }
+
+            try
+            {
+                Payment payment = client.Payment.Fetch(razorpay_payment_id);
+                decimal paidAmount = Convert.ToDecimal(payment["amount"]) / 100;
+                decimal expectedAmount = Convert.ToDecimal(TC.TxnAmount);
+
+                if (generated_signature == razorpay_signature && paidAmount == expectedAmount)
+                {
+                    TxnStatus_ID = "3";
+                    appClass.Update_Fees_txn(TC.UniversityId, TC.FMonth, TC.FYear);
+                }
+                else
+                {
+                    TxnStatus_ID = "2";
+                }
+            }
+            catch
+            {
+                TxnStatus_ID = "2";
+            }
+
+            // Save transaction log
+            RazorPG_Update RPU = new RazorPG_Update
+            {
+                OrderId = razorpay_order_id,
+                PG_Status_id = TxnStatus_ID,
+                razorpay_payment_id = razorpay_payment_id,
+                RP_signature = razorpay_signature,
+            };
+            appClass.Update_RP_Txn_Details(RPU);
+
+            return Json(new
+            {
+                TxnStatus = TxnStatus_ID == "3" ? "Success" : "Failed",
+                OrderId = razorpay_order_id,
+                TxnNumber = TC?.TxnNumber ?? "",
+                TxnAmt = TC?.TxnAmount ?? ""
+            });
+        }
+   
+        public ActionResult PGtxnRpt()
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            ModelState.Clear();
+            return View(appClass.PUTxnDetailonPG(ARespo.University_ID));            
+        }
 	}
 }

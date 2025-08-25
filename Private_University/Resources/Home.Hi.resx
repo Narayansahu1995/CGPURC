@@ -160,7 +160,7 @@
     <value>गरियाबंद</value>
   </data>
   <data name="GovName" xml:space="preserve">
-    <value>सुश्री अनुसुइया उइके</value>
+    <value>श्री रमेन डेका</value>
   </data>
   <data name="GovPost" xml:space="preserve">
     <value>माननीय राज्यपाल, छत्तीसगढ़</value>
@@ -246,11 +246,11 @@
   <data name="UniversityRaipur" xml:space="preserve">
     <value>विश्वविद्यालय रायपुर</value>
   </data>
-  <data name="VCName" xml:space="preserve">
-    <value>प्रो (डॉ) कर्नल उमेश कुमार मिश्रा</value>
+  <data name="HODName" xml:space="preserve">
+    <value>प्रोफेसर विजय कुमार गोयल</value>
   </data>
-  <data name="VCPost" xml:space="preserve">
-    <value>अध्यक्ष छग  निजी  विवि  विनियामक आयोग (पूर्व कुलपति)</value>
+  <data name="HODPost" xml:space="preserve">
+    <value>अध्यक्ष छग  निजी  विवि  विनियामक आयोग</value>
   </data>
   <data name="WorldRecord" xml:space="preserve">
     <value>विश्व रिकार्ड</value>

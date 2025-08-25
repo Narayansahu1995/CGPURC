@@ -1,8 +1,8 @@
 ﻿@model Private_University.Models.Student
 @using Private_University.Models;
 @{
-	ViewBag.Title = "AddStudent";
-	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "AddStudent";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <style type="text/css">
@@ -35,6 +35,9 @@
             font-size: 14pt;
             font-weight: bold;
         }
+
+       
+       
 </style>
 
 <div class="sb2-2-2">
@@ -62,7 +65,7 @@
 					@using (Html.BeginForm("AddStudent", "Student", FormMethod.Post, new { Class = "s12" }))
                     {
 						@Html.AntiForgeryToken()
-						AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+                        AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
                     <div class="form-horizontal">
                         @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
                         <div class="form-group">
@@ -215,7 +218,7 @@
                             </div>
                             @Html.Raw(TempData["msg"])
                         </div>
-                        }
+                    }
                     </div>
 			</div>
 		</div>
@@ -225,85 +228,102 @@
 <script>
     $(document).ready(function () {
 
+        //$('input[type="text"]').prop("disabled", true);
+        //$('input[type="date"]').prop("disabled", true);
+        //$('select').prop("disabled", true);
+    
+            var Session_ID = $("#Session_ID").val();
+         
 		$("#subCourse").html("<option>----------Select Sub Course-----------</option>");
-		$("#CourseMode").html("<option>---------Select Course Mode (Year/Semester)-----------</option>");
-		$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
-		for (var i = 0 ; i <= $('.text-danger').length ; i++) {
+        $("#CourseMode").html("<option>---------Select Course Mode (Year/Semester)-----------</option>");
+        $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+            for (var i = 0 ; i <= $('.text-danger').length ; i++) {
 
-		    if ($('.text-danger:eq(' + i + ')').text().length > 0) {
-		        $('.text-danger:eq(' + i + ')').css("display", "initial");
-		    }
-		    else {
-		        $('.text-danger:eq(' + i + ')').css("display", "none");
-		    }
-		}
+                if ($('.text-danger:eq(' + i + ')').text().length > 0) {
+                $('.text-danger:eq(' + i + ')').css("display", "initial");
+            }
+            else {
+                $('.text-danger:eq(' + i + ')').css("display", "none");
+            }
+        }
 
-		$('#Aadhar_Number').keypress(function (evt) {
-		    var data = $('#Number_of_Year_Sem').val();
-		    if (evt.charCode >= 48 && evt.charCode <= 57) {		    
-		                $(".text-danger:eq(4)").text("");
-		                $(".text-danger:eq(4)").css("display", "none");	  
-		    }
-		    else {
-		        evt.preventDefault();
-		        $(".text-danger:eq(4)").text("Enter numbers only");
-		        $(".text-danger:eq(4)").css("display", "initial");
-		    }
+        $('#Aadhar_Number').keypress(function (evt) {
+            var data = $('#Number_of_Year_Sem').val();
+            if (evt.charCode >= 48 && evt.charCode <= 57) {
+                $(".text-danger:eq(4)").text("");
+                $(".text-danger:eq(4)").css("display", "none");
+            }
+            else {
+                evt.preventDefault();
+                $(".text-danger:eq(4)").text("Enter numbers only");
+                $(".text-danger:eq(4)").css("display", "initial");
+            }
 
-		});
+        });
 
-		$('#Mobile_Number_Stu').keypress(function (evt) {
-		    var data = $('#Number_of_Year_Sem').val();
-		    if (evt.charCode >= 48 && evt.charCode <= 57) {
-		        $(".text-danger:eq(7)").text("");
-		        $(".text-danger:eq(7)").css("display", "none");
-		    }
-		    else {
-		        evt.preventDefault();
-		        $(".text-danger:eq(7)").text("Enter numbers only");
-		        $(".text-danger:eq(7)").css("display", "initial");
-		    }
+        $('#Mobile_Number_Stu').keypress(function (evt) {
+            var data = $('#Number_of_Year_Sem').val();
+            if (evt.charCode >= 48 && evt.charCode <= 57) {
+                $(".text-danger:eq(7)").text("");
+                $(".text-danger:eq(7)").css("display", "none");
+            }
+            else {
+                evt.preventDefault();
+                $(".text-danger:eq(7)").text("Enter numbers only");
+                $(".text-danger:eq(7)").css("display", "initial");
+            }
 
-		});
-		$('#Mobile_Number_Father').keypress(function (evt) {
-		    var data = $('#Number_of_Year_Sem').val();
-		    if (evt.charCode >= 48 && evt.charCode <= 57) {
-		        $(".text-danger:eq(8)").text("");
-		        $(".text-danger:eq(8)").css("display", "none");
-		    }
-		    else {
-		        evt.preventDefault();
-		        $(".text-danger:eq(8)").text("Enter numbers only");
-		        $(".text-danger:eq(8)").css("display", "initial");
-		    }
+        });
+        $('#Mobile_Number_Father').keypress(function (evt) {
+            var data = $('#Number_of_Year_Sem').val();
+            if (evt.charCode >= 48 && evt.charCode <= 57) {
+                $(".text-danger:eq(8)").text("");
+                $(".text-danger:eq(8)").css("display", "none");
+            }
+            else {
+                evt.preventDefault();
+                $(".text-danger:eq(8)").text("Enter numbers only");
+                $(".text-danger:eq(8)").css("display", "initial");
+            }
 
-		});
+        });
 
 
-		$("#course").change(function () {
-			var id1 = $(this).val();
-			$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
-			$.get("Sub_Course", { Univ_Course_ID: id1 }, function (data) {
-				$("#subCourse").html(data);
-			});			
-		});
+        $("#course").change(function () {
+            var id1 = $(this).val();
+            $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+            $.get("Sub_Course", { Univ_Course_ID: id1 }, function (data) {
+                $("#subCourse").html(data);
+            });
+        });
 
-		$("#course").change(function () {
-			var id1 = $(this).val();
-			$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
-			$.get("Course_Mode_1", { Univ_Course_ID: id1 }, function (data) {
-				$("#CourseMode").html(data);
-			});
-		});
+        $("#course").change(function () {
+            var id1 = $(this).val();
+            $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+            $.get("Course_Mode_1", { Univ_Course_ID: id1 }, function (data) {
+                $("#CourseMode").html(data);
+            });
+        });
 
-		$("#CourseMode").change(function () {
-		    var id1 = $("#course").find('option:selected').val();
-			$("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
-			$.get("Course_Year_Sem", { Univ_Course_ID: id1 }, function (data) {
-				$("#Year_Sem").html(data);
-			});
-		});
-	});
+        $("#CourseMode").change(function () {
+            var id1 = $("#course").find('option:selected').val();
+            $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+            $.get("Course_Year_Sem", { Univ_Course_ID: id1 }, function (data) {
+                $("#Year_Sem").html(data);
+               
+                //if (Session_ID == 4)
+                //    {
+                //    $("#Year_Sem").val(1);
+                //    $("#Year_Sem").css({ 'pointer-events': 'none', "background-color": "#d3d3d370" });
+                //}
+            });
+
+        });
+
+        //$("#Year_Sem").click(function () {
+        //    $("#Year_Sem option[value='1']").remove();            
+        //});
+    });
 
 
 </script>

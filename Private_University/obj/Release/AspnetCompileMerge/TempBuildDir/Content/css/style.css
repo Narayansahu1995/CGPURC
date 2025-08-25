@@ -1286,12 +1286,18 @@
      background: url(../images/anual_report.jpg) no-repeat;
      background-size: cover;
 }
+
+  .ho-ev-latest-bg-20{
+     background: url(../images/AR_BG.png) no-repeat;
+     background-size: cover;
+}
+
  .ho-ev-latest-bg-21{
-     background: url(../images/prevantion_of_ragging.jpg) no-repeat;
+     background: url(../images/prevantionofragging.jpg) no-repeat;
      background-size: cover;
 }
  .ho-ev-latest-bg-22{
-     background: url(../images/sexual_harassment.jpg) no-repeat;
+     background: url(../images/sexual-harassment.jpg) no-repeat;
      background-size: cover;
 }
  .ho-ev-latest-bg-3{

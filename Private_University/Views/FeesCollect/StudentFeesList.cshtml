@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Private_University.Models.StudentFeesDetails>
 @using Private_University.Models;
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <!DOCTYPE html>
@@ -11,73 +11,327 @@
     <meta name="viewport" content="width=device-width" />
     <title>StudentFeesList</title>
     <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
-</head>
+    <style type="text/css">
+            .hypBtn {
+                display:block;
+                margin: 3px;
+                width: 100px;
+                background-color: #dfebf391;
+                padding: 0;
+                height: 28px;
+                line-height: 26px;
+                text-align:center;
+                border-radius: 4px;
+                font-weight:bold;
+            }
+            .hypBtn:hover {
+                background-color: #678da9;
+                color:white;
+            }
+             @@media print {
+            a[href]:after {
+            content: none !important;
+        }
+    }
+      .Edit_Img
+        {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAkCAMAAAExyiHzAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGkUExURQAAAB4eHhAQECoqKhsbGxYWFhMTEwAAAAMDAwEBAS4uLgQEBFVVVRAQEAYGBpmZmRkZGQ0NDQkJCSEhIRQUFAAAABQUFAQEBFtbWw8PDw4ODgUFBSoqKg0NDQQEBAAAAP///wAAAAAAABEREUxMTBcXFwICAgcHBw8PDwAAABUVFQMDAwoKCi0tLQ0NDTU1NQUFBQAAABERETMzMxsbGxUVFR4eHicnJxcXFwAAAAgICBcXFxAQEBMTE2lpaQYGBgAAAA4ODhcXFxQUFCIiIjAwMAUFBQQEBAMDAw0NDf///xcXFxYWFgAAABAQEDo6Og4ODh0dHQkJCScnJwAAAAgICCAgIBQUFAAAABYWFg8PDx4eHgMDAyIiIg4ODgcHBwQEBB4eHgAAACIiIgAAABAQECkpKQ8PDwQEBAYGBlVVVQYGBgAAAAMDAygoKH9/fwcHBy0tLQYGBg4ODjAwMB8fHwUFBQAAABMTExkZGQAAAP///wEBAQAAAAAAABAQEAUFBSsrKwICAhMTEwgICAcHBwMDAwQEBBcXFwQEBBgYGAYGBje+CZsAAACMdFJOUwB8ex44UHPe/J0W6QOL/AU9iMZxlgVwpQ51kOYYhe6XAQKEkAqL/sByCm3+yzOCE/7VoDY3akIaYok7kG+NEeDSf1e7aBXV8Mp0A41njocjfE/oJwHKdVmeknFE/TR5x+pM5zzUeTeB8uoMlgb6LATEHN+ROgjn/0A7mAL/A0R+70f/dufB//9A7JTkVZZ6mgAAAAlwSFlzAAAXEQAAFxEByibzPwAAAdhJREFUKFONkolfTFEcxX8RQyREimKKhpe9ktBO2bNE1rEvNRFlOZhncKsp/NOd3713zHukOp/5vPc75/u7y7t3xCoQAR84o5WRAHC5pAUdkm7dpBUFBaSYFSQlYAZcZcK2Lo6zCSNt9WIv3hgiDY0i/tbYFsitfshRLcLXIj2u50+RQSsL1ZyNi8pn+Qiw7bLKzgrD3cBuUfbrkBrbocFxtYfkRyG4iZbaXxzEVVwwwYIqBqoMBz2zQfOgVSfw2aHlq24LH090fapEvgGnRBKh3Xa7PNe0URJ517xabYrc+Sa1PDbvLxWs93tpQ5EP3o/KW7VHvjqfxbQcSMo9eL8K4Wl2tRX8uE4R8V5PY/43l4j6buAjXwnjDmTwLB5pXPg+YKfaZetahXu/atgV05exK0xfhjB3ksqDhJ/eaXaY2Qq9cp7HRXaQ5/33eE05SqXu8m9B7i/VqirlIcw+9XF+7L6HMA9cEuWP8x7C9PoowifScnjG0rCOtnJgq6ZF/g47XkjZQ5hymoMb0MPTjfCVIxx5/b1UX1DXZv7mu79v3t43tOeG1gvxuBbh60/mcrnz4X95hjetOlevTnn8fLOTSteVOke+gH5udJT3e+L2P1r7ycOlJDIPnE/QKStcKnUAAAAASUVORK5CYII=') no-repeat;
+            display: block;           
+            height: 34px;
+            text-indent: -9999px; /* hides the link text */                                
+        }
+        .Delete_Img 
+        {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAfCAMAAAFWnHbnAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIHUExURQAAAAoKCqWlpQkJCTExMQYGBiUlJRwcHA4ODgoKCgcHBzw8PCsrKw0NDQgICAQEBA8PDw0NDSwsLBcXFzAwMDk5ORMTEw8PDxMTE01NTQYGBv///ygoKBISEhQUFBUVFTU1NQ8PDxoaGgwMDFRUVAgICBgYGBYWFg8PDycnJy8vL////ywsLEFBQV1dXQkJCRERESwsLAoKChAQENTU1BsbGxwcHAkJCRQUFAoKCkFBQVxcXBISEgQEBCUlJRsbGx0dHTs7OysrKyoqKiAgIFJSUhUVFRsbGyEhIRQUFCcnJxQUFGVlZTIyMgsLCxwcHEhISCgoKBAQEDs7OzExMTU1NQ8PDwkJCSYmJgcHBwoKCh0dHa6urh8fHyAgIBoaGuLi4hAQEBISEhAQEEtLSwoKCkRERC4uLicnJw4ODjk5ORcXFxkZGRUVFRkZGQgICBsbG////w8PDzg4OAQEBBISEhUVFSQkJCEhIU5OToqKig8PDyMjIzk5OUJCQhEREQgICFZWVhQUFP///ywsLCIiImBgYCsrKwsLCyQkJBwcHAgICA8PDwwMDMbGxhERERAQEEFBQSoqKgAAAA8PD3Nzcx4eHmBgYAEBAWpqaiEhIQICAhQUFB8fH1BQULKyshQUFAMDA1BQUAkJCRQUFAsLCxAQEGZmZiQkJImJiRUVFQQEBBsbG3sMokYAAACtdFJOUwDUEdyA/zaf39z/Kkzn//zMwTmsfVWppuor/AR/zMRVR9xY7BvxVZ7/qlwBbDop3tGa8ewGvI75yctCC//+gYO8YmmEhiijnpn/gasZUe65TZzeX2FRpetr4P6AE/r6qwnu5tsv+zyJaNhZsKil1vi7COBW/arIm/83GKdPQxvg9TLYBYOFHZ7tamT9yu0J8MpGbf/SFqUt/xiK/6/APArd/yn6yvLHCm8a3f+yT5fXrQAAAAlwSFlzAAAXEQAAFxEByibzPwAAAdZJREFUKFNtkYdXFDEYxMdyFlQ4xVOsBzZOEQuIWLAB9kZR7IqKYsNeEAtWVGzoWFZPgcXu8kc6yeUeeNzvvd3MfJPkS14AFOuzfGRcfw7XlygwMg+88hPNtKiQHOsjfPLU+RWa2WpXWMtmIy0JD2Qs5pzbGqeNZXSBxt8zOeOSxjaXTw2Hwy+M7JB4hMZz/WhMbpPgFRDnnmXMG8KRg8xa7ODWP4xEOWw8M2Q/8LTOHWXLWX6XfUNOpufxKvnMHGlzzFH20FhglEeOs2qRmo9Ri5ca3/3XlMh2pzFk29l9XHOTDA9wwynDdZwiK8nH5AFyE05qpxMB4j58lmOb3Gu5AB4LUSDXLVeqzp/MnZdMlzsqUQBNeD9B7q+cGoa4ytyKWfa9ilwzMiS3xV0vFptrzuYYqksaqp0XhxKVNBxOvnca+t42LQ0bbtUNZGLTHWW9botUjtcDFU6n0qt12wOJpejMpL8L7R69+VhnSquV9ZRKbMTd2QwiiMYZqsJeXTXYraxrhLK1WLnPZfvvY40qF9Yrw0Wp81Ow3GVFs5CvSk2XyT5L5RzEV5ct/IUSVXaaCLU+6b+9eZk80vOFvDc694eySps1PJdMJThjs8HHnO/Pt0nAP6z9My6JTQ4yAAAAAElFTkSuQmCC') no-repeat;
+            display: block;           
+            height: 34px;
+            text-indent: -9999px; /* hides the link text */                                  
+        }       
+        .Save_Img 
+        {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAASwwAAEsMBci0EygAAA41JREFUSEvtll1Ik1EYx6Vo7svvKfMrwY9NJzgRlWyOjS4m3szJdG7MzQTFLhSHVhKoF0J30bzpMgy2YCATpehKNqR20Ye1SCxvaiFio5lBilpsp+d5eZW5udw7M7rwgT/vdt7zPL9zznue85ykUCgkXV9f15tMppaenp5D0uv16oWFBQv2IYScS4owaE8GmeGdECSA3634f3Nz8+bg4KAGY5rNZvX4+LgJ2q+BDH6/n085Ly8v6xsbG39kZ2cH8/LyDiktLS3Y19f3DhzuQmAu5RBm0M7b2dmZdDqdszab7dHU1NTcysrKQ5/PN1dQULCdk5MTzM3NDQoEglB3d7cP+s9AnIuUM4xMDR1IRkYGycrKOlBmZibh8/mkvb39GTh0gsN5yiHMoJ3j9XrvlZaWUn3ZbDbp6up6HggEWmHgIRg4FQtj83g8otPp3oPPHZAxaWRkpAVnhyAY2YHQITU1lcByI/gyzYoyl8s1XF5eThCC8La2tvnV1dVLhYWFofT09IN4GJ/FYhGLxbK9t7fXGxcYZqukOVHmcDi0EomEIIReIdfa2po8ErwfMyUlhTQ3N98/MXh6eloXLxiFnIqKipl/DkaVlZXZTgyG3awOB8M3PhYsEonsx4INBoMHNpeC5hwyGBBraWlptri4mHA4HGrnwow9Gxsbsr8Bno+1qwHMhnezVqv18ejo6JOhoSGbx+O5DYeErKioKDEwCttKSkoC9fX1b2tqarzV1dWvwyWVShdra2u9SqXyRVNT0xs4iJ7KZLJFePdBKBRSg4+MiToWjMLkxxzFJ/aJFL5D4ergDPE3PmNBUXGBT0Nn4KgOmJdcLpd6YqowERYM3BdQ9aLixgTjxsD/KpUKD5BvGo3mC8gfr7Rard9oNP7CqoXwcCgqJhh3JaTR193d3VuQp1dAIpCYgSSgXshr51G5HBOMo4SD/BN9TiRscPj05+fnR6XWH8FQYz/DqJPpGAlZR0fHdYh9Bv6PwVB9LtAxEjK43A0nOmMOHSMhg119gxEYcw/TCcCdIDEdh5GBn2JiYsKK0LjBWNrEYvH3ra2tSQggpWMxMvhMV8fGxtxYLsOhKAo8MDDQgrf9cPC+5HL5z7q6OizsrxjqJVwOPsKljlq9yLhwKtrxsqbDOxN+18gOWBzQEd8xFd6f0feoItHQ0ODEb6GC5X4Am8leVVV1qqqsrLQrFAqH2+3u/w0HPEIW4lWZFwAAAABJRU5ErkJggg==') no-repeat;
+            display: none;           
+            height: 34px;
+            width:30px;
+            text-indent: -9999px; /* hides the link text */                                  
+        }   
+        .RcvDate {
+            display:none;
+        }
+         .FAmt{
+            width:100px;
+            display:none;
+        }
+    </style>
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        function CheckNum(evt) {
+            if (evt.charCode >= 48 && evt.charCode <= 57) {               
+            }
+            else {
+                evt.preventDefault();                       
+            }
+        }
 
-<body>
-  
-        <h2 style="text-align:center;"> Students Fees Details</h2>
-     
-    <div>
-        <table class="table table-bordered" style="width:auto;margin:auto;">
-            <thead>
-                <tr>
-                    <th>SNo </th>
-                    <th>Student Name</th>
-                    <th>Enrollment No</th>
-                    <th>Pursuing Year/Semester</th>
-                    <th>Bill No</th>
-                    <th>Bill Date</th>
-                    <th>Narration</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Count() != 0)
+
+        function Edit(i) {            
+            if ($(".Save_Img:eq('" + i + "')").css("display") == "none")
                 {
-                    foreach (var item in Model)
+            $(".RcvDate:eq('" + i + "')").css("display", "block");
+            $(".FAmt:eq('" + i + "')").css("display", "block");
+            $(".Save_Img:eq('" + i + "')").css("display", "block");
+            $(".DateTxt:eq('" + i + "')").css("display", "none");
+            $(".FAtxt:eq('" + i + "')").css("display", "none");
+            $(".Edit_Img:eq('" + i + "')").css("display", "none");
+            }          
+        }
+        function Save(i) {            
+            var TxnIDValue = 0;
+            var FeesAmt = 0;
+            var RcvDate = "";
+            TxnIDValue = parseInt($(".TxnID_txt:eq('" + i + "')").text());
+            FeesAmt = parseInt($(".FAmt:eq('" + i + "')").val());
+            RcvDate = $(".RcvDate:eq('" + i + "')").val();
+            
+            if (FeesAmt == 0)
+            {
+                alert("Fees Amount Can not be zero !");
+            }
+            else if(Number.isNaN(FeesAmt))
+            {
+                alert("Enter Fees Amount !");
+            }
+            else
+                {
+            
+            $.post("UpdateFees", { TxnId: TxnIDValue, Amt: FeesAmt, R_Date:RcvDate }, function (data) {
+                alert(data);
+            });
+            location.reload(true);
+            //if ($(".Edit_Img:eq('" + i + "')").css("display") == "none") {
+            //    $(".RcvDate:eq('" + i + "')").css("display", "none");
+            //    $(".FAmt:eq('" + i + "')").css("display", "none");
+            //    $(".Save_Img:eq('" + i + "')").css("display", "none");
+            //    $(".DateTxt:eq('" + i + "')").css("display", "block");
+            //    $(".FAtxt:eq('" + i + "')").css("display", "block");
+            //    $(".Edit_Img:eq('" + i + "')").css("display", "block");
+            //}
+            }
+        }
+
+        function Delete(i) {            
+            debugger;
+            var TxnIDValue = 0;
+            TxnIDValue = parseInt($(".TxnID_txt:eq('" + i + "')").text());
+            $.post("DeleteFees", { TxnId: TxnIDValue }, function (data) {
+                alert(data);
+            });
+            location.reload();
+        }
+
+
+        function CWFReport(MNo,YNo)
+        {
+            $.getJSON("CWFReport", { MonthNo: MNo, Year: YNo }, function (data) {
+                debugger;
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                var MName = urlParams.get('MonthName');
+                
+                $('#FeesRptTbl tbody').empty();
+                $('#FeesRptTbl tfoot').empty();
+                $('#MR').show();
+                $('#HR1').show();               
+                $('#HR3').hide();
+                $('#MName').text(MName);
+                var CR = data;
+                var TotalAmt = 0;
+                var TotalStudents = 0;
+                
+                for (var i = 0; i < CR.length; i++) {
+                    $('#FeesRptTbl tbody').append("<tr> <td> " + (i + 1) +
+                        "</td><td> " + CR[i].Univ_Course_Name +
+                        "</td><td> " + CR[i].Univ_subCourse_Name +
+                        "</td><td style='display: none;'>" + CR[i].Univ_subCourse_ID +
+                        "</td><td style='padding:0;'><a class='hypBtn' href='StudentFeesList?USCID=" + CR[i].Univ_subCourse_ID + "&MonthNo=" + MNo + "&Year=" + YNo + "&CN=" + CR[i].Univ_Course_Name + "&SCN=" +
+                         CR[i].Univ_subCourse_Name + "&MonthName=" + MName + "'>" + CR[i].NoOfStudents +
+                        "</a></td><td style='text-align:right;'>" + CR[i].Fees_AMT +
+                        "</td></tr>");
+                    TotalStudents += parseInt(CR[i].NoOfStudents);
+                    TotalAmt += parseInt(CR[i].Fees_AMT);
+                }
+                $('#FeesRptTbl tfoot').append("<tr style='font-weight:bold;text-align:right;'> <td  colspan='3' style='text-align: right'>Total :- </td><td style='text-align:center;'>" + TotalStudents +
+                    "</td><td>" + TotalAmt + "</td>");
+                $('#FeesRptTbl tfoot').append("<tr><td colspan='8' style='border-color: transparent;text-align:center;'> <a class='btn btn-success' href='/FeesCollect/StudentFeesList'>Back to List</a></td></tr>");
+        });
+
+        }
+
+        function SCWFReport(SC_ID,MNo,YNo) {            
+            $.getJSON("SCWFReport", { USCID: SC_ID, MonthNo: MNo, Year: YNo }, function (data) {
+                
+                var SCSL = data;
+                var FTotal = 0;  
+                var EN = '';
+                var SNo = 1;
+                var SN = '';
+                var PaidCount = 0;
+                $('#FeesRptTbl tbody').empty();
+                $('#FeesRptTbl tfoot').empty();
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                var CName = urlParams.get('CN');
+                var SCName = urlParams.get('SCN');
+                var MName = urlParams.get('MonthName');
+                $('#MName').text(MName);
+                $('#CN').text(CName);
+                $('#SCB').text(SCName);
+                $('#MR').show();
+                $('#HR0').show();
+                $('#HR1').hide();
+                $('#HR2').show();
+                $('#HR3').hide();
+
+                const TodayDate = new Date().toISOString().split('T')[0];
+                let CDate = new Date();
+                //let no_of_months = -2;
+                //CDate.setMonth(CDate.getMonth() + no_of_months);
+                CDate.setMonth(-2);
+                CDate.setDate(1);
+                const StartDate = CDate.toISOString().split('T')[0];
+
+                for (var i = 0; i < SCSL.length; i++) {
+                    if (EN != SCSL[i].Enrollment_Number)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.count)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Student_Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Enrollment_Number)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PYS)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Bill_Number)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Bill_Date)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Narration)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Amount)
-                            </td>
-                        </tr>
+                        SN = SNo;
+                        SNo++;                       
+                    }
+                    else
+                    {
+                        SN = '';
+                    }
+                    $('#FeesRptTbl tbody').append("<tr><td>" + SN +
+                        "</td><td>" + SCSL[i].Enrollment_Number +
+                        "</td><td class='TxnID_txt'>" + SCSL[i].Txn_ID +
+                        "</td><td>" + SCSL[i].Student_Name +
+                        "</td><td>" + SCSL[i].Father_Name +
+                        "</td><td>" + SCSL[i].Semester_Year +
+                        "</td><td><input type='date' class='form-control RcvDate' name='RD' value=" + SCSL[i].DateValue + " max=" + TodayDate + " min=" + StartDate + "><span class='DateTxt'>" + SCSL[i].RCVDate + "</span></td>" +
+                        "<td style='text-align:right;'><input type='text' onkeypress='CheckNum(event)' class='form-control FAmt' value=" + SCSL[i].Fees_Amount + " name='FA' /><span class='FAtxt'>" + SCSL[i].Fees_Amount + "</span></td>" +
+                        
+                        "<td class='EditTD'><a class='Edit_Img' href='javascript:;' onclick='Edit(" + i + ")'>Edit</a><a class='Save_Img' href='javascript:;' onclick='Save(" + i + ")'>Save</a></td>"+
+                        "<td class='DeleteTD'><a class='Delete_Img' href='javascript:;' onclick='Delete(" + i + ")'>Delete</a>" +                        
+                        "</td></tr>");                    
+                    FTotal += parseInt(SCSL[i].Fees_Amount);  
+                    EN = SCSL[i].Enrollment_Number;
+                    if (SCSL[i].Is_Paid == 1) {
+                        PaidCount = PaidCount + SCSL[i].Is_Paid;
+                        $(".EditTD:eq('" + i + "')").hide();
+                        $(".DeleteTD:eq('" + i + "')").hide();
                     }
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="8" style="text-align:center;">
-                            @Html.Label("------------No Records Found -----------")
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                if (PaidCount == SCSL.length) {
+                    $(".ED_TH").hide();
+                   
+                }                
+                $('#FeesRptTbl tfoot').append("<tr style='font-weight:bold;text-align:right;'> <td  colspan='7' style='text-align: right'>Total :- </td><td id='TotalAMT' style='text-align:right;'>" + FTotal
+                    + "</td></tr>");
+                $('#FeesRptTbl tfoot').append("<tr><td colspan='8' style='border-color: transparent;text-align:center;'> <a class='btn btn-success' href='/FeesCollect/StudentFeesList?MonthNo=" + MNo + "&Year=" + YNo + "&MonthName=" + MName + "'>Back to List</a></td></tr>");
+            });
+           
+        }
+    </script>
+</head >
+                <body>
 
-    </div>
-   
+                    <h3 style="text-align:center;"> <b>@Html.Raw(TempData["UnvName"])</b> <br/> Students Fees Details</h3>
+
+                    <div>
+                        <table id="FeesRptTbl" class="table table-bordered" style="width:auto;margin:auto;">
+                            <thead>
+                                <tr>
+                                    <th id="MR" colspan="10" style="display:none;font-weight:bold;text-align:center;font-size:16px">
+                                        Month - <span id="MName"></span>
+                                    </th>
+                                </tr>
+                                <tr id="HR0" style="display:none;font-weight:bold;text-align:center;">
+                                    <td colspan="10" >
+                                        Course Name - <span id="CN"></span>&emsp;
+                                        Course/Sub-Course/Branch - <span id="SCB"></span>
+                                    </td>
+                                </tr>
+                                <tr id="HR1" style="display:none;background-color: #b0c4de73;">
+                                    <th>SNo</th>
+                                    <th>Course Name</th>
+                                    <th>Course/Sub-Course/Branch</th>
+                                    <th style="display:none;">Sub Course ID</th>
+                                    <th>No Of Students</th>
+                                    <th>Fees Amount</th>
+                                </tr>
+                                <tr style="display:none;background-color: #b0c4de73;" id="HR2">
+                                    <th style="text-align:center">SNo </th>
+                                    <th>Enrollment No</th>
+                                    <th>Transection ID</th>
+                                    <th>Student Name</th>
+                                    <th>Father's Name</th>
+                                    <th>Pursuing Year/Semester</th>
+                                    <th>Receiving Date</th>
+                                    <th>Fees Amount</th>
+                                    <th class="ED_TH">Edit</th>
+                                    <th class="ED_TH">Delete</th>
+                                </tr>
+                                <tr id="HR3" style="text-align:center;background-color: #b0c4de73;">
+                                    <th>SNo</th>
+                                    <th>Month</th>
+                                    <th>Year</th>
+                                    <th>Fees Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                            <tfoot> 
+                                                       
+                            </tfoot>
+                        </table>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            const queryString = window.location.search;
+                            const urlParams = new URLSearchParams(queryString);
+                            const SCID = urlParams.get('USCID');
+                            const MNo = urlParams.get('MonthNo');
+                            const YNo = urlParams.get('Year');
+                            
+                            if (SCID == null && MNo == null)
+                            {
+                                $.getJSON("MWFReport",function(data){
+                                    var MR = data;
+                                    var TotalAmt = 0;
+                                    for (var i = 0; i < MR.length; i++){
+                                        $('#FeesRptTbl tbody').append("<tr> <td> " + (i + 1) +
+                                            "</td><td style='padding:0;'><a class='hypBtn' href='StudentFeesList?MonthNo=" + MR[i].MonthNo + "&Year=" + MR[i].YearValue + "&MonthName=" + MR[i].MonthName+" "+MR[i].YearValue + "'>" + MR[i].MonthName +
+                                            
+                                            "</a></td><td> " + MR[i].YearValue +
+                                            "</td><td style='text-align:right;'> " + MR[i].Fees_Amt +
+                                            "</td></tr>");
+                                        TotalAmt += parseInt(MR[i].Fees_Amt);                                        
+                                    }
+                                    debugger;
+                                    $('#FeesRptTbl tfoot').append("<tr style='font-weight:bold;'> <td  colspan='3' style='text-align: right'>Total :- </td><td style='text-align:right;'>" + TotalAmt + "</td>");
+                                });
+                             }
+                            else if (SCID == null)
+                            {
+                                CWFReport(MNo, YNo);                                
+                            }
+                            else
+                            {
+                                SCWFReport(SCID,MNo,YNo);
+                            }
+               });
+    </script>
 
 
-</body>
+    </body>
 </html>

@@ -45,8 +45,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CaptchaMvc, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe46ad421dd3b0e6, processorArchitecture=MSIL">
@@ -82,8 +82,16 @@
     <Reference Include="MySql.Web">
       <HintPath>..\..\CM_Anudan\Bin\MySql.Web.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NumberToWords">
       <HintPath>..\..\..\Project CSIDC\Project_CSIDC_Audit\Dues_GIT\bin\NumberToWords.dll</HintPath>
+    </Reference>
+    <Reference Include="Razorpay, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Razorpay.3.1.4\lib\net45\Razorpay.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -114,9 +122,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -149,9 +157,6 @@
     </Reference>
     <Reference Include="System.Web.Mvc">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -470,17 +475,18 @@
     <Content Include="Content\images\mm-col-bg.png" />
     <Content Include="Content\images\our-structure.jpg" />
     <Content Include="Content\images\placeholder.jpg" />
-    <Content Include="Content\images\prevantion_of_ragging.jpg" />
+    <Content Include="Content\images\prevantionofragging.jpg" />
     <Content Include="Content\images\pro-bg.jpg" />
     <Content Include="Content\images\purc_white_logo.png" />
     <Content Include="Content\images\search.png" />
     <Content Include="Content\images\seminar-bg.jpg" />
-    <Content Include="Content\images\sexual_harassment.jpg" />
+    <Content Include="Content\images\sexual-harassment.jpg" />
     <Content Include="Content\images\slider\1.jpg" />
     <Content Include="Content\images\slider\2.jpg" />
     <Content Include="Content\images\slider\3.jpg" />
     <Content Include="Content\images\slider\banner_one.jpg" />
     <Content Include="Content\images\slider\banner_two.jpg" />
+    <Content Include="Content\images\slider\Prof_V_K_Goyal.jpeg" />
     <Content Include="Content\images\slider\slider.png" />
     <Content Include="Content\images\sm\1.png" />
     <Content Include="Content\images\sm\2.png" />
@@ -511,6 +517,7 @@
     <Content Include="Content\js\json2.js" />
     <Content Include="Content\js\main.min.js" />
     <Content Include="Content\js\materialize.min.js" />
+    <Content Include="Content\js\tableToExcel.js" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -563,6 +570,7 @@
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\PersonModel.cs" />
     <Compile Include="Models\Promote.cs" />
+    <Compile Include="Models\RazorPG.cs" />
     <Compile Include="Models\University_Fees.cs" />
     <Compile Include="Models\ForgotPassword.cs" />
     <Compile Include="Models\master_notification.cs" />
@@ -708,7 +716,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\web.config" />
+    <Content Include="Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="libman.json" />
     <Content Include="Content\fonts\fontawesome-webfont﹖.eot" />
     <Content Include="Content\fonts\fontawesome-webfont﹖v=4.6.3.eot" />
@@ -726,7 +736,9 @@
     <Content Include="ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="ckeditor\SECURITY.md" />
     <Content Include="ckeditor\skins\moono-lisa\readme.md" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
@@ -802,6 +814,22 @@
     <Content Include="Views\Course\CourseRpt.cshtml" />
     <Content Include="Views\Course\Delete.cshtml" />
     <Content Include="Views\Course\Edit.cshtml" />
+    <Content Include="Views\Home\AnnualReports.cshtml" />
+    <Content Include="Views\FeesCollect\FeesReceived.cshtml" />
+    <Content Include="Views\FeesCollect\FeesReport.cshtml" />
+    <Content Include="Views\Commission\WorkReport.cshtml" />
+    <Content Include="Views\FeesCollect\FeesCollection.cshtml" />
+    <Content Include="Views\FeesCollect\UploadFeesData.cshtml" />
+    <Content Include="Views\Student\StudentPromote.cshtml" />
+    <Content Include="Views\Student\UploadDegreeData.cshtml" />
+    <Content Include="Views\Student\UploadInternshipData.cshtml" />
+    <Content Include="Views\Student\UploadAcademicCalendar.cshtml" />
+    <Content Include="Views\University\FCLforHDFCPG.cshtml" />
+    <Content Include="Views\University\PaymentResult.cshtml" />
+    <Content Include="Views\University\GoToPay.cshtml" />
+    <Content Include="Views\Home\AppPrivacyPolicy.cshtml" />
+    <Content Include="Views\FeesCollect\RptUploadedFeesData.cshtml" />
+    <Content Include="Views\University\PGtxnRpt.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -815,6 +843,7 @@
     <Folder Include="File_News\" />
     <Folder Include="File_Notification\" />
     <Folder Include="UniversityBearer\" />
+    <Folder Include="UploadedFeesData\" />
     <Folder Include="UploadedFile\" />
     <Folder Include="UploadedStudentsData\" />
   </ItemGroup>
@@ -946,7 +975,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59823</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44366/</IISUrl>
+          <IISUrl>http://localhost:44366/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -88,6 +88,15 @@ namespace Private_University.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anjaneya University.
+        /// </summary>
+        public static string AnjaneyaUniversity {
+            get {
+                return ResourceManager.GetString("AnjaneyaUniversity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Annual Details.
         /// </summary>
         public static string AnnualDetails {
@@ -151,6 +160,33 @@ namespace Private_University.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shri Vishnu Deo Sai.
+        /// </summary>
+        public static string CMName {
+            get {
+                return ResourceManager.GetString("CMName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hon&apos;ble Chief Minister of Chhattisgarh.
+        /// </summary>
+        public static string CMPost {
+            get {
+                return ResourceManager.GetString("CMPost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shir Davara University.
+        /// </summary>
+        public static string DavaraUniversity {
+            get {
+                return ResourceManager.GetString("DavaraUniversity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dev Sanskriti.
         /// </summary>
         public static string DevSanskriti {
@@ -187,7 +223,7 @@ namespace Private_University.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sushri Anusuiya Uikey.
+        ///   Looks up a localized string similar to Shri Ramen Deka.
         /// </summary>
         public static string GovName {
             get {
@@ -201,6 +237,24 @@ namespace Private_University.Resources {
         public static string GovPost {
             get {
                 return ResourceManager.GetString("GovPost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Professor Vijay Kumar Goyal.
+        /// </summary>
+        public static string HODName {
+            get {
+                return ResourceManager.GetString("HODName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chairman CGPURC.
+        /// </summary>
+        public static string HODPost {
+            get {
+                return ResourceManager.GetString("HODPost", resourceCulture);
             }
         }
         
@@ -444,24 +498,6 @@ namespace Private_University.Resources {
         public static string UniversityRaipur {
             get {
                 return ResourceManager.GetString("UniversityRaipur", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Prof (Dr) Colonel Umesh Kumar Mishra.
-        /// </summary>
-        public static string VCName {
-            get {
-                return ResourceManager.GetString("VCName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chairman CGPURC (Former Vice Chancellor).
-        /// </summary>
-        public static string VCPost {
-            get {
-                return ResourceManager.GetString("VCPost", resourceCulture);
             }
         }
         

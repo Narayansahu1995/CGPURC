@@ -29,7 +29,7 @@
                         @foreach (var item in Model)
                         {
                             <li>
-                                <img src="@Url.Content("~/File_Gallery/" + item.Picture)" class="materialboxed" style="height: 260px;" />
+                                <img src="@Url.Content("~/File_Gallery/" + item.Picture)" class="materialboxed"  />
                                 <p class="text-center">@Html.DisplayFor(modelItem => item.Name)</p>
                             </li>
                         }

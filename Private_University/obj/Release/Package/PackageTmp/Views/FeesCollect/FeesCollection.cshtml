@@ -1,0 +1,264 @@
+﻿@model IEnumerable<Private_University.Models.student_fees_collection>
+@using Private_University.Models;
+@{
+    ViewBag.Title = "FeesCollection";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";    
+}
+
+<style type="text/css">
+
+    #StudentsListTbl > tbody > tr {
+        background-color: #c4e2e3ab;
+    }
+
+        #StudentsListTbl > tbody > tr:hover {
+            /*  background-color: #c4e2e34f;*/
+        }
+    
+</style>
+
+<script type="text/javascript">
+    function EnableRow(i) {
+        $("#TotalAMT").text("");
+            if ($(".FAmt:eq('" + i + "')").prop('readonly')) {
+                $("#StudentsListTbl tbody tr:eq('" + i + "')").css("background-color", "white");
+                $(".FAmt:eq('" + i + "')").prop('readonly', false);
+                $(".RcvDate:eq('" + i + "')").prop('readonly', false);
+            }
+            else {
+                $("#StudentsListTbl tbody tr:eq('" + i + "')").css("background-color", "#c4e2e3ab");
+                $(".FAmt:eq('" + i + "')").val(0);
+                $(".FAmt:eq('" + i + "')").prop('readonly', true);
+                $(".RcvDate:eq('" + i + "')").prop('readonly', true);
+            }
+           
+    }
+    
+    
+    function RemoveTotal(evt) {        
+        $("#TotalAMT").text("");
+        if (evt.charCode >= 48 && evt.charCode <= 57) {
+            //$(".text-danger:eq(8)").text("");
+            //$(".text-danger:eq(8)").css("display", "none");
+        }
+        else {
+            evt.preventDefault();
+            //$(".text-danger:eq(8)").text("Enter numbers only");
+            //$(".text-danger:eq(8)").css("display", "initial");            
+        }
+    }
+    
+
+</script>    
+
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form" style="margin-top:-42px;">
+                <div class="inn-title">
+                    <h4>Fees Collection</h4>
+                </div>
+                <div class="tab-inn">
+
+                    @using (Html.BeginForm())
+                    {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.Label("Course :-", htmlAttributes: new { @class = "col-md-3" })
+                            <div class="col-md-5">
+                                @*@Html.DropDownList("Course", new SelectList(ViewBag.CourseList, "Value", "Text"), "---- Select Course ----", new { @class = "form-control", @id = "course" })*@
+                                @Html.DropDownList("Course", new SelectList("Value", "Text"), "---- Select Course ----", new { @class = "form-control", @id = "Course" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Branch :-", htmlAttributes: new { @class = "col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownList("SubCourse", new SelectList("Value", "Text"), "---- Select Branch ----", new { @class = "form-control", @id = "subCourse" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Pursuing Semester/Year:-", htmlAttributes: new { @class = "col-md-3", @id = "Sem_Year_Label" })
+
+                            <div class="col-md-5">
+                                @Html.DropDownList("Sem_Year", new SelectList("Value", "Text"), "---- Select (Year/Semester) ----", new { @class = "form-control", @id = "Year_Sem" })
+
+                            </div>
+                        </div>
+
+                        <table id="StudentsListTbl" class="table table-bordered" style="display:none;">
+                            <thead>
+                                <tr>
+                                    <th>SNo.</th>
+                                    <th style="display:none;">University ID</th>
+                                    <th style="display:none;">Student Id</th>
+                                    <th style="display:none;">Session ID</th>
+                                    <th>Enrollment No</th>
+                                    <th>Student Name</th>
+                                    <th>Father's Name</th>
+                                    <th>Fees Amount</th>
+                                    <th>Received Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align:right;">
+                                        <input type="button" value="Total" id="TotalBtn" style="width:200px;" />
+                                    </td>
+                                    <td id="TotalAMT" style="font-weight:bold;">
+
+                                    </td>
+                                </tr>
+                                
+                            </tfoot>
+                        </table>
+
+                        <div class="form-group" style="display: flex;justify-content: space-around;">
+                            
+                            <input type="button" value="Save" id="SaveFeesBtn" class="btn btn-primary" style="width:200px;" />
+                        </div>
+                    </div>
+
+
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var CourseMode;
+        $.get("CoursesForFees", function (data) {
+            $("#Course").html(data);            
+        });
+
+        $("#Course").change(function () {
+            $("#StudentsListTbl tbody").empty();
+            var id1 = $(this).val();
+            
+            if (parseInt($("#Course option:selected").attr("CM")) == 1) {
+                CourseMode = "Semester";
+            }
+            else {
+                CourseMode = "Year";
+            }
+            $("#Sem_Year_Label").text("Pursuing " + CourseMode + " :-");
+
+            $.get("SubCoursesForFees", { Univ_Course_ID: id1 }, function (data) {
+                $("#subCourse").html(data);
+            });
+        });
+
+        $("#subCourse").change(function () {            
+            $("#StudentsListTbl tbody").empty();
+            var sc = $(this).val();
+            $.get("Sem_YearListForFees", { SC_ID: sc }, function (data) {
+                $("#Year_Sem").html(data);
+            });
+            
+           
+
+        });
+
+        $("#Year_Sem").change(function () {
+
+            var Selected_SY = $(this).val();            
+            var Selected_SC = $("#subCourse").val();
+            const StudentsRecords = [];
+            $("#StudentsListTbl tbody").empty();
+
+            $.get("SY_StudentList", { USC_ID: Selected_SC, SY: Selected_SY }, function (data) {
+                
+                    var SR = data;
+                    const TodayDate = new Date().toISOString().split('T')[0];
+                    let CDate = new Date();
+                    //let no_of_months = -1;
+                    //CDate.setMonth(CDate.getMonth() + no_of_months);
+                    CDate.setMonth(-2);
+                    CDate.setDate(1);
+                    const StartDate = CDate.toISOString().split('T')[0];
+
+                    for (var i = 0; i < SR.length; i++)
+                    {
+                        $('#StudentsListTbl tbody').append("<tr><td style='padding: 0px;padding-right: 20px;'>"+
+                            "<div class='form-check'>"+
+                                    "<input type = 'checkbox' class= 'form-check-input' id = 'CB"+i+"'>"+                            
+                            "<label onclick='EnableRow("+i+")' " +                            
+                            " class='form-check-label' for='CB" + i + "' style='margin: 0px; padding: 0px; padding-left: 28px; margin-left: -12px'><b>" +
+                                         SR[i].Count + "</b></label>" +
+                            "</div></td>"+
+                            "<td style='display:none;'>" + SR[i].University_ID + "</td>"+
+                            "<td style = 'display:none;' > " + SR[i].Student_ID + "</td>"+
+                            "<td style = 'display:none;' > " + SR[i].Session_ID + "</td>" +
+                            "<td class='CB_Cell'>" + SR[i].Enrollment_Number + "</td>" +
+                            "<td>" + SR[i].Student_Name + "</td>" +
+                            "<td>" + SR[i].Father_Name + "</td>" +
+                            "<td><input type='text' onkeypress='RemoveTotal(event)' class='form-control FAmt' value='0' name='FA' readonly /></td>" +
+                            "<td><input type='date' class='form-control RcvDate' name='RD' max=" + TodayDate + " min=" + StartDate + " readonly></td></tr>");                          
+                    }                    
+                    $(".RcvDate").val(TodayDate);
+                    $("#StudentsListTbl").show();
+            });
+        });
+
+        $("#SaveFeesBtn").click(function () {
+
+            var RowValues_String = "";
+            var NoOfRows = $("#StudentsListTbl tbody tr").length;
+            var SelectedRows = $(".FAmt:not([readonly])").length; // This is not suggested by Chat GPT
+            var SRCount = 1;
+            var UniversityID = 0;
+            var Student_ID = 0;
+            var Session_ID = 0;
+            var Enrollment_No = "";
+            var FeesAmt = 0;
+            const CurrentDate = new Date().toISOString().split('T')[0];
+            var RcvDate = CurrentDate;
+            for (var i = 0; i < NoOfRows; i++)
+            {
+                if (!$(".FAmt:eq('" + i + "')").prop('readonly')) {
+                    UniversityID = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(1)").text();
+                    Student_ID = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(2)").text();
+                    Session_ID = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(3)").text();
+                    Enrollment_No = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(4)").text();
+                    FeesAmt = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(7) .FAmt").val();
+                    RcvDate = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(8) .RcvDate").val();
+                    if (SRCount == SelectedRows) {
+                        RowValues_String = RowValues_String + "(" + UniversityID + "," + Student_ID + "," + Session_ID + ",'" + Enrollment_No + "'," + FeesAmt + ",'" + RcvDate + "')";
+                    }
+                    else {
+                        RowValues_String = RowValues_String + "(" + UniversityID + "," + Student_ID + "," + Session_ID + ",'" + Enrollment_No + "'," + FeesAmt + ",'" + RcvDate + "'),";
+                        SRCount++;
+                    }
+                }
+            }
+            //alert($(".FAmt[readonly]").length); // This Will Work
+            //alert("Counted Rows = " + SelectedRows + " Added Rows = " + SRCount);
+            //alert(RowValues_String);           
+            $.post("InsertFees", { Values_Str: RowValues_String }, function (data) {
+                alert(data);
+                location.reload();
+            });
+        });
+        $("#TotalBtn").click(function () {
+            var sum = 0;
+            $('.FAmt').each(function () {
+                sum += parseInt($(this).val());
+            });            
+            $("#TotalAMT").text(sum);            
+        });
+
+    });
+</script>

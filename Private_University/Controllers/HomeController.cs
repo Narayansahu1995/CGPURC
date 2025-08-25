@@ -21,11 +21,11 @@ namespace Private_University.Controllers
 			AppClass appClass = new AppClass();
 			//AppClass appClass = new AppClass();
 			System.DateTime lastdate = System.DateTime.Now.AddMonths(-1);
-			bool Check = appClass.ayoge_transctions_Check(lastdate.Month, lastdate.Year);
-			if (!Check)
-			{
-				appClass.FeesCollectionSummery(lastdate.Month, lastdate.Year);
-			}
+			//bool Check = appClass.ayoge_transctions_Check(lastdate.Month, lastdate.Year);
+			//if (!Check)
+			//{
+				//appClass.FeesCollectionSummery(lastdate.Month, lastdate.Year);
+			//}
 			
 			//if (LanguageAbbrevation != null)
 			//{
@@ -134,6 +134,11 @@ namespace Private_University.Controllers
 			return View();
 		}
 
+        public ActionResult AnnualReports()
+        {
+            ViewBag.Title = "Annual Reports";
+            return View();
+        }
 
 		public ActionResult ContactUs()
 		{
@@ -319,6 +324,11 @@ namespace Private_University.Controllers
 			Session.Abandon();
 			return RedirectToAction("Index");
 		}
+
+        public ActionResult AppPrivacyPolicy()
+        {
+            return View();
+        }
 
 	}
 }

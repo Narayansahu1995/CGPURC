@@ -101,6 +101,7 @@ namespace Private_University.Controllers
             return View(appClass.GetUniversityShowHome());
         }
 
+
         public ActionResult AddAddress()
         {
             AppClass appClass = new AppClass();
@@ -166,6 +167,17 @@ namespace Private_University.Controllers
                 }
             }
             return View();
+        }
+
+
+        [HttpGet]
+        [SessionCheck]
+        public ActionResult WorkReport()
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            ModelState.Clear();
+            return View(appClass.GetUniversityWorkStatus());
         }
 
     }

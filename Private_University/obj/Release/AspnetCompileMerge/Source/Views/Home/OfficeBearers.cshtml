@@ -29,11 +29,13 @@
                 {
                     <div class="col-md-3" style="height: 376px;">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); max-width: 300px; text-align: center; font-family: arial; margin-bottom: 80px; margin-top: 30px;">
-                            <img src="@Url.Content("~/File_Bearer/" + item.Picture)" alt="@Html.DisplayFor(modelItem => item.Name)" style="width:100%; height:250px;">
-                           
-                                <h4><b>@Html.DisplayFor(modelItem => item.Name, new { @class = "text-center font-weight-bold" })</b></h4>
-                                <p class="text-center">@Html.DisplayFor(modelItem => item.Designation, new { @class = "text-center" })</p>
-                          
+                            <img src="@Url.Content("~/File_Bearer/" + item.Picture)" alt="@Html.DisplayFor(modelItem => item.Name)" style="width:100%; height:250px;">                          
+                            @*<h4><b style="height: 48px;display: flex;justify-content: flex-end;align-items: center;flex-direction: column">@Html.Raw(item.Name)</b></h4>
+                            <p style="height: 48px;display: flex;justify-content: flex-start;align-items: center;flex-direction: column">@Html.DisplayFor(modelItem => item.Designation, new { @class = "text-center" })</p>*@
+                            <h4><b>@Html.Raw(item.Name)</b></h4>
+                             @*<p>@Html.DisplayFor(modelItem => item.Designation, new { @class = "text-center" })</p>*@
+                            <p>@Html.Raw(item.Designation)</p>
+
                         </div>
                     </div>
                 }

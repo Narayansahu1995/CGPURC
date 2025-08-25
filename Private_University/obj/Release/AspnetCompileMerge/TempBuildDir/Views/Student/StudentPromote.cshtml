@@ -1,0 +1,354 @@
+﻿
+@{
+    ViewBag.Title = "StudentPromote";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style type="text/css">
+
+    #StudentsListTbl > tbody > tr {
+        background-color: #c4e2e3ab;
+    }
+
+        #StudentsListTbl > tbody > tr:hover {
+            /*  background-color: #c4e2e34f;*/
+        }
+
+</style>
+
+<script type="text/javascript">
+    function EnableRow(i) {                
+        //if ($(".FAmt:eq('" + i + "')").prop('disabled')) {
+            if ($("#CB1st"+i).is(':not(:checked)')) {            
+                $("#StudentsListTbl tbody tr:eq('" + i + "')").css("background-color", "white");
+                $(".RowSY:eq('" + i + "')").prop('disabled', false);
+               
+            }
+            else {
+                $("#StudentsListTbl tbody tr:eq('" + i + "')").css("background-color", "#c4e2e3ab");
+                //$(".FAmt:eq('" + i + "')").val(0);
+                $(".RowSY:eq('" + i + "')").prop('disabled', true);
+            }
+    }
+
+    function EnableAllRows() {
+        if ($('#CBAll').is(':checked')) {
+            $("#StudentsListTbl tbody tr").css("background-color", "#c4e2e3ab");
+            $(".RowSY").prop('disabled', true);
+            $(".RowCB").prop('checked', false);
+            $("#HeadSY").prop('disabled', true);
+           
+        }
+        else
+        {
+            $("#StudentsListTbl tbody tr").css("background-color", "white");
+            $(".RowSY").prop('disabled', false);
+            $(".RowCB").prop('checked', true);            
+            $("#HeadSY").prop('disabled', false);
+        }      
+    }
+
+    
+
+
+</script>
+
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp admin-form" style="margin-top:-42px;">
+                <div class="inn-title">
+                    <h4>Student Promote</h4>
+                </div>
+                <div class="tab-inn">
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="form-group">
+                                @Html.Label("Course :-", htmlAttributes: new { @class = "col-md-3" })
+                                <div class="col-md-5">                                    
+                                    @Html.DropDownList("Course", new SelectList("Value", "Text"), "---- Select Course ----", new { @class = "form-control", @id = "Course" })
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Branch :-", htmlAttributes: new { @class = "col-md-3" })
+                                <div class="col-md-5">
+                                    @Html.DropDownList("SubCourse", new SelectList("Value", "Text"), "---- Select Branch ----", new { @class = "form-control", @id = "subCourse" })
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Pursuing Semester/Year:-", htmlAttributes: new { @class = "col-md-3", @id = "Sem_Year_Label" })
+
+                                <div class="col-md-5">
+                                    @Html.DropDownList("Sem_Year", new SelectList("Value", "Text"), "---- Select (Year/Semester) ----", new { @class = "form-control", @id = "Year_Sem" })
+
+                                </div>
+                            </div>
+
+                            <table id="StudentsListTbl" class="table table-bordered" style="display:none;">
+                                <thead>
+                                    <tr>                                       
+                                        <td colspan="6">
+                                            <div style="display:flex; justify-content:flex-end;">
+                                                <div class='form-check'>
+                                                    <input type='checkbox' class='form-check-input' id='CBAll'>
+                                                    <label onclick="EnableAllRows()" class='form-check-label' for='CBAll' style='margin: 0px; margin-right:30px; padding: 0px; padding-left: 28px; margin-left: -12px'>
+                                                        Apply for All &emsp; &emsp; <span class="SY_Text"></span> 
+                                                    </label>
+                                                </div>
+                                                <select class='form-control' id="HeadSY" style='width:110px;' disabled></select>
+                                            </div>  
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th style="display:none;">University ID</th>
+                                        <th style="display:none;">Student Id</th>
+                                        <th style="display:none;">Session ID</th>
+                                        <th>Enrollment No</th>
+                                        <th>Student Name</th>
+                                        <th>Father's Name</th>
+                                        <th colspan="2" style="width:160px"><span class="SY_Text"></span>                                           
+                                        </th>                                                                              
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                  
+
+                                </tfoot>
+                            </table>
+
+                            <div class="form-group" style="display: flex;justify-content: space-around;">
+                                <input type="button" value="Save" id="SaveBtn" class="btn btn-primary" style="width:200px;" />
+                            </div>
+                        </div>
+
+
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var CourseMode;
+        var CourseModeTitle = "";
+        var NoOfSemYear = 1;       
+        
+        $.get("CoursesForPromote", function (data) {
+            $("#Course").html(data);            
+        });
+
+        $("#HeadSY").change(function () {
+            $(".RowSY").val($("#HeadSY").val());
+        });
+
+
+        $("#Course").change(function () {            
+            $('#CBAll').prop('checked', false);
+            $(".RowSY").prop('disabled', true);
+            $(".RowCB").prop('checked', false);            
+            $("#HeadSY").prop('disabled', true);
+
+            $("#StudentsListTbl tbody").empty();
+            var id1 = $(this).val();
+            if (id1 > 0)
+            {
+                $.get("SubCoursesForPromote", { Univ_Course_ID: id1 }, function (data) {
+                    $("#subCourse").html(data);
+                });
+                //--- Following are working codes
+                //alert($('#course').find('option:selected').attr("name"));
+                //alert($("#course option:selected").attr("nosy"));
+                //alert($('#course option:selected').data('nosy'));
+
+                NoOfSemYear = parseInt($("#Course option:selected").attr("nosy"));
+                CourseMode = parseInt($("#Course option:selected").attr("CM"));
+                if(CourseMode  == 1)
+                {                
+                    CourseModeTitle = "Semester";
+                    $(".SY_Text").text("Next Semester");
+                }
+                else {
+                    CourseModeTitle = "Year";
+                    $(".SY_Text").text("Result");
+                }
+            }
+        });
+
+        $("#subCourse").change(function () {
+            $('#CBAll').prop('checked', false);
+            $(".RowSY").prop('disabled', true);
+            $(".RowCB").prop('checked', false);
+            $("#HeadSY").prop('disabled', true);
+
+            $("#StudentsListTbl tbody").empty();
+            var sc = $(this).val();
+            if (sc > 0)
+            {
+                $.get("Sem_YearList_Promote", { SC_ID: sc }, function (data) {
+                    $("#Year_Sem").html(data);
+                });
+                $("#Sem_Year_Label").text("Pursuing " + CourseModeTitle + " :-");
+            }
+        });
+
+        $("#Year_Sem").change(function () {
+            $('#CBAll').prop('checked', false);
+            $(".RowSY").prop('disabled', true);
+            $(".RowCB").prop('checked', false);
+            $("#HeadSY").prop('disabled', true);
+
+            var NextSYOptions = "";
+            var Selected_SY = parseInt($(this).val());
+            var Selected_SC = $("#subCourse").val();
+            const StudentsRecords = [];
+          
+           if (CourseMode == 1)
+            {  
+               for (i = parseInt(Selected_SY); i <= NoOfSemYear; i++)
+               {
+                   NextSYOptions += "<option value='" + i + "'>" + i + "</option>"
+               }
+            }
+            else {
+               NextSYOptions = "<option value='" + Selected_SY + "'> Fail </option>" +
+                                "<option value='" + parseInt(Selected_SY + 1) + "'> Pass </option>";
+           }
+           NextSYOptions += "<option value='PO' style='color:darkgreen;font-weight: bold;'>Pass Out</option><option value='DO' style='color: red;font-weight: bold;'>Drop Out</option>"
+           $('#HeadSY').empty();
+           $('#HeadSY').append(NextSYOptions);
+           $('#HeadSY :nth-child(2)').attr("selected", "selected");
+
+            $("#StudentsListTbl tbody").empty();
+
+            $.get("StudentListForPromote", { USC_ID: Selected_SC, SY: Selected_SY }, function (data) {
+
+                var SR = data;
+                const TodayDate = new Date().toISOString().split('T')[0];
+                let CDate = new Date();
+                let no_of_months = -1;
+                CDate.setMonth(CDate.getMonth() + no_of_months);
+                CDate.setMonth(4);
+                CDate.setDate(1);
+                const StartDate = CDate.toISOString().split('T')[0];
+
+                for (var i = 0; i < SR.length; i++)
+                {
+                    $('#StudentsListTbl tbody').append("<tr>" +
+                        "<td>" + SR[i].Count+"</td>"+
+                        "<td style='display:none;'>" + SR[i].University_ID + "</td>" +
+                        "<td style = 'display:none;' > " + SR[i].Student_ID + "</td>" +
+                        "<td style = 'display:none;' > " + parseInt(SR[i].Session_ID+1) + "</td>" +
+                        "<td class='CB_Cell'>" + SR[i].Enrollment_Number + "</td>" +                        
+                        "<td>" + SR[i].Student_Name + "</td>" +
+                        "<td>" + SR[i].Father_Name + "</td>" +  
+                        "<td><select class='form-control RowSY' style='width:110px;' disabled>"+                         
+                        NextSYOptions +
+                        "</select></td>" +           
+                        "<td>"+
+                        "<div class='form-check'>" +
+                        "<input type = 'checkbox' class= 'form-check-input RowCB' id = 'CB1st" + i + "' >" +
+                        "<label onclick='EnableRow(" + i + ")' " +
+                        "class='form-check-label' for='CB1st" + i + "' style='margin: 0px; padding: 0px; padding-left: 28px; margin-left: -12px'>" +
+                         "</label>" +
+                        "</div>" +
+                        "</td>" +
+                        "</tr>");
+                }
+                $('.RowSY :nth-child(2)').attr("selected", "selected");
+                $("#StudentsListTbl").show();
+            });
+        });
+
+        $("#SaveBtn").click(function () {
+
+            var Promoted2Next = "";
+            var PromotedSid = "";
+            var PassOuts = "";
+            var DropOuts = "";
+            var NoOfRows = $("#StudentsListTbl tbody tr").length;
+            var SelectedRows = $(".RowCB:checked").length; // This is not suggested by Chat GPT
+            var SRCount = 0;
+            var POCount = 0;
+            var DOCount = 0;
+            var UniversityID = 0;
+            var Student_ID = 0;
+            var Session_ID = 0;
+            var Enrollment_No = "";
+            var Semester_Year = 0;
+            var SC_id = $("#subCourse").val();
+            
+           
+            for (var i = 0; i < NoOfRows; i++) {
+                
+                if ($("#CB1st" + i).is(":checked")) {
+                    UniversityID = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(1)").text();
+                    Student_ID = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(2)").text();
+                    Session_ID = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(3)").text();
+                    Enrollment_No = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(4)").text();
+                    Semester_Year = $("#StudentsListTbl tbody tr:eq('" + i + "') td:eq(7) .RowSY").val();                   
+                   
+                    if (Semester_Year == 'PO')
+                    {
+                        if(POCount == 0)
+                        {
+                            PassOuts = Student_ID;
+                            POCount++;                           
+                        }
+                        else
+                        {
+                            PassOuts = PassOuts + "," + Student_ID;
+                            POCount++;                           
+                        }
+                    }
+                    else if (Semester_Year == 'DO')
+                    {
+                        if(DOCount == 0)
+                        {
+                            DropOuts = Student_ID;
+                            DOCount++;                          
+                        }
+                        else
+                        {
+                            DropOuts = DropOuts + "," + Student_ID;
+                            DOCount++;                           
+                        }
+                    }
+                    else if (SRCount == 0) {
+                        Promoted2Next = Promoted2Next + "(" + UniversityID + "," + Student_ID + "," + Session_ID + ",'" + Enrollment_No + "'," + Semester_Year + ",now())";
+                        PromotedSid = Student_ID;
+                        SRCount++;
+                    }
+                    else {
+                        Promoted2Next = Promoted2Next + ",(" + UniversityID + "," + Student_ID + "," + Session_ID + ",'" + Enrollment_No + "'," + Semester_Year + ",now())";
+                        PromotedSid = PromotedSid + "," + Student_ID;
+                        SRCount++;
+                    }
+                }
+            }          
+            //alert("Promoted -" + SRCount + " Pass Out -" + POCount + " Drop Out -" + DOCount+" Sub Course ID -"+SC_id);
+            $.post("PromoteStudentInsert", { Pmt_Str: Promoted2Next, Pmt_Id: PromotedSid, NoOfPmt: SRCount, PO_Str: PassOuts, NoOfPO: POCount, DO_Str: DropOuts, NoOfDO: DOCount, SC_ID: SC_id }, function (data) {
+                alert(data);
+                location.replace("StudentPromote");
+            });           
+         
+        });
+
+    });
+</script>

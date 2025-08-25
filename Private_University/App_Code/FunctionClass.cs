@@ -72,17 +72,17 @@ namespace Private_University.App_Code
 
         #region 'OTP and Recaptcha'
 
-        public VerificationCode Generate_OTP_Code()
-        {
-            Random rnd = new Random();
-            string otp = rnd.Next(100000, 999999).ToString();
-            VerificationCode Vr = new VerificationCode()
-            {
-                Mobile_Code = otp,
-                Email_Code = Guid.NewGuid().ToString(),
-            };
-            return Vr;
-        }
+        //public VerificationCode Generate_OTP_Code()
+        //{
+        //    Random rnd = new Random();
+        //    string otp = rnd.Next(100000, 999999).ToString();
+        //    VerificationCode Vr = new VerificationCode()
+        //    {
+        //        Mobile_Code = otp,
+        //        Email_Code = Guid.NewGuid().ToString(),
+        //    };
+        //    return Vr;
+        //}
 
         public string[] Recaptcha_Math()
         {
@@ -275,8 +275,7 @@ namespace Private_University.App_Code
             {
                 if (conn.State == ConnectionState.Closed) { conn.Open(); }
                 Command.Connection = conn;
-                Command.ExecuteNonQuery();
-                // Command.ExecuteNonQuery();
+                Command.ExecuteNonQuery();              
                 int Result = Convert.ToInt32(Command.LastInsertedId);
                 if (Result > 0)
                     return Result;

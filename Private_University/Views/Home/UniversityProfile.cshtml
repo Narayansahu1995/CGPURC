@@ -28,10 +28,10 @@
 
         <div class="container pg-inn" style="padding: 7px 15px; ">
             <div class="col-md-3">
-                <div class="pro-user">
+                <div class="pro-user" style="background-color:white;">
                     @if (item.Univsersity_Logo != string.Empty)
                     {
-                        <img src="@Url.Content("~/UniversityLogo/" + @item.Univsersity_Logo)" style="height:200px;" alt="user">
+                        <img src="@Url.Content("~/UniversityLogo/" + @item.Univsersity_Logo)" style="height:200px;object-fit:scale-down;" alt="user">
                     }
                     else
                     {
@@ -44,9 +44,9 @@
                             <h4>Registration No - @item.Registration_Number</h4>
                         </li>
                         <li></li>
-                        <li><i class="fa fa-phone">@item.Contact_Number</i></li>
-                        <li><i class="fa fa-envelope">@item.Email_ID</i></li>
-                        <li><i class="fa fa-globe"></i><a href="@item.Website_URL" target="_blank">@item.Website_URL</a></li>
+                        <li><i class="fa fa-phone">&nbsp;@item.Contact_Number</i></li>
+                        <li><i class="fa fa-envelope">&nbsp;@item.Email_ID</i></li>
+                        <li><i class="fa fa-globe"></i><a href="@item.Website_URL" style="word-break: break-all;" target="_blank">&nbsp;@item.Website_URL</a></li>
                     </ul>
                 </div>
             </div>
@@ -64,11 +64,11 @@
             <div class="row">
                 <div class="udb-sec udb-prof">
                     <h4>University Members</h4>
-                    <div class="row">
+                    <div style="display:flex; flex-wrap:wrap; justify-content: center;">
                         @for (int i = 0; i < item.UniversityOfficeBearerShowHome.Count; i++)
                         {
-                            <div class="col-md-3 col-sm-3">
-                                <img class="img img-thumbnail" src="@Url.Content("~/UniversityBearer/" + item.UniversityOfficeBearerShowHome[i].Picture)" height="120" />
+                            <div style="text-align: center; width:180px; box-shadow: 2px 2px 10px gray; margin:8px;">
+                                <img src="@Url.Content("~/UniversityBearer/" + item.UniversityOfficeBearerShowHome[i].Picture)"  style="width:100%; height:200px; object-fit: cover;"/>  
                                 @*<p class="font-weight-bold text-center">@Html.DisplayFor(modelItem => item.UniversityOfficeBearerShowHome[i].Other, new { @class = "text-center font-weight-bold" })</p>*@
                                 <p class="font-weight-bold text-center">@Html.DisplayFor(modelItem => item.UniversityOfficeBearerShowHome[i].Name)</p>
                                 <p class="text-center">@Html.DisplayFor(modelItem => item.UniversityOfficeBearerShowHome[i].Designation)</p>

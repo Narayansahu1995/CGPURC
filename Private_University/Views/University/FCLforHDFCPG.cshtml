@@ -1,0 +1,199 @@
+﻿@model IEnumerable<Private_University.Models.PG_txn_List>
+@using Private_University.Models;
+
+@{
+    ViewBag.Title = "FCLforHDFCPG";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js"></script>
+<div class="sb2-2-2">
+    <ul>
+        <li>
+            <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </li>
+        <li class="active-bre">
+            <a href="@Url.Action("Index", "Dashboard")"> Dashboard</a>
+        </li>
+        <li class="page-back">
+            <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-backward" aria-hidden="true"></i> Back to Home</a>
+        </li>
+    </ul>
+</div>
+@{
+    if (TempData["Msg"] != null)
+    {
+        @Html.Raw(TempData["Msg"])
+
+    }
+}
+
+<!--== DASHBOARD INFO ==-->
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4>{Testing PG } Payable Amount to Commission</h4>
+
+                </div>
+                <div class="tab-inn">
+                    <div class="row">
+                        <p class="col-lg-4 col-md-4 col-sm-6">
+                            @{
+                                AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+                            }
+                        </p>
+                    </div>
+                    <div class="row">
+                        @*<div class="table-responsive table-desi">*@
+                        <table class="table table-bordered">
+                            @*id="demoGrid" class="table table-hover"*@
+
+                            <thead>
+                                <tr>
+                                    <th>SNo.</th>
+
+                                    <th>@Html.DisplayNameFor(model => model.Txn_Month)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Txn_Year)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Total_Amount)</th>
+                                    <th>@Html.DisplayNameFor(model => model.One_Percent_Amt)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Due_Date)</th>
+                                    <th>@Html.DisplayNameFor(model => model.DelayDays)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Penal_Interest)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Payble_Amt)</th>
+
+
+                                    @*<th>Month</th>
+                                        <th>Year</th>
+                                        <th>Total Amount</th>
+                                        <th>1% of Total</th>
+                                        <th>Due Date</th>
+                                        <th>Delay Days</th>
+                                        <th>Penal Interest</th>
+                                        <th>Payable Amount</th>*@
+
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.count)
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.Txn_Month_name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Txn_Year)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Total_Amount)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.One_Percent_Amt)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Due_Date)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.DelayDays)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Penal_Interest)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Payble_Amt)</td>
+
+                                        @{
+                                            if (item.Is_Paid == false)
+                                            {
+                                                <td>
+                                                    @using (Html.BeginForm("GoToPay", "University", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="University_ID" value="@item.University_ID" />
+                                                        <input type="hidden" name="Txn_Month" value="@item.Txn_Month" />
+                                                        <input type="hidden" name="Txn_Year" value="@item.Txn_Year" />
+                                                        <button type="submit" class="btn btn-primary">Go To Pay</button>
+
+                                                    }
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="background-color: #5beb0b4d;text-align: center;">
+                                                    <b> Paid </b>
+                                                </td>
+                                            }
+                                        }
+
+                                    </tr>
+                                            }
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="top: 100px;">
+            @using (Html.BeginForm("FCLforHDFCPG", "University", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title custom_align">Draft Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-6">Draft's Bank Name</label>
+                        <div class="col-md-6">
+                            <input class="validate" id="txt_Draft_Bank" name="txt_Draft_Bank" type="text" style="font-size: 1.4rem;" required>
+                            <input id="txt_Ayong_Txn_ID" name="txt_Ayong_Txn_ID" type="hidden">
+                            <input id="txt_Ayong_Txn_Amt" name="txt_Ayong_Txn_Amt" type="hidden">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6">Demand Draft Number</label>
+                        <div class="col-md-6">
+                            <input class="validate" id="txt_Demand_Draft_No" name="txt_Demand_Draft_No" type="number" style="font-size: 1.4rem;" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-6">Date of Issue</label>
+                        <div class="col-md-6">
+                            <input class="validate" id="txt_Issue_Date" name="txt_Issue_Date" type="date" style="font-size: 1.4rem;" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-6">Amount</label>
+                        <div class="col-md-6">
+                            <input class="validate" id="txt_Amount" name="txt_Amount" type="number" style="font-size: 1.4rem;" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update Draft Details</button>
+                </div>}
+        </div>
+    </div>
+</div>
+
+<script>
+	$(function () {
+		$('#myModal2').on('show.bs.modal', function (e) {
+			var button = $(e.relatedTarget) // Button that triggered the modal
+			var ids = button.data('id') // Extract info from data-* attributes
+			var Amt = button.data('status') // Extract info from data-* attributes
+			$(e.currentTarget).find("input[name='txt_Ayong_Txn_ID']").val(ids);
+			$(e.currentTarget).find("input[name='txt_Ayong_Txn_Amt']").val(Amt);
+		});
+	});
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.getJSON("MWFReport",function(data){
+        })
+    });
+</script>

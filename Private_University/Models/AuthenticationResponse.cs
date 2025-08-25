@@ -20,5 +20,7 @@ namespace Private_University.Models
 		public string Message { get; set; }
         public string PwdRstDateTime { get; set; }
         public string UserName { get; set; }
-	}
+        public string University_Name { get; set; }
+
+    }
 }

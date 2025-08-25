@@ -325,6 +325,24 @@ namespace Private_University.Models
         public string Other { get; set; }
     }
 
+    public class UniversityWorkDetail
+    {
+        public int count { get; set; }
 
+        //[Display(Name = "University Name")]
+        public string UniversityName { get; set; }
+
+        //[Display(Name = "No. Of Courses")]
+        public Int32 NoOfCourses { get; set; }
+
+        //[Display(Name = "No Of Branches")]
+        public Int32 NoOfBranches { get; set; }
+        public Int64 NoOfStudents { get; set; }
+        public string UniversityProfileUpdation { get; set; }
+
+        public Int32 NoOfOfficeBearers { get; set; }
+        public Int32 FeesEnteredBranches { get; set; }
+        
+    }
 
 }

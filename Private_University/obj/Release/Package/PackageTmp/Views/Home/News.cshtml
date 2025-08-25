@@ -29,7 +29,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <li>
-                                        <div class="ho-ev-date pg-eve-date">
+                                        @*<div class="ho-ev-date pg-eve-date">
                                             <span>News</span>
                                         </div>
                                         <div class="ho-ev-link pg-eve-desc">
@@ -40,7 +40,15 @@
                                         </div>
                                         <div class="pg-eve-reg">
                                             <a href="~/File_News/@item.News_File" target="_blank">View</a>
+                                        </div>*@
+                                        <div class="ho-ev-link pg-eve-desc">
+                                            <h4>@item.count. @Html.DisplayFor(modelItem => item.News_Title)</h4>
+
+                                            <p style="white-space:pre-wrap;">@Html.Raw(item.News_Descrip)</p>
                                         </div>
+                                        <div class="ho-ev-date pg-eve-date">
+                                            <a href="~/File_News/@item.News_File" target="_blank" style="color: white;">View</a>
+                                        </div>  
                                     </li>
                                 }
                             </ul>

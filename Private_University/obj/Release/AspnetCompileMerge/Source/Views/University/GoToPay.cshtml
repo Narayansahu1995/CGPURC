@@ -1,0 +1,89 @@
+﻿@model Private_University.Models.RazorPG_Request
+@using Private_University.Models;
+
+@{
+    ViewBag.Title = "ProceedToPay";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+@Html.Raw(TempData["FinalMsg"])
+
+    <hr />
+    <div class="sb2-2-3">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="box-inn-sp">
+                    <div class="inn-title">
+                        <h4 style="text-align:center;">Proceed for Payment</h4>
+                        </div>
+                    <div class="tab-inn">
+                   
+                        <div class="row">
+                            <table class="table table-condensed" style="width:auto;margin:auto;">
+                                <tr>
+                                    <td>Transection Number</td>
+                                    <td>@Html.DisplayFor(model => model.TxnID)</td>
+                                </tr>
+                                <tr>
+                                    <td>Fees Month</td>
+                                    <td>@Html.DisplayFor(model => model.BillingMonth)</td>
+                                </tr>
+                                <tr>
+                                    <td>Fees Year</td>
+                                    <td>@Html.DisplayFor(model => model.BillingYear)</td>
+                                </tr>
+                                <tr>
+                                    <td>Fees 1% Amount</td>
+                                    <td>@Html.DisplayFor(model => model.One_Percent_Amt)</td>
+                                </tr>
+                                <tr>
+                                    <td>Penal Interest</td>
+                                    <td>@Html.DisplayFor(model => model.Penal_Interest)</td>
+                                </tr>
+                                <tr>
+                                    <td>Payable Amount</td>
+                                    <td>@Html.DisplayFor(model => model.Payble_Amt)</td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        @using (Html.BeginForm("GoToPay", "University", FormMethod.Post, new { action = "https://api.razorpay.com/v1/checkout/embedded", @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="key_id" value="@ViewBag.Key" />
+                        <input type="hidden" name="amount"  value="@Model.Payble_Amt">
+                        <input type="hidden" name="currency" value="INR" />
+                        <input type="hidden" name="order_id"  value="@Model.Order_ID">
+                        <input type="hidden" name="University_ID"  value="@Model.UniversityID">
+                        <input type="hidden" name="name" value="CGPURC" />
+                        <input type="hidden" name="description" value="Fees One Percent" />
+                        <input type="hidden" name="image" value="https://cdn.razorpay.com/logos/BUVwvgaqVByGp2_large.jpg" />
+                        <input type="hidden" name="prefill[name]"  value="@Model.UniversityName">
+                        <input type="hidden" name="prefill[contact]"  value="@Model.UniversityMobile">
+                        <input type="hidden" name="prefill[email]"  value="@Model.UniversityEmail">
+                        <input type="hidden" name="BillingAddress"  value="@Model.BillingAddress">
+                        <input type="hidden" name="Txn_Month"  value="@Model.BillingMonth">
+                        <input type="hidden" name="Txn_Year"  value="@Model.BillingYear">
+
+                        <input type="hidden" name="callback_url" value="http://localhost:44366//University/RazorPayResponse" />
+                        <input type="hidden" name="cancel_url" value="http://localhost:44366//University/RazorPayResponse" />
+                        <button type="submit" class="btn btn-primary">Pay</button>
+                    }
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Back", "FCLforHDFCPG", new { }, new { @class = "btn btn-success" })
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>

@@ -292,9 +292,11 @@ namespace Private_University.Models
 
 		[DisplayName("Persuing Year/Semester")]
 		public string Semester_Year { get; set; }
-
         public int Student_ID { get; set; }
-	}
+
+        public string SubmittedBy { get; set; }
+
+    }
 
 	public class student_promote
 	{
@@ -321,6 +323,7 @@ namespace Private_University.Models
        public string File_Name { get; set; }
        public string File_path { get; set; }
        public string Uploaded_DateTime { get; set; }
+        public int Session_Id { get; set; }
         
     }
     public class Uploaded_Student_data_files
@@ -335,8 +338,22 @@ namespace Private_University.Models
         public int Records_left { get; set; }
         public string Processed { get; set; }
         public string Remark { get; set; }
-
-
     }
+
+    public class Uploaded_data_files
+    {
+        public int count { get; set; }
+        public int File_ID { get; set; }
+        public string University_Name { get; set; }
+        public int University_ID { get; set; }
+        public string File_Name { get; set; }
+        public string File_path { get; set; }
+        public string Uploaded_DateTime { get; set; }
+        public int Records_exported_to_Server { get; set; }
+        public int Records_left { get; set; }
+        public string Processed { get; set; }
+        public string Remark { get; set; }
+    }
+
 
 }

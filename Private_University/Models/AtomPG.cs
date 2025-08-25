@@ -43,9 +43,20 @@ namespace Private_University.Models
 		public string Txn_Number { get; set; }
 		public string RequestString { get; set; }
 		public string ReqStringData { get; set; }
-	}
+        public string Amount { get; set; }
+    }
 
-	public class PG_String_Update
+    public class RazorPay_String_Insert
+    {
+        public int Order_ID { get; set; }
+        public int University_ID { get; set; }
+        public string Txn_Number { get; set; }
+        public string RequestString { get; set; }
+        public string ReqStringData { get; set; }
+        public string Amount { get; set; }
+    }
+
+    public class PG_String_Update
 	{
 		public int Ayong_Txn_ID { get; set; }
 		public string Txn_Number { get; set; }

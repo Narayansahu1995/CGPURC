@@ -1,0 +1,132 @@
+﻿@model Private_University.Models.RazorPG_Request
+@using Private_University.Models;
+
+@{
+    ViewBag.Title = "ProceedToPay";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box-inn-sp">
+                <div class="inn-title">
+                    <h4 style="text-align:center;">Proceed for Payment</h4>
+                </div>
+                <div class="tab-inn">
+                    <table class="table table-condensed" style="width:auto;margin:auto;">
+                        <tr><td>Transaction Number</td><td>@Model.TxnID</td></tr>
+                        <tr><td>Fees Month</td><td>@Model.BillingMonth</td></tr>
+                        <tr><td>Fees Year</td><td>@Model.BillingYear</td></tr>
+                        <tr><td>Fees 1% Amount</td><td>@Model.One_Percent_Amt</td></tr>
+                        <tr><td>Penal Interest</td><td>@Model.Penal_Interest</td></tr>
+                        <tr><td>Payable Amount</td><td>@Model.Payble_Amt</td></tr>
+                    </table>
+
+                    <br />
+
+                    <button id="rzp-button" class="btn btn-primary">Pay</button>
+                    <button id="back-button" class="btn btn-success" onclick="window.history.back();">Back</button>
+
+                    <div id="loader" style="display:none; text-align:center; margin-top:20px;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Processing...</span>
+                        </div>
+                        <p>Processing payment...</p>
+                    </div>
+
+                    <div id="payment-result" style="margin-top:20px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "@ViewBag.Key",
+    "amount": "@(Model.Payble_Amt * 100)", // paise
+    "currency": "INR",
+    "name": "CGPURC",
+    "description": "Fees One Percent",
+    "image": "https://cdn.razorpay.com/logos/BUVwvgaqVByGp2_large.jpg",
+    "order_id": "@Model.Order_ID",
+    "prefill": {
+        "name": "@Model.UniversityName",
+        "email": "@Model.UniversityEmail",
+        "contact": "@Model.UniversityMobile"
+    },
+    "notes": {
+        "University_ID": "@Model.UniversityID",
+        "BillingAddress": "@Model.BillingAddress",
+        "Txn_Month": "@Model.BillingMonth",
+        "Txn_Year": "@Model.BillingYear"
+    },
+    "theme": { "color": "#3399cc" },
+    "handler": function (response) {
+        var loader = document.getElementById("loader");
+        var payBtn = document.getElementById("rzp-button");
+        var backBtn = document.querySelector(".btn-success");
+
+        // Hide buttons and show loader
+        payBtn.style.display = "none";
+        if(backBtn) backBtn.style.display = "none";
+        loader.style.display = "block";
+
+        var startTime = Date.now(); // record start time
+
+        $.ajax({
+            url: "@Url.Action("RazorPayResponseJson", "University")",
+            type: "POST",
+            data: {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+            },
+            success: function (res) {
+                var elapsed = Date.now() - startTime;
+                var remaining = 5000 - elapsed; // ensure at least 5 seconds
+                if (remaining < 0) remaining = 0;
+
+                setTimeout(function () {
+                    loader.style.display = "none"; // hide loader
+
+                    var resultDiv = document.getElementById("payment-result");
+                    resultDiv.innerHTML = "<h4>Status: " + res.TxnStatus + "</h4>" +
+                                          "<p>Order ID: " + res.OrderId + "</p>" +
+                                          "<p>Transaction Number: " + res.TxnNumber + "</p>" +
+                                          "<p>Amount: " + res.TxnAmt + "</p>";
+                    resultDiv.style.color = res.TxnStatus == "Success" ? "green" : "red";
+
+                    // If failed, show buttons again
+                    if(res.TxnStatus != "Success"){
+                        payBtn.style.display = "inline-block";
+                        if(backBtn) backBtn.style.display = "inline-block";
+                    }
+                }, remaining);
+            },
+            error: function () {
+                var elapsed = Date.now() - startTime;
+                var remaining = 5000 - elapsed;
+                if (remaining < 0) remaining = 0;
+
+                setTimeout(function () {
+                    loader.style.display = "none";
+                    alert("Error processing payment.");
+
+                    payBtn.style.display = "inline-block";
+                    if(backBtn) backBtn.style.display = "inline-block";
+                }, remaining);
+            }
+        });
+    }
+};
+
+var rzp = new Razorpay(options);
+document.getElementById('rzp-button').onclick = function (e) {
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+

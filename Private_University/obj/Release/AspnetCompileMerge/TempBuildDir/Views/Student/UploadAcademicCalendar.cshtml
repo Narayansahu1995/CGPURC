@@ -1,0 +1,132 @@
+﻿@model IEnumerable<Private_University.Models.Uploaded_Student_data_files>
+
+    @using Private_University.Models;
+
+    @{
+        ViewBag.Title = "UploadAcademicCalendar";
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+
+<style type="text/css">
+    .Delete_Img {
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAfCAMAAAFWnHbnAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIHUExURQAAAAoKCqWlpQkJCTExMQYGBiUlJRwcHA4ODgoKCgcHBzw8PCsrKw0NDQgICAQEBA8PDw0NDSwsLBcXFzAwMDk5ORMTEw8PDxMTE01NTQYGBv///ygoKBISEhQUFBUVFTU1NQ8PDxoaGgwMDFRUVAgICBgYGBYWFg8PDycnJy8vL////ywsLEFBQV1dXQkJCRERESwsLAoKChAQENTU1BsbGxwcHAkJCRQUFAoKCkFBQVxcXBISEgQEBCUlJRsbGx0dHTs7OysrKyoqKiAgIFJSUhUVFRsbGyEhIRQUFCcnJxQUFGVlZTIyMgsLCxwcHEhISCgoKBAQEDs7OzExMTU1NQ8PDwkJCSYmJgcHBwoKCh0dHa6urh8fHyAgIBoaGuLi4hAQEBISEhAQEEtLSwoKCkRERC4uLicnJw4ODjk5ORcXFxkZGRUVFRkZGQgICBsbG////w8PDzg4OAQEBBISEhUVFSQkJCEhIU5OToqKig8PDyMjIzk5OUJCQhEREQgICFZWVhQUFP///ywsLCIiImBgYCsrKwsLCyQkJBwcHAgICA8PDwwMDMbGxhERERAQEEFBQSoqKgAAAA8PD3Nzcx4eHmBgYAEBAWpqaiEhIQICAhQUFB8fH1BQULKyshQUFAMDA1BQUAkJCRQUFAsLCxAQEGZmZiQkJImJiRUVFQQEBBsbG3sMokYAAACtdFJOUwDUEdyA/zaf39z/Kkzn//zMwTmsfVWppuor/AR/zMRVR9xY7BvxVZ7/qlwBbDop3tGa8ewGvI75yctCC//+gYO8YmmEhiijnpn/gasZUe65TZzeX2FRpetr4P6AE/r6qwnu5tsv+zyJaNhZsKil1vi7COBW/arIm/83GKdPQxvg9TLYBYOFHZ7tamT9yu0J8MpGbf/SFqUt/xiK/6/APArd/yn6yvLHCm8a3f+yT5fXrQAAAAlwSFlzAAAXEQAAFxEByibzPwAAAdZJREFUKFNtkYdXFDEYxMdyFlQ4xVOsBzZOEQuIWLAB9kZR7IqKYsNeEAtWVGzoWFZPgcXu8kc6yeUeeNzvvd3MfJPkS14AFOuzfGRcfw7XlygwMg+88hPNtKiQHOsjfPLU+RWa2WpXWMtmIy0JD2Qs5pzbGqeNZXSBxt8zOeOSxjaXTw2Hwy+M7JB4hMZz/WhMbpPgFRDnnmXMG8KRg8xa7ODWP4xEOWw8M2Q/8LTOHWXLWX6XfUNOpufxKvnMHGlzzFH20FhglEeOs2qRmo9Ri5ca3/3XlMh2pzFk29l9XHOTDA9wwynDdZwiK8nH5AFyE05qpxMB4j58lmOb3Gu5AB4LUSDXLVeqzp/MnZdMlzsqUQBNeD9B7q+cGoa4ytyKWfa9ilwzMiS3xV0vFptrzuYYqksaqp0XhxKVNBxOvnca+t42LQ0bbtUNZGLTHWW9botUjtcDFU6n0qt12wOJpejMpL8L7R69+VhnSquV9ZRKbMTd2QwiiMYZqsJeXTXYraxrhLK1WLnPZfvvY40qF9Yrw0Wp81Ow3GVFs5CvSk2XyT5L5RzEV5ct/IUSVXaaCLU+6b+9eZk80vOFvDc694eySps1PJdMJThjs8HHnO/Pt0nAP6z9My6JTQ4yAAAAAElFTkSuQmCC') no-repeat;
+        display: block;
+        height: 34px;
+        text-indent: -9999px; /* hides the link text */
+    }
+</style>
+<script type="text/javascript">
+    function Delete(i,FP) {
+        debugger;
+        var FID = 0;
+        var FiP = "";
+        FID = parseInt(i);
+        FiP = "~" + FP;
+        $.post("DeleteACFile", { File_Id: FID, FPath: FiP }, function (data) {
+            alert(data);
+        });
+        location.replace("UploadAcademicCalendar");
+    }
+</script>
+
+                     <div class="sb2-2-3">
+                         <div class="row">
+                             <div class="col-md-12">
+                                 <div class="box-inn-sp admin-form">
+                                     <div class="inn-title">
+                                         <h4>Upload Academic Calendar</h4>
+                                     </div>
+                                     <div class="tab-inn">
+                                         @using (Html.BeginForm("UploadAcademicCalendar", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                         {
+                                             @Html.AntiForgeryToken()
+                                             AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+                                             <div class="form-horizontal">
+                                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                                 <h4 style="padding-left:2%;">Academic Calendar must be in PDF format only </h4>
+
+                                                 @if(Model.Count() == 0)
+                                                 { 
+                                                 <div class="form-group">
+                                                     @Html.Label("Select PDF file to upload", htmlAttributes: new { @class = "control-label col-md-5" })
+                                                     <div class="col-md-4">
+                                                         <input type="file" name="file" id="file" class="form-control" accept="application/pdf" />
+
+                                                         @*@Html.TextBox("file", "", new { type = "file" })*@
+                                                         <br /> <input type="submit" value="Upload" class="btn btn-primary col-md-2" />
+
+                                                     </div>
+
+                                                 </div>
+                                                 }
+                                                 @Html.Raw(TempData["msg"])
+
+                                                 <table class="table table-bordered" style="width:auto;margin:auto;" id="Flist">
+                                                     <thead>
+                                                         <tr>
+                                                             <th>SNo </th>
+                                                             <th>File Name</th>
+                                                             <th>Uploaded Date</th>                                                         
+                                                             <th>Remark</th>
+                                                             <th>Checked</th>                                                            
+                                                             <th>Download</th>
+                                                             <th>Delete</th>
+                                                         </tr>
+                                                     </thead>
+                                                     <tbody>
+                                                         @if (Model.Count() > 0 )
+                                                         {
+                                                             foreach (var item in Model)
+                                                             {
+                                                                 <tr>
+                                                                     <td>
+                                                                         @Html.DisplayFor(modelItem => item.count)
+                                                                     </td>
+                                                                     <td>
+                                                                         @Html.DisplayFor(modelItem => item.File_Name)
+                                                                     </td>
+                                                                     <td>
+                                                                         @Html.DisplayFor(modelItem => item.Uploaded_DateTime)
+                                                                     </td>
+                                                                     <td>
+                                                                         @Html.DisplayFor(modelItem => item.Remark)
+                                                                     </td>
+                                                                     <td>
+                                                                         @Html.DisplayFor(modelItem => item.Processed)
+                                                                     </td>
+                                                                     <td style="text-align: center;">
+                                                                         <a href="@Html.DisplayFor(modelItem => item.File_path).ToString()" target="_blank">
+                                                                             <img id="DW" runat="server" alt='DWbtn' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAA7GUAAOxlAc4u8ggAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAABpklEQVRoQ+3YzysEYRzH8SG5UMrJj4PiIIr8AYoif4Crm8OWq+Li4C4nP26ilKMDJTk7OrhQlHJykBQhF+H9He32NH2zs9bOfJ/t+dSrtu1p+36a2ZlnJqpRNvBVxi68yDm0Aq4rNMJ80pS5RiiTdUIZqwllrCaUsZpQxmpCGasJZawmTRl5BPAiZ9AKuEyVacE8FrGQcAetgOsdUjrpAM3INK24hTZoNfaQy3+pB/fQhvoLOTJNyC2j+IA2XCWe0YvcMwttwEpMw0xWoA2ZxirM5RDasL85RQPMRa5wF9CG1jygG2bTh0dowydNwXwm8AmtQNESvMkctBJC7vLeZQ3JIjdog5c5QbGI7MeG4W3kKFxCymRyY2xHFzoV/7FXkt8f+vlYVWQ3rc0os5dO3X284VXRDyuRfaA2p3y3iTjueZ00CCsZhzaj2EGcI2gLxACsZAzajGILcUKZHBLKuEKZGiWUcdVVmQ5YyQi0GUWqMssoGCEvPrQZRaoyvqjPMsfQFvhkG3HkEUBb4JN1xJmBtsAnkyhFmr2g3CsiS2TWJ3DFjaJv0m0vUFXJCQIAAAAASUVORK5CYII='
+                                                                                  height='30' style='cursor: pointer;' />
+                                                                         </a>
+                                                                     </td>
+                                                                     @if (item.Processed == "No")
+                                                                     {
+                                                                         <td class='File_ID'>
+                                                                             <a class='Delete_Img' href='javascript:;' onclick="Delete('@item.File_ID', '@item.File_path')">Delete</a>
+                                                                         </td>
+                                                                     }       
+                                                                 </tr>
+                                                             }
+                                                         }
+                                                         else
+                                                         {
+                                                             <tr>
+                                                                 <td colspan="4" style="text-align:center;">
+                                                                     No Records Found
+                                                                 </td>
+                                                             </tr>
+                                                         }
+
+                                                     </tbody>
+                                                 </table>
+
+                                             </div>
+                                         }
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+

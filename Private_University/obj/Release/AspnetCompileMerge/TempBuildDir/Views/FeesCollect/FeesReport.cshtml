@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Private_University.Models.FeesReport>
+@using Private_University.Models;
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+<div class="sb2-2-3">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box-inn-sp admin-form">
+                <div class="inn-title">
+                    <h4>Fees Collection Details</h4>
+                </div>
+                <div class="tab-inn">
+                    <table class="table table-bordered" style="width:auto;margin:auto;" id="Flist">
+                        <thead style="background-color: lightgoldenrodyellow;">
+                            <tr>
+                                <th style="font-weight:bold;">SNo </th>
+                                <th style="font-weight:bold;">Transection ID </th>
+                                <th style="font-weight:bold;">Number Of Students </th>
+                                <th style="font-weight:bold;">Fees Amount</th>
+                                <th style="font-weight:bold;">Received Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.count)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.txn_id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NoOfStudents)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FeesAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ReceivedDate)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+ </div>
+
+
+
+
+  

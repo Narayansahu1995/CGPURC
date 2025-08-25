@@ -1,0 +1,140 @@
+﻿@model IEnumerable<Private_University.Models.StudentFeesDetails>
+@using Private_University.Models;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentFeesList</title>
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        function SCWFReport(SC_ID) {            
+            $.getJSON("SCWFReport", { USCID: SC_ID }, function (data) {
+                
+                var SCSL = data;
+                var FTotal = 0;  
+                var EN = '';
+                var SNo = 1;
+                var SN = '';
+                $('#FeesRptTbl tbody').empty();
+                $('#FeesRptTbl tfoot').empty();
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                var CName = urlParams.get('CN');
+                var SCName = urlParams.get('SCN');               
+                $('#CN').text(CName);
+                $('#SCB').text(SCName);
+                $('#HR0').show();
+                $('#HR1').hide();
+                $('#HR2').show();
+                for (var i = 0; i < SCSL.length; i++) {
+                    if (EN != SCSL[i].Enrollment_Number)
+                    {
+                        SN = SNo;
+                        SNo++;                       
+                    }
+                    else
+                    {
+                        SN = '';
+                    }
+                    $('#FeesRptTbl tbody').append("<tr><td>" + SN +
+                        "</td><td>" + SCSL[i].Enrollment_Number +
+                        "</td><td>" + SCSL[i].Txn_ID +
+                        "</td><td>" + SCSL[i].Student_Name +
+                        "</td><td>" + SCSL[i].Father_Name +
+                        "</td><td>" + SCSL[i].Semester_Year +
+                        "</td><td>" + SCSL[i].RCVDate +
+                        "</td><td class='FAmt'>" + SCSL[i].Fees_Amount +
+                        "</td></tr>");                    
+                    FTotal += parseInt(SCSL[i].Fees_Amount);  
+                    EN = SCSL[i].Enrollment_Number;
+                }                
+                $('#FeesRptTbl tfoot').append("<tr style='font-weight: bold;'> <td  colspan='7' style='text-align: right'>Total :- </td><td id='TotalAMT'>" + FTotal
+                    + "</td></tr>");
+                $('#FeesRptTbl tfoot').append("<tr><td colspan='8' style='border-color: transparent;text-align:center;'> <a class='btn btn-success' href='/FeesCollect/StudentFeesList'>Back to List</a></td></tr>");
+            });
+           
+        }
+    </script>
+</head >
+                <body>
+
+                    <h3 style="text-align:center;"> <b>@Html.Raw(TempData["UnvName"])</b> <br/> Students Fees Details</h3>
+
+                    <div>
+                        <table id="FeesRptTbl" class="table table-bordered" style="width:auto;margin:auto;">
+                            <thead>
+                                <tr id="HR0" style="font-weight:bold;text-align:center;display:none;">
+                                    <td colspan="8" >
+                                        Course Name - <span id="CN"></span>&emsp;
+                                        Course/Sub-Course/Branch - <span id="SCB"></span>
+                                    </td>
+                                </tr>
+                                <tr id="HR1" style="background-color: #b0c4de73;">
+                                    <th>SNo</th>
+                                    <th>Course Name</th>
+                                    <th>Course/Sub-Course/Branch</th>
+                                    <th style="display:none;">Sub Course ID</th>
+                                    <th>No Of Students</th>
+                                    <th>Fees Amount</th>
+                                </tr>
+                                <tr style="display:none;background-color: #b0c4de73;" id="HR2">
+                                    <th style="text-align:center">SNo </th>
+                                    <th>Enrollment No</th>
+                                    <th>Transection ID</th>
+                                    <th>Student Name</th>
+                                    <th>Father's Name</th>
+                                    <th>Pursuing Year/Semester</th>
+                                    <th>Receiving Date</th>
+                                    <th>Fees Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                            <tfoot> 
+                                                       
+                            </tfoot>
+                        </table>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            const queryString = window.location.search;
+                            const urlParams = new URLSearchParams(queryString);
+                            const SCID = urlParams.get('USCID');
+                            if (SCID == null)
+                                {
+                            $.getJSON("CWFReport", function (data) {
+                                var CR = data;
+                                var TotalAmt = 0;
+                                var TotalStudents = 0;
+                                for (var i = 0; i < CR.length; i++) {
+                                    $('#FeesRptTbl tbody').append("<tr> <td> " + (i + 1) +
+                                        "</td> <td> " + CR[i].Univ_Course_Name +
+                                        " </td> <td> " + CR[i].Univ_subCourse_Name +
+                                        " </td><td style='display: none;'>" + CR[i].Univ_subCourse_ID +                                                                               
+                                        "</td><td><a href='StudentFeesList?USCID=" + CR[i].Univ_subCourse_ID + "&CN=" + CR[i].Univ_Course_Name + "&SCN=" + CR[i].Univ_subCourse_Name + "'>" + CR[i].NoOfStudents +
+                                         "</a></td><td>" + CR[i].Fees_AMT +
+                                        "</td></tr>");
+                                    TotalStudents += parseInt(CR[i].NoOfStudents);
+                                    TotalAmt += parseInt(CR[i].Fees_AMT);
+                                }
+                                $('#FeesRptTbl tfoot').append("<tr style='font-weight: bold;'> <td  colspan='3' style='text-align: right'>Total :- </td><td>" + TotalStudents +
+                                    "</td><td>" + TotalAmt +"</td>");
+                            });
+                            }
+                            else
+                            {
+                                SCWFReport(SCID);
+                            }
+               });
+    </script>
+
+
+    </body>
+</html>

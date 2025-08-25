@@ -21,7 +21,60 @@ namespace Private_University.Models
 		public int Student_ID { get; set; }
 		public string Narration { get; set; }
 	}
+    
+    public class student_fees_collection
+    {
+        public int Count { get; set; }
+        public int Txn_ID { get; set; }
+        public int University_ID { get; set; }
+        public int Session_ID { get; set; }
+        public decimal Fees_Amount { get; set; }
+        public Nullable<DateTime> Txn_Date { get; set; }
+        public Nullable<DateTime> Entry_DateTime { get; set; }
+        public int Student_ID { get; set; }
+        public String Enrollment_Number { get; set; }
+        public String Student_Name { get; set; }
+        public String Father_Name { get; set; }
 
+    }
+
+    public class FeesReceived
+    {
+        public int txn_id { get; set; }
+        public int University_ID { get; set; }
+
+        [DisplayName("Number Of Students")]
+        [Required(ErrorMessage = "Enter number of students")]
+        public int NoOfStudents { get; set; }
+
+        [DisplayName("Fees Amount")]
+        [Required(ErrorMessage ="Enter fees amount")]
+        public int FeesAmount { get; set; }
+        
+        [DisplayName("Received Date")]
+        [Required(ErrorMessage = "Received Date can not be blank")]
+        [DataType(DataType.Date)]
+        public string ReceivedDate { get; set; }
+
+        public DateTime Entry_DateTime { get; set; }
+        public int Session_ID { get; set; }
+    }
+
+    public class FeesReport
+    {
+        public int count { get; set; }
+        public int txn_id { get; set; }        
+
+        [DisplayName("Number Of Students")]        
+        public int NoOfStudents { get; set; }
+
+        [DisplayName("Fees Amount")]       
+        public int FeesAmount { get; set; }
+
+        [DisplayName("Received Date")]
+        public String ReceivedDate { get; set; }
+  
+    }
     public class StudentFeesDetails
     {
         public int Student_Id { get; set; }
@@ -123,20 +176,96 @@ namespace Private_University.Models
 		public string Txn_Month_name { get; set; }
 		[Display(Name = "Year")]
 		public int Txn_Year { get; set; }
-		[Display(Name = "Total Amount Collected")]
+		[Display(Name = "Total Amount")]
 		public decimal Total_Amount { get; set; }
-		[Display(Name = "1% Percent of Total")]
-		public decimal Percent_Amount { get; set; }
-		public bool Is_Paid { get; set; }
+		[Display(Name = "1% of Total")]
+        public decimal One_Percent { get; set; }
+
+        [Display(Name = "Delay Days")]
+        public int DelayDays { get; set; }
+
+        [Display(Name = "Penalty Charge")]
+        public decimal PenaltyCharge { get; set; }
+
+		[Display(Name = "Payable Amount")]
+        public double Percent_Amount { get; set; }
+        public bool Is_Paid { get; set; }
 		[Display(Name = "Due Date")]
-		public DateTime Due_Date { get; set; }
+		public String Due_Date { get; set; }
 		public string CustomerName { get; set; }
 		public string CustomerEmail { get; set; }
 		public string CustomerMobile { get; set; }
 		public string BillingAddress { get; set; }
 	}
 
-	public class ayoge_transctions_Draft
+    public class PG_transctions_List
+    {
+        public int count { get; set; }
+        public int Ayong_Txn_ID { get; set; }
+        public int University_ID { get; set; }
+        [Display(Name = "Month")]
+        public int Txn_Month { get; set; }
+        public string Txn_Month_name { get; set; }
+        [Display(Name = "Year")]
+        public int Txn_Year { get; set; }
+        [Display(Name = "Total Amount")]
+        public decimal Total_Amount { get; set; }
+        [Display(Name = "1% of Total")]
+        public decimal One_Percent { get; set; }
+
+        [Display(Name = "Delay Days")]
+        public int DelayDays { get; set; }
+
+        [Display(Name = "Penal Interest")]
+        public decimal PenalInterest { get; set; }
+
+        [Display(Name = "Payable Amount")]
+        public double Payable_Amount { get; set; }
+        public bool Is_Paid { get; set; }
+        [Display(Name = "Due Date")]
+        public String Due_Date { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerEmail { get; set; }
+        public string CustomerMobile { get; set; }
+        public string BillingAddress { get; set; }
+    }
+
+    public class PG_txn_List
+    {
+        public int count { get; set; }        
+             
+        public int University_ID { get; set; }
+        [Display(Name = "Month")]
+        public int Txn_Month { get; set; }
+        public string Txn_Month_name { get; set; }
+        [Display(Name = "Year")]
+        public int Txn_Year { get; set; }
+        [Display(Name = "Total Amount")]
+        public decimal Total_Amount { get; set; }
+        [Display(Name = "1% of Total")]
+        public decimal One_Percent_Amt { get; set; }
+
+        [Display(Name = "Delay Days")]
+        public int DelayDays { get; set; }
+
+        [Display(Name = "Penal Interest")]
+        public decimal Penal_Interest { get; set; }
+
+        [Display(Name = "Payable Amount")]
+        public decimal Payble_Amt { get; set; }
+        public bool Is_Paid { get; set; }
+        [Display(Name = "Due Date")]
+        public String Due_Date { get; set; }
+        public string UniversityName { get; set; }
+        public string UniversityEmail { get; set; }
+        public string UniversityMobile { get; set; }
+        public string BillingAddress { get; set; }
+    }
+
+
+
+
+    public class ayoge_transctions_Draft
 	{
 		public int Ayong_Txn_ID { get; set; }
 		public string Txn_Number { get; set; }

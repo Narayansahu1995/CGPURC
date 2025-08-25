@@ -15,6 +15,7 @@ namespace Private_University
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -35,5 +36,6 @@ namespace Private_University
                 System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en");
             }
         }
+       
     }
 }

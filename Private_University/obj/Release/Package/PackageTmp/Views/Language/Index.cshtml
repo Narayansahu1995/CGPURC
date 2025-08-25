@@ -18,7 +18,7 @@
                     <div class="carousel-inner">
                         <div class="item slider1 active">
                             @*<img src="~/Content/images/slider/banner.jpg" alt="">*@
-                            <img src="~/Content/images/slider/banner_one.jpg" alt="" style="height:600px;" />
+                            <img src="~/Content/images/slider/banner_three.jpg" alt="" style="height:auto;" />
                         </div>
                     </div>
 
@@ -49,7 +49,7 @@
             <div class="col-md-3" style="margin: 0px !important; padding: 0px !important">
                 <div class="ed-rese-grid ed-rese-grid-mar-bot-30" style="margin: 0px 18px;">
                     <div class="ed-rsear-dec ed-faci-full-bot text-center" style="min-height:300px;margin:0;text-align:center">
-                        <img src="~/Content/images/slider/governer-1.jpg" style="height:200px" />
+                        <img src="~/Content/images/slider/GovernerNow.jpg" style="height:200px" />
                         <h5 style="font-weight:bold;">@Html.Label(Private_University.Resources.Home.GovName, new { @class = "person-name" })</h5>
                         <p>@Html.Label(Private_University.Resources.Home.GovPost, new { @class = "post-name" })</p>
                         @*<span style="font-size: 15px; text-align: center;">Visitor of <strong>CGPURC</strong></span>*@
@@ -57,11 +57,19 @@
                     </div>
                 </div>
                 <div class="ed-rese-grid ed-rese-grid-mar-bot-30" style="margin: 0px 18px;">
+                    <div class="ed-rsear-dec ed-faci-full-bot text-center" style="min-height:300px;margin:0;text-align:center">
+                        <img src="~/Content/images/slider/CMNow.png" style="height:200px" />
+                        <h5 style="font-weight:bold;">@Html.Label(Private_University.Resources.Home.CMName, new { @class = "person-name" })</h5>
+                        <p>@Html.Label(Private_University.Resources.Home.CMPost, new { @class = "post-name" })</p>
+
+                    </div>
+                </div>
+                <div class="ed-rese-grid ed-rese-grid-mar-bot-30" style="margin: 0px 18px;">
                     <div class="ed-rsear-dec ed-faci-full-bot text-center" style="min-height:280px;margin:0;text-align:center">
-                        <img src="~/Content/images/slider/umesh_vc.jpg" style="height:180px" />
-                        <h5 style="font-weight:bold;">@Html.Label(Private_University.Resources.Home.VCName, new { @class = "person-name" })</h5>
-                        <p>@Html.Label(Private_University.Resources.Home.VCPost, new { @class = "post-name" })</p>
-                        <span>@Html.Label(Private_University.Resources.Home.CGPURC, new { @class = "purc-name" })</span>
+                        <img src="~/Content/images/slider/Pf_V_K_Goyal.jpg" style="height:180px" />
+                        <h5 style="font-weight:bold;">@Html.Label(Private_University.Resources.Home.HODName, new { @class = "person-name" })</h5>
+                        <p>@Html.Label(Private_University.Resources.Home.HODPost.ToString(), new { @class = "post-name" })</p>
+
 
                     </div>
                 </div>
@@ -94,7 +102,7 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="ed-course-in">
                         <a class="course-overlay" href="~/Home/OurValues">
-                            <img src="~/Content/images/h11.jpg" alt="" />
+                            <img src="~/Content/images/CoreValues.png" alt="" />
                             <span>@Html.Label(Private_University.Resources.Home.OurValues, new { @class = "course-overlay-span" })</span>
                         </a>
                     </div>
@@ -103,7 +111,7 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="ed-course-in">
                         <a class="course-overlay" href="~/Home/OrganizationStructure">
-                            <img src="~/Content/images/uvi.jpg" alt="" />
+                            <img src="~/Content/images/OrgStr.jpg" alt="" />
                             <span>@Html.Label(Private_University.Resources.Home.OrgStruct, new { @class = "course-overlay-span" })</span>
                         </a>
                     </div>
@@ -111,7 +119,7 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="ed-course-in">
                         <a class="course-overlay" href="~/Home/WorldRecord">
-                            <img src="~/Content/images/h10.jpg" alt="" height="20" />
+                            <img src="~/Content/images/WorldRecordLogo.png" alt="" height="20" />
                             <span>@Html.Label(Private_University.Resources.Home.WorldRecord, new { @class = "course-overlay-span" })</span>
                         </a>
                     </div>
@@ -129,10 +137,12 @@
             <div class="ho-ex-title">
                 <h4>@Html.Label(Private_University.Resources.Home.AnnualDetails, new { @class = "ho-ex-title-h4" })</h4>
             </div>
-            <div class="ho-ev-latest ho-ev-latest-bg-2">
-                <div class="ho-lat-ev">
-                    <h4>@Html.Label(Private_University.Resources.Home.AnnualReport, new { @class = "ho-lat-ev-h4" })</h4>
-                </div>
+            <div class="ho-ev-latest ho-ev-latest-bg-20">
+                <a href="/Home/AnnualReports">
+                    <div class="ho-lat-ev">
+                        <h4>@Html.Label(Private_University.Resources.Home.AnnualReport, new { @class = "ho-lat-ev-h4" })</h4>
+                    </div>
+                </a>
             </div>
         </div>
         <div class="col-md-4 col-sm-4 col-xs-12">

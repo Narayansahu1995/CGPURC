@@ -160,7 +160,7 @@
     <value>Gariyaband</value>
   </data>
   <data name="GovName" xml:space="preserve">
-    <value>Sushri Anusuiya Uikey</value>
+    <value>Shri Ramen Deka</value>
   </data>
   <data name="GovPost" xml:space="preserve">
     <value>Hon`ble Governor of Chhattisgarh</value>
@@ -246,13 +246,25 @@
   <data name="UniversityRaipur" xml:space="preserve">
     <value>University Raipur</value>
   </data>
-  <data name="VCName" xml:space="preserve">
-    <value>Prof (Dr) Colonel Umesh Kumar Mishra</value>
+  <data name="HODName" xml:space="preserve">
+    <value>Professor Vijay Kumar Goyal</value>
   </data>
-  <data name="VCPost" xml:space="preserve">
-    <value>Chairman CGPURC (Former Vice Chancellor)</value>
+  <data name="HODPost" xml:space="preserve">
+    <value>Chairman CGPURC</value>
   </data>
   <data name="WorldRecord" xml:space="preserve">
     <value>World Record</value>
+  </data>
+  <data name="AnjaneyaUniversity" xml:space="preserve">
+    <value>Anjaneya University</value>
+  </data>
+  <data name="DavaraUniversity" xml:space="preserve">
+    <value>Shir Davara University</value>
+  </data>
+  <data name="CMName" xml:space="preserve">
+    <value>Shri Vishnu Deo Sai</value>
+  </data>
+  <data name="CMPost" xml:space="preserve">
+    <value>Hon'ble Chief Minister of Chhattisgarh</value>
   </data>
 </root>

@@ -82,12 +82,10 @@
                                 @Html.ValidationMessageFor(model => model.Student_Id, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-offset-6 col-md-6">
-                                <input type="button" value="Search" class="btn btn-primary" id="SearchBtn" /> 
-                               
-                            </div>
-                        </div>
+                        <div class="row justify-content-start" style="display: flex;justify-content: space-evenly;">
+                                    <input type="button" value="Search" class="btn btn-primary" id="SearchBtn" />
+                                    <input type="button" value="Reset" class="btn btn-primary" id="ResetBtn" />
+                         </div>
 
                         <div class='alert alert-danger' role='alert' id="GetMsg" style="display:none;">
                             Entered Student ID does not exist !!
@@ -245,33 +243,13 @@
 @Html.Raw(TempData["FinalMsg"])
 
 <script type="text/javascript">   
-
-    function EnableEdit() {
-        $(".form-control").css('pointer-events', 'auto');
-        $(".ENText").css('pointer-events', 'none');        
-    }
-
-    function GetDDLSelections() {
-        var Univ_subCourse_ID =  $("#course").val();
-       
-        //$.get("Sub_Course", { Univ_Course_ID: data.Univ_Course_ID }, function (data) {
-        //    $("#subCourse").html(data);
-        //    $("#subCourse").val(Univ_subCourse_ID);
-        //});
-        //$.get("Course_Mode_1", { Univ_Course_ID: data.Univ_Course_ID }, function (data) {
-        //    $("#CourseMode").html(data);
-        //    $("#CourseMode").val(Course_Mode_ID);
-        //});
-        //$.get("Course_Year_Sem", { Univ_Course_ID: data.Univ_Course_ID }, function (data) {
-        //    $("#Year_Sem").html(data);
-        //    $("#Year_Sem").val(Semester_Year);
-        //});
-        alert("Value =" + Univ_subCourse_ID);
-    }
-
+    
     $(document).ready(function () {
+
+        var Session_ID = $("#Session_ID").val();
+        var Semester_Year;
         $("#SearchBtn").click(function () {
-            debugger;
+            var SY_Value;           
             if ($("#Student_Id").val() !== "") {
                 var SID = 0;
                    SID = parseInt($("#Student_Id").val());
@@ -291,10 +269,17 @@
 
                         $("#GetMsg").css("display", "none");
                         $(".form-control").css('pointer-events', 'auto');
-                        $(".ENText").css('pointer-events', 'none');
+                        $("#Student_Id").css({ 'pointer-events': 'none', "background-color": "#d3d3d370" });
+                        //$("#Student_Id").prop("disabled", true);
+
                         var Univ_subCourse_ID = data.Univ_subCourse_ID;
                         var Course_Mode_ID = data.Course_Mode_ID;
-                        var Semester_Year = data.Semester_Year;
+                         Semester_Year = data.Semester_Year;
+                        $.get("Sub_Course", { Univ_Course_ID: data.Univ_Course_ID }, function (data) {
+                            $("#subCourse").html(data);
+                            $("#subCourse").val(Univ_subCourse_ID);
+                        });
+
                         $.get("Sub_Course", { Univ_Course_ID: data.Univ_Course_ID }, function (data) {
                             $("#subCourse").html(data);
                             $("#subCourse").val(Univ_subCourse_ID);
@@ -306,6 +291,7 @@
                         $.get("Course_Year_Sem", { Univ_Course_ID: data.Univ_Course_ID }, function (data) {
                             $("#Year_Sem").html(data);
                             $("#Year_Sem").val(Semester_Year);
+                            SY_Value = parseInt(Semester_Year);
                         });
                         $("#Enrollment_Number").val(data.Enrollment_Number);
                         $("#Student_Name").val(data.Student_Name);
@@ -321,6 +307,10 @@
                         $("#course").val(data.Univ_Course_ID);
                         $("#Student_Id").val(data.Student_Id);
                         
+                        //if (Semester_Year == 1) {                            
+                        //    $("#Year_Sem").css({'pointer-events':'none',"background-color": "#d3d3d370"});                            
+                        //}
+                        
                     }
                 });
             }
@@ -329,9 +319,37 @@
                 $("#GetMsg").text("Enter enrollment No !!");
                 $("#GetMsg").css("display", "block");
             }
+            
         });
 
+        $("#ResetBtn").click(function () {
 
+            if ($("#Student_Id").prop("pointer-events", "none")) {
+                //$('#Student_Id').prop("disabled", false);
+                $("#Student_Id").css({ 'pointer-events': 'auto', "background-color": "" });
+            }
+            $("#GetMsg").css("display", "none");
+
+            var GenderList = $("#Gender").html();
+            var CourseList = $("#course").html();
+            $(".form-control").css('pointer-events', 'none');
+            $("#Student_Id").css('pointer-events', 'auto');
+            $('input[type=text]').each(function () {
+                $(this).val('');
+            });
+            $('select').empty();
+            $('input[type=date]').each(function () {
+                $(this).val('');
+            });
+            $(".ENText").val('');
+
+            $("#Gender").append(GenderList);
+            $("#course").append(CourseList);
+
+            //if ($("#Year_Sem").css("pointer-events")=="none") {
+            //    $("#Year_Sem").css({ 'pointer-events': 'auto', "background-color": "" });                
+            //}
+        });
 
         $("#subCourse").html("<option>----------Select Sub Course-----------</option>");
         $("#CourseMode").html("<option>---------Select Course Mode (Year/Semester)-----------</option>");
@@ -400,7 +418,8 @@
         });
 
         $("#course").change(function () {
-            var id1 = $(this).val();           
+            var id1 = $(this).val();
+            $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
             $.get("Course_Mode_1", { Univ_Course_ID: id1 }, function (data) {
                 $("#CourseMode").html(data);
             });
@@ -408,11 +427,21 @@
 
         $("#CourseMode").change(function () {
             var id1 = $("#course").find('option:selected').val();
-            $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");
+            $("#Year_Sem").html("<option>-----------Select Persuing (Year/Semester)-----------</option>");            
             $.get("Course_Year_Sem", { Univ_Course_ID: id1 }, function (data) {
                 $("#Year_Sem").html(data);
+                //if (Session_ID == 4 || Semester_Year == 1) {
+                //    $("#Year_Sem").val(1);
+                //    $("#Year_Sem").css({ 'pointer-events': 'none', "background-color": "#d3d3d370" });
+                //}
+               
             });
+            
         });
+
+        //$("#Year_Sem").click(function () {
+        //    $("#Year_Sem option[value='1']").remove();            
+        //});
     });
 
 
