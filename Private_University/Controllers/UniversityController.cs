@@ -419,13 +419,13 @@ namespace Private_University.Controllers
                 string receiptId = "PU" + DateTime.Now.ToString("yyyyMMddHHmmss") + new Random().Next(100, 999);
 
                 // ✅ Load Razorpay keys from Web.config
-                //string key = ConfigurationManager.AppSettings["RazorpayKey"];
-                //string secret = ConfigurationManager.AppSettings["RazorpaySecret"];
+                string razorpayKey = ConfigurationManager.AppSettings["RazorpayKey"];
+                string razorpaySecret = ConfigurationManager.AppSettings["RazorpaySecret"];
 
-                RazorpayClient client = new RazorpayClient("rzp_test_e6PwERqvUunUHR", "JZH6W5L2EBFUCOSycfEVaIR6");
+                RazorpayClient client = new RazorpayClient(razorpayKey, razorpaySecret);
 
                 // ✅ Amount in paise
-           
+
                 // ✅ Create Razorpay order
                 var options = new Dictionary<string, object>();
                 options.Add("amount", Convert.ToInt32(PGTL.Payble_Amt * 100)); // paise
@@ -436,7 +436,7 @@ namespace Private_University.Controllers
 
                 // ✅ Store order ID for verification
                 Session["OrderId"] = order["id"].ToString();
-                ViewBag.Key = "rzp_test_e6PwERqvUunUHR";
+                ViewBag.Key = razorpayKey;
 
                 // ✅ Prepare request model for View
                 RazorPG_Request RPG = new RazorPG_Request
@@ -638,12 +638,11 @@ namespace Private_University.Controllers
 
             TxnCheck TC = appClass.PGTxnCheck(razorpay_order_id);
 
-            string key = "rzp_test_e6PwERqvUunUHR";
-            string secret = "JZH6W5L2EBFUCOSycfEVaIR6";
+            string razorpayKey = ConfigurationManager.AppSettings["RazorpayKey"];
+            string razorpaySecret = ConfigurationManager.AppSettings["RazorpaySecret"];
+            RazorpayClient client = new RazorpayClient(razorpayKey, razorpaySecret);
 
-            RazorpayClient client = new RazorpayClient(key, secret);
-
-            string generated_signature = appClass.HMAC_Sha256(razorpay_order_id + "|" + razorpay_payment_id, secret);
+            string generated_signature = appClass.HMAC_Sha256(razorpay_order_id + "|" + razorpay_payment_id, razorpaySecret);
 
             try
             {
