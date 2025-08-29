@@ -1,4 +1,6 @@
 ﻿using System;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,11 +10,11 @@ using Private_University.Models;
 using Private_University.App_Code;
 using System.Data;
 using Newtonsoft.Json;
-using System.Web.Http.Results;
+using System.Globalization;
 
 namespace Private_University.Controllers
 {
-	public class FeesCollectController : Controller
+    public class FeesCollectController : Controller
 	{
 		// GET: FeesCollect
 		[SessionCheck]
@@ -357,51 +359,91 @@ namespace Private_University.Controllers
         [HttpPost]
         public ActionResult ValidateExcelFile(HttpPostedFileBase file)
         {
-            // Step 2.1: Check if file is selected
+            AppClass appClass = new AppClass();
+            List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
+
             if (file == null || file.ContentLength == 0)
             {
                 TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
-                return View();
+                return View("InvalidRecords", invalidRecords);
             }
-
-            // Step 2.2: Prepare list to collect invalid records
-            List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
 
             try
             {
-                // Step 2.3: Read Excel using EPPlus
-                using (var package = new ExcelPackage(file.InputStream))
+                using (var stream = file.InputStream)
                 {
-                    var worksheet = package.Workbook.Worksheets[0]; // first sheet
-                    int rowCount = worksheet.Dimension.Rows;
+                    IWorkbook workbook = new XSSFWorkbook(stream); // .xlsx
+                    ISheet sheet = workbook.GetSheetAt(0);
 
-                    // Step 2.4: Loop through each row (skip header)
-                    for (int row = 2; row <= rowCount; row++)
+                    if (sheet == null)
                     {
-                        string dateStr = worksheet.Cells[row, 1].Text.Trim();        // Date column
-                        string enrollmentNo = worksheet.Cells[row, 2].Text.Trim();   // Enrollment column
-                        string issues = "";
+                        TempData["msg"] = "<div class='alert alert-danger'>Worksheet not found!</div>";
+                        return View("InvalidRecords", invalidRecords);
+                    }
 
-                        // Step 2.5: Validate date format (DD/MM/YYYY)
-                        if (!DateTime.TryParseExact(dateStr, "dd/MM/yyyy",
-                            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    int lastRow = sheet.LastRowNum;
+
+                    for (int row = 1; row <= lastRow; row++) // skip header
+                    {
+                        IRow currentRow = sheet.GetRow(row);
+                        if (currentRow == null) continue;
+
+                        string enrollmentNo = currentRow.GetCell(1)?.ToString().Trim(); // Enrollment No (col index 1)
+                        string dateStr = "";
+                        string issues = "";
+                        DateTime parsedDate;
+
+                        ICell dateCell = currentRow.GetCell(3); // Date column (col index 3)
+
+                        // ✅ STOP at first completely blank row
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) && (dateCell == null || string.IsNullOrWhiteSpace(dateCell.ToString())))
                         {
-                            issues += "Invalid Date Format; ";
+                            break;
                         }
 
-                        // Step 2.6: Check enrollment number exists in DB
-                        bool exists = appClass.CheckEnrollmentExists(enrollmentNo);
-                        if (!exists)
+                        // ===== Date Validation =====
+                        if (dateCell != null)
+                        {
+                            if (dateCell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(dateCell))
+                            {
+                                parsedDate = dateCell.DateCellValue;
+                                dateStr = parsedDate.ToString("dd/MM/yyyy");
+                            }
+                            else
+                            {
+                                dateStr = dateCell.ToString().Trim();
+
+                                if (!DateTime.TryParseExact(dateStr,
+                                    new[] { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" },
+                                    CultureInfo.InvariantCulture,
+                                    DateTimeStyles.None,
+                                    out parsedDate))
+                                {
+                                    issues += "Invalid Date Format (must be DD/MM/YYYY); ";
+                                }
+                                else
+                                {
+                                    dateStr = parsedDate.ToString("dd/MM/yyyy");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            issues += "Date is missing; ";
+                        }
+
+                        // ===== Enrollment Validation =====
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) || !appClass.CheckEnrollmentExists(enrollmentNo))
                         {
                             issues += "Enrollment No not found; ";
                         }
 
-                        // Step 2.7: Add invalid record to list
+                        // ===== Collect invalid rows =====
                         if (!string.IsNullOrEmpty(issues))
                         {
-                            invalidRecords.Add(new ExcelValidationResult
+                            invalidRecords.Add(new FeeExcelValidationResult
                             {
-                                RowNumber = row,
+                                RowNumber = row + 1, // Excel row number (1-based)
                                 EnrollmentNo = enrollmentNo,
                                 DateValue = dateStr,
                                 Issues = issues.TrimEnd(' ', ';')
@@ -410,15 +452,17 @@ namespace Private_University.Controllers
                     }
                 }
 
-                // Step 2.8: Return view with invalid records
                 return View("InvalidRecords", invalidRecords);
             }
             catch (Exception ex)
             {
                 TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
-                return View();
+                return View("InvalidRecords", invalidRecords);
             }
         }
+
+
+
 
     }
 }

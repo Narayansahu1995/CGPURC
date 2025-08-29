@@ -1,0 +1,40 @@
+﻿@model List<Private_University.Models.FeeExcelValidationResult>
+
+@{
+    ViewBag.Title = "Invalid Records";
+}
+
+<h2>Invalid Records</h2>
+
+@if (Model != null && Model.Any())
+{
+    <div class="alert alert-danger" style="margin-top:20px;">
+        <strong>Oops!</strong> Some records are invalid.
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Row #</th>
+                <th>Enrollment No</th>
+                <th>Date</th>
+                <th>Issues</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.RowNumber</td>
+                    <td>@item.EnrollmentNo</td>
+                    <td>@item.DateValue</td>
+                    <td>@item.Issues</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No invalid records found.</p>
+}

@@ -4018,13 +4018,21 @@ WHERE st.Is_Deleted= 0 and st.Student_Id =@Student_Id and st.University_ID=@Univ
 			return val;
 		}
 
-		/*Payment Gateway End*/
+        public bool CheckEnrollmentExists(string enrollmentNo)
+        {
+            // logic here
+            return true; // Just a dummy return for now
+        }
 
-	}
+        /*Payment Gateway End*/
+
+    }
 
 	public class VerificationCode
 	{
 		public string Mobile_Code { get; set; }
 		public string Email_Code { get; set; }
 	}
+ 
+  
 }
