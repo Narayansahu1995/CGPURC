@@ -364,8 +364,7 @@ namespace Private_University.Controllers
 
             if (file == null || file.ContentLength == 0)
             {
-                TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
-                return View("InvalidRecords", invalidRecords);
+                return Json(new { success = false, message = "No file selected!" });
             }
 
             try
@@ -377,11 +376,13 @@ namespace Private_University.Controllers
 
                     if (sheet == null)
                     {
-                        TempData["msg"] = "<div class='alert alert-danger'>Worksheet not found!</div>";
-                        return View("InvalidRecords", invalidRecords);
+                        return Json(new { success = false, message = "Worksheet not found!" });
                     }
 
                     int lastRow = sheet.LastRowNum;
+
+                    // ✅ keep a set for duplicate check
+                    HashSet<string> seenRecords = new HashSet<string>();
 
                     for (int row = 1; row <= lastRow; row++) // skip header
                     {
@@ -393,10 +394,12 @@ namespace Private_University.Controllers
                         string issues = "";
                         DateTime parsedDate;
 
+                        ICell feeCell = currentRow.GetCell(2);  // Fee Amount column (col index 2)
                         ICell dateCell = currentRow.GetCell(3); // Date column (col index 3)
 
                         // ✅ STOP at first completely blank row
-                        if (string.IsNullOrWhiteSpace(enrollmentNo) && (dateCell == null || string.IsNullOrWhiteSpace(dateCell.ToString())))
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) &&
+                            (dateCell == null || string.IsNullOrWhiteSpace(dateCell.ToString())))
                         {
                             break;
                         }
@@ -438,6 +441,43 @@ namespace Private_University.Controllers
                             issues += "Enrollment No not found; ";
                         }
 
+                        // ===== Fee Amount Validation =====
+                        double feeAmount = -1;
+                        if (feeCell == null || string.IsNullOrWhiteSpace(feeCell.ToString()))
+                        {
+                            issues += "Fee Amount is missing; ";
+                        }
+                        else
+                        {
+                            if (feeCell.CellType == CellType.Numeric)
+                            {
+                                feeAmount = feeCell.NumericCellValue;
+                            }
+                            else if (!double.TryParse(feeCell.ToString().Trim(), out feeAmount))
+                            {
+                                issues += "Fee Amount must be numeric; ";
+                            }
+
+                            if (feeAmount <= 0)
+                            {
+                                issues += "Fee Amount must be greater than 0; ";
+                            }
+                        }
+
+                        // ===== Duplicate Validation =====
+                        if (!string.IsNullOrWhiteSpace(enrollmentNo) && !string.IsNullOrWhiteSpace(dateStr) && feeAmount > 0)
+                        {
+                            string key = $"{enrollmentNo}|{feeAmount}|{dateStr}";
+                            if (seenRecords.Contains(key))
+                            {
+                                issues += "Duplicate record found in Excel; ";
+                            }
+                            else
+                            {
+                                seenRecords.Add(key);
+                            }
+                        }
+
                         // ===== Collect invalid rows =====
                         if (!string.IsNullOrEmpty(issues))
                         {
@@ -452,15 +492,21 @@ namespace Private_University.Controllers
                     }
                 }
 
-                return View("InvalidRecords", invalidRecords);
+                // ✅ Return JSON (for modal display)
+                if (invalidRecords.Any())
+                {
+                    return Json(new { success = false, records = invalidRecords });
+                }
+                else
+                {
+                    return Json(new { success = true, message = "File validated successfully. No errors found!" });
+                }
             }
             catch (Exception ex)
             {
-                TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
-                return View("InvalidRecords", invalidRecords);
+                return Json(new { success = false, message = "Error reading Excel: " + ex.Message });
             }
         }
-
 
 
 

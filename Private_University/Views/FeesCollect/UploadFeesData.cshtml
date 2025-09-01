@@ -124,4 +124,71 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="invalidModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Invalid Records</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="invalidTable">
+                    <thead>
+                        <tr>
+                            <th>Row</th>
+                            <th>Enrollment No</th>
+                            <th>Date</th>
+                            <th>Issues</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function() {
+    $("#excelForm").submit(function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: '@Url.Action("ValidateExcelFile", "FeesCollect")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                if (!res.success) {
+                    // clear old rows
+                    $("#invalidTable tbody").empty();
+
+                    // add invalid rows
+                    $.each(res.records, function(i, record) {
+                        $("#invalidTable tbody").append(
+                            "<tr>" +
+                              "<td>" + record.RowNumber + "</td>" +
+                              "<td>" + record.EnrollmentNo + "</td>" +
+                              "<td>" + record.DateValue + "</td>" +
+                              "<td>" + record.Issues + "</td>" +
+                            "</tr>"
+                        );
+                    });
+
+                    // show modal
+                    $("#invalidModal").modal("show");
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function() {
+                alert("Something went wrong!");
+            }
+        });
+    });
+});
+</script>
