@@ -1,18 +1,19 @@
 ﻿@model List<Private_University.Models.FeeExcelValidationResult>
 
 @{
-    ViewBag.Title = "Invalid Records";
+    ViewBag.Title = "InvalidRecord";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <h2>Invalid Records</h2>
 
 @if (Model != null && Model.Any())
 {
-    <div class="alert alert-danger" style="margin-top:20px;">
+    <div class="alert alert-danger mt-3">
         <strong>Oops!</strong> Some records are invalid.
     </div>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped mt-2">
         <thead>
             <tr>
                 <th>Row #</th>
@@ -36,5 +37,9 @@
 }
 else
 {
-    <p>No invalid records found.</p>
+    <div class="alert alert-success mt-3">
+        No invalid records found.
+    </div>
 }
+
+<h3 class="text-danger">Note: Please correct above records & submit.</h3>

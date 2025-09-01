@@ -364,7 +364,8 @@ namespace Private_University.Controllers
 
             if (file == null || file.ContentLength == 0)
             {
-                return Json(new { success = false, message = "No file selected!" });
+                TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
+                return View("InvalidRecords", invalidRecords);
             }
 
             try
@@ -376,7 +377,8 @@ namespace Private_University.Controllers
 
                     if (sheet == null)
                     {
-                        return Json(new { success = false, message = "Worksheet not found!" });
+                        TempData["msg"] = "<div class='alert alert-danger'>Worksheet not found!</div>";
+                        return View("InvalidRecords", invalidRecords);
                     }
 
                     int lastRow = sheet.LastRowNum;
@@ -492,23 +494,20 @@ namespace Private_University.Controllers
                     }
                 }
 
-                // ✅ Return JSON (for modal display)
                 if (invalidRecords.Any())
-                {
-                    return Json(new { success = false, records = invalidRecords });
-                }
-                else
-                {
-                    return Json(new { success = true, message = "File validated successfully. No errors found!" });
-                }
+                    return View("InvalidRecords", invalidRecords);
+
+                // ✅ All records valid, redirect to UploadFees view
+                ViewBag.Status = true;
+                TempData["msg"] = "<div class='alert alert-success'>All records are valid!</div>";
+                return View("UploadFeesData");
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Error reading Excel: " + ex.Message });
+                TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
+                return View("InvalidRecords", invalidRecords);
             }
         }
-
-
 
     }
 }
