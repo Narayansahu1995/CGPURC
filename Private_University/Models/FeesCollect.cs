@@ -320,4 +320,12 @@ namespace Private_University.Models
 
 	}
 
+    public class FeeExcelValidationResult
+    {
+        public int RowNumber { get; set; }
+        public string EnrollmentNo { get; set; }
+        public string DateValue { get; set; }
+        public string Issues { get; set; }
+    }
+
 }

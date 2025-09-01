@@ -1,4 +1,6 @@
 ﻿using System;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,11 +10,11 @@ using Private_University.Models;
 using Private_University.App_Code;
 using System.Data;
 using Newtonsoft.Json;
-using System.Web.Http.Results;
+using System.Globalization;
 
 namespace Private_University.Controllers
 {
-	public class FeesCollectController : Controller
+    public class FeesCollectController : Controller
 	{
 		// GET: FeesCollect
 		[SessionCheck]
@@ -315,6 +317,10 @@ namespace Private_University.Controllers
             return View(appClass.Fees_Files_for_University(ARespo.University_ID, ARespo.Session_ID));
         }
 
+
+    
+
+
         [HttpGet]
         [SessionCheck]
         public ActionResult RptUploadedFeesData()
@@ -348,6 +354,159 @@ namespace Private_University.Controllers
                 Msg = "Error in deleting File !!";
             }
             return Msg;
+        }
+
+        [HttpPost]
+        public ActionResult ValidateExcelFile(HttpPostedFileBase file)
+        {
+            AppClass appClass = new AppClass();
+            List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
+
+            if (file == null || file.ContentLength == 0)
+            {
+                TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
+                return View("InvalidRecords", invalidRecords);
+            }
+
+            try
+            {
+                using (var stream = file.InputStream)
+                {
+                    IWorkbook workbook = new XSSFWorkbook(stream); // .xlsx
+                    ISheet sheet = workbook.GetSheetAt(0);
+
+                    if (sheet == null)
+                    {
+                        TempData["msg"] = "<div class='alert alert-danger'>Worksheet not found!</div>";
+                        return View("InvalidRecords", invalidRecords);
+                    }
+
+                    int lastRow = sheet.LastRowNum;
+
+                    // ✅ keep a set for duplicate check
+                    HashSet<string> seenRecords = new HashSet<string>();
+
+                    for (int row = 1; row <= lastRow; row++) // skip header
+                    {
+                        IRow currentRow = sheet.GetRow(row);
+                        if (currentRow == null) continue;
+
+                        string enrollmentNo = currentRow.GetCell(1)?.ToString().Trim(); // Enrollment No (col index 1)
+                        string dateStr = "";
+                        string issues = "";
+                        DateTime parsedDate;
+
+                        ICell feeCell = currentRow.GetCell(2);  // Fee Amount column (col index 2)
+                        ICell dateCell = currentRow.GetCell(3); // Date column (col index 3)
+
+                        // ✅ STOP at first completely blank row
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) &&
+                            (dateCell == null || string.IsNullOrWhiteSpace(dateCell.ToString())))
+                        {
+                            break;
+                        }
+
+                        // ===== Date Validation =====
+                        if (dateCell != null)
+                        {
+                            if (dateCell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(dateCell))
+                            {
+                                parsedDate = dateCell.DateCellValue;
+                                dateStr = parsedDate.ToString("dd/MM/yyyy");
+                            }
+                            else
+                            {
+                                dateStr = dateCell.ToString().Trim();
+
+                                if (!DateTime.TryParseExact(dateStr,
+                                    new[] { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" },
+                                    CultureInfo.InvariantCulture,
+                                    DateTimeStyles.None,
+                                    out parsedDate))
+                                {
+                                    issues += "Invalid Date Format (must be DD/MM/YYYY); ";
+                                }
+                                else
+                                {
+                                    dateStr = parsedDate.ToString("dd/MM/yyyy");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            issues += "Date is missing; ";
+                        }
+
+                        // ===== Enrollment Validation =====
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) || !appClass.CheckEnrollmentExists(enrollmentNo))
+                        {
+                            issues += "Enrollment No not found; ";
+                        }
+
+                        // ===== Fee Amount Validation =====
+                        double feeAmount = -1;
+                        if (feeCell == null || string.IsNullOrWhiteSpace(feeCell.ToString()))
+                        {
+                            issues += "Fee Amount is missing; ";
+                        }
+                        else
+                        {
+                            if (feeCell.CellType == CellType.Numeric)
+                            {
+                                feeAmount = feeCell.NumericCellValue;
+                            }
+                            else if (!double.TryParse(feeCell.ToString().Trim(), out feeAmount))
+                            {
+                                issues += "Fee Amount must be numeric; ";
+                            }
+
+                            if (feeAmount <= 0)
+                            {
+                                issues += "Fee Amount must be greater than 0; ";
+                            }
+                        }
+
+                        // ===== Duplicate Validation =====
+                        if (!string.IsNullOrWhiteSpace(enrollmentNo) && !string.IsNullOrWhiteSpace(dateStr) && feeAmount > 0)
+                        {
+                            string key = $"{enrollmentNo}|{feeAmount}|{dateStr}";
+                            if (seenRecords.Contains(key))
+                            {
+                                issues += "Duplicate record found in Excel; ";
+                            }
+                            else
+                            {
+                                seenRecords.Add(key);
+                            }
+                        }
+
+                        // ===== Collect invalid rows =====
+                        if (!string.IsNullOrEmpty(issues))
+                        {
+                            invalidRecords.Add(new FeeExcelValidationResult
+                            {
+                                RowNumber = row + 1, // Excel row number (1-based)
+                                EnrollmentNo = enrollmentNo,
+                                DateValue = dateStr,
+                                Issues = issues.TrimEnd(' ', ';')
+                            });
+                        }
+                    }
+                }
+
+                if (invalidRecords.Any())
+                    return View("InvalidRecords", invalidRecords);
+
+                // ✅ All records valid, redirect to UploadFees view
+                ViewBag.Status = true;
+                TempData["msg"] = "<div class='alert alert-success'>All records are valid!</div>";
+                return View("UploadFeesData");
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
+                return View("InvalidRecords", invalidRecords);
+            }
         }
 
     }

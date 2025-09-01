@@ -41,8 +41,14 @@
                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
 
                                     @*@Html.TextBox("file", "", new { type = "file" })*@
-                                    <br /> <input type="submit" value="Upload" class="btn btn-primary col-md-2" />
-
+                                    <br /> 
+                                    <input type="submit" value="Check Data" class="btn btn-primary col-md-2"
+                                           formaction="@Url.Action("ValidateExcelFile", "FeesCollect")" />
+                                    <br />
+                                    @if (ViewBag.Status == true)
+                                    {
+                                    <input type="submit" value="Upload" class="btn btn-primary col-md-2" />
+                                    }
                                 </div>
 
                             </div>
@@ -63,56 +69,38 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (Model.Count() != 0 || Model != null)
+                                    @if (Model != null && Model.Any())
                                     {
                                         foreach (var item in Model)
                                         {
                                             <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.count)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.File_Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Uploaded_DateTime)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Processed)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Records_exported_to_Server)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Records_left)
-                                                </td>
-
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Remark)
-                                                </td>
+                                                <td>@Html.DisplayFor(modelItem => item.count)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.File_Name)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Uploaded_DateTime)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Processed)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Records_exported_to_Server)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Records_left)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Remark)</td>
                                                 <td style="text-align: center;">
                                                     <a href="@Html.DisplayFor(modelItem => item.File_path).ToString()">
-                                                        <img id="DW" runat="server" alt='DWbtn' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAA7GUAAOxlAc4u8ggAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAABpklEQVRoQ+3YzysEYRzH8SG5UMrJj4PiIIr8AYoif4Crm8OWq+Li4C4nP26ilKMDJTk7OrhQlHJykBQhF+H9He32NH2zs9bOfJ/t+dSrtu1p+36a2ZlnJqpRNvBVxi68yDm0Aq4rNMJ80pS5RiiTdUIZqwllrCaUsZpQxmpCGasJZawmTRl5BPAiZ9AKuEyVacE8FrGQcAetgOsdUjrpAM3INK24hTZoNfaQy3+pB/fQhvoLOTJNyC2j+IA2XCWe0YvcMwttwEpMw0xWoA2ZxirM5RDasL85RQPMRa5wF9CG1jygG2bTh0dowydNwXwm8AmtQNESvMkctBJC7vLeZQ3JIjdog5c5QbGI7MeG4W3kKFxCymRyY2xHFzoV/7FXkt8f+vlYVWQ3rc0os5dO3X284VXRDyuRfaA2p3y3iTjueZ00CCsZhzaj2EGcI2gLxACsZAzajGILcUKZHBLKuEKZGiWUcdVVmQ5YyQi0GUWqMssoGCEvPrQZRaoyvqjPMsfQFvhkG3HkEUBb4JN1xJmBtsAnkyhFmr2g3CsiS2TWJ3DFjaJv0m0vUFXJCQIAAAAASUVORK5CYII='
+                                                        <img id="DW" alt='DWbtn'
+                                                             src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAA7GUAAOxlAc4u8ggAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAABpklEQVRoQ+3YzysEYRzH8SG5UMrJj4PiIIr8AYoif4Crm8OWq+Li4C4nP26ilKMDJTk7OrhQlHJykBQhF+H9He32NH2zs9bOfJ/t+dSrtu1p+36a2ZlnJqpRNvBVxi68yDm0Aq4rNMJ80pS5RiiTdUIZqwllrCaUsZpQxmpCGasJZawmTRl5BPAiZ9AKuEyVacE8FrGQcAetgOsdUjrpAM3INK24hTZoNfaQy3+pB/fQhvoLOTJNyC2j+IA2XCWe0YvcMwttwEpMw0xWoA2ZxirM5RDasL85RQPMRa5wF9CG1jygG2bTh0dowydNwXwm8AmtQNESvMkctBJC7vLeZQ3JIjdog5c5QbGI7MeG4W3kKFxCymRyY2xHFzoV/7FXkt8f+vlYVWQ3rc0os5dO3X284VXRDyuRfaA2p3y3iTjueZ00CCsZhzaj2EGcI2gLxACsZAzajGILcUKZHBLKuEKZGiWUcdVVmQ5YyQi0GUWqMssoGCEvPrQZRaoyvqjPMsfQFvhkG3HkEUBb4JN1xJmBtsAnkyhFmr2g3CsiS2TWJ3DFjaJv0m0vUFXJCQIAAAAASUVORK5CYII='
                                                              height='30' style='cursor: pointer;' />
                                                     </a>
                                                 </td>
-                                                @*<td>
-                                                        <input type="submit" value="Delete" class="btn btn-primary" />
-                                                        @Html.DisplayFor(modelItem => item.File_ID)
-                                                    </td>*@
                                             </tr>
                                         }
                                     }
                                     else
                                     {
                                         <tr>
-                                            <td colspan="4" style="text-align:center;">
+                                            <td colspan="8" style="text-align:center;">
                                                 No Records Found
                                             </td>
                                         </tr>
                                     }
-
                                 </tbody>
+
                             </table>
 
                         </div>
