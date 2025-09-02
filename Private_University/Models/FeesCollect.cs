@@ -324,8 +324,20 @@ namespace Private_University.Models
     {
         public int RowNumber { get; set; }
         public string EnrollmentNo { get; set; }
+        public int? StudentId { get; set; }
         public string DateValue { get; set; }
+        public decimal? Amount { get; set; }
         public string Issues { get; set; }
     }
+    public class ValidatedFeeRecord
+    {
+        public string EnrollmentNo { get; set; }
+        public int StudentID { get; set; } // from DB
+        public string StudentName { get; set; }
+        public string Department { get; set; }
+        public double FeeAmount { get; set; }
+        public string FeeDate { get; set; }
+    }
+
 
 }

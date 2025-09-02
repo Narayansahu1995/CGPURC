@@ -11,6 +11,7 @@ using Private_University.App_Code;
 using System.Data;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Private_University.Controllers
 {
@@ -256,7 +257,7 @@ namespace Private_University.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SessionCheck]
-        public ActionResult UploadFeesData(HttpPostedFileBase file)
+        public ActionResult UploadFeesData_old(HttpPostedFileBase file)
         {
             AppClass appClass = new AppClass();
             AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
@@ -381,6 +382,41 @@ namespace Private_University.Controllers
                         return View("InvalidRecords", invalidRecords);
                     }
 
+                    // ✅ Expected headers
+                    string[] expectedHeaders = { "Sno.", "Enrollment No", "Fees Amount", "Fees Receiving Date (DD-MM-YYYY)" };
+
+                    IRow headerRow = sheet.GetRow(0);
+                    if (headerRow == null)
+                    {
+                        TempData["msg"] = "<div class='alert alert-danger'>Header row missing in Excel!</div>";
+                        return View("InvalidRecords", invalidRecords);
+                    }
+
+                    // ✅ Check column count first
+                    if (headerRow.LastCellNum != expectedHeaders.Length)
+                    {
+                        TempData["msg"] = $"<div class='alert alert-danger'>Invalid Excel format! Expected {expectedHeaders.Length} columns, but found {headerRow.LastCellNum}.</div>";
+                        return View("InvalidRecords", invalidRecords);
+                    }
+
+                    // ✅ Now check header names
+                    for (int i = 0; i < expectedHeaders.Length; i++)
+                    {
+                        string actualHeader = headerRow.GetCell(i)?.ToString().Trim();
+
+                        // 🔹 normalize newlines, multiple spaces
+                        actualHeader = Regex.Replace(actualHeader, @"\s+", " ");
+
+                        string expectedHeader = expectedHeaders[i];
+                        expectedHeader = Regex.Replace(expectedHeader, @"\s+", " ");
+
+                        if (!string.Equals(actualHeader, expectedHeader, StringComparison.OrdinalIgnoreCase))
+                        {
+                            TempData["msg"] = $"<div class='alert alert-danger'>Invalid Excel format! Expected '{expectedHeaders[i]}' in column {i + 1}, but found '{actualHeader}'.</div>";
+                            return View("InvalidRecords", invalidRecords);
+                        }
+                    }
+
                     int lastRow = sheet.LastRowNum;
 
                     // ✅ keep a set for duplicate check
@@ -500,7 +536,8 @@ namespace Private_University.Controllers
                 // ✅ All records valid, redirect to UploadFees view
                 ViewBag.Status = true;
                 TempData["msg"] = "<div class='alert alert-success'>All records are valid!</div>";
-                return View("UploadFeesData");
+                return View("InvalidRecords");
+            
             }
             catch (Exception ex)
             {
@@ -508,6 +545,15 @@ namespace Private_University.Controllers
                 return View("InvalidRecords", invalidRecords);
             }
         }
+
+        public ActionResult BackToUpload(bool? status)
+        {
+            // put it in ViewBag so the view can use it
+            ViewBag.Status = status;
+            return View("UploadFeesData");
+        }
+
+
 
     }
 }

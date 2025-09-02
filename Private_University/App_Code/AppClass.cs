@@ -4020,8 +4020,15 @@ WHERE st.Is_Deleted= 0 and st.Student_Id =@Student_Id and st.University_ID=@Univ
 
         public bool CheckEnrollmentExists(string enrollmentNo)
         {
-            // logic here
-            return true; // Just a dummy return for now
+         
+          
+            {
+                string Query = "SELECT Student_ID FROM Students WHERE EnrollmentNo = @EnrollmentNo";
+                MySqlCommand cmd = new MySqlCommand(Query);
+                cmd.Parameters.AddWithValue("@EnrollmentNo", enrollmentNo);
+                bool val = Fnc.CURDCommands(cmd);
+                return val;
+            }
         }
 
         /*Payment Gateway End*/

@@ -1,45 +1,60 @@
 ﻿@model List<Private_University.Models.FeeExcelValidationResult>
 
 @{
-    ViewBag.Title = "InvalidRecord";
+    ViewBag.Title = "Invalid Records";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <h2>Invalid Records</h2>
 
-@if (Model != null && Model.Any())
+@if (TempData["msg"] != null)
+{
+    <div class="mt-2">
+        @Html.Raw(TempData["msg"])
+    </div>
+}
+else if (Model != null && Model.Any())
 {
     <div class="alert alert-danger mt-3">
-        <strong>Oops!</strong> Some records are invalid.
+        <strong>Oops!</strong> Found <b>@Model.Count</b> invalid record(s). Please fix them and re-upload.
     </div>
 
-    <table class="table table-bordered table-striped mt-2">
-        <thead>
-            <tr>
-                <th>Row #</th>
-                <th>Enrollment No</th>
-                <th>Date</th>
-                <th>Issues</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td>@item.RowNumber</td>
-                    <td>@item.EnrollmentNo</td>
-                    <td>@item.DateValue</td>
-                    <td>@item.Issues</td>
+                    <th>Row #</th>
+                    <th>Enrollment No</th>
+                    <th>Date</th>
+                    <th>Issues</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.RowNumber</td>
+                        <td>@item.EnrollmentNo</td>
+                        <td>@item.DateValue</td>
+                        <td class="text-danger fw-bold">@item.Issues</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h5 class="text-danger mt-3">
+        ⚠️ Please correct the above records and submit again.
+    </h5>
 }
 else
 {
     <div class="alert alert-success mt-3">
-        No invalid records found.
+        ✅ No invalid records found.
     </div>
 }
 
-<h3 class="text-danger">Note: Please correct above records & submit.</h3>
+<!-- 🔹 Back button -->
+<a href="@Url.Action("BackToUpload", "FeesCollect", new { status = ViewBag.Status })" class="btn btn-secondary">
+    ⬅ Back to Upload
+</a>
