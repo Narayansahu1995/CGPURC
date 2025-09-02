@@ -45,7 +45,7 @@
                                     <input type="submit" value="Check Data" class="btn btn-primary col-md-2"
                                            formaction="@Url.Action("ValidateExcelFile", "FeesCollect")" />
                                     <br />
-                                    @if (ViewBag.Status == true)
+                                    @if (ViewBag.Status != null && (bool)ViewBag.Status == true)
                                     {
                                     <input type="submit" value="Upload" class="btn btn-primary col-md-2" />
                                     }
