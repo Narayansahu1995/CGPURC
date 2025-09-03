@@ -4030,6 +4030,38 @@ WHERE st.Is_Deleted= 0 and st.Student_Id =@Student_Id and st.University_ID=@Univ
         }
 
 
+
+        public class Studentinfo
+        {
+            public int StudentID { get; set; }
+      
+
+        }
+
+
+        public Studentinfo GetStudentByEnrollment(string enrollmentNo)
+        {
+            string query = @"SELECT Student_Id
+                     FROM Student_details 
+                     WHERE Enrollment_Number = @Enrollment_Number";
+
+            MySqlCommand cmd = new MySqlCommand(query);
+            cmd.Parameters.AddWithValue("@Enrollment_Number", enrollmentNo);
+
+            DataTable dt = Fnc.GetDataTable(cmd);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+                return new Studentinfo
+                {
+                    StudentID = Convert.ToInt32(row["Student_Id"]),
+               
+                };
+            }
+
+            return null; // not found
+        }
         /*Payment Gateway End*/
 
     }
