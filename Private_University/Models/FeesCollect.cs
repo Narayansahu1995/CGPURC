@@ -331,12 +331,16 @@ namespace Private_University.Models
     }
     public class ValidatedFeeRecord
     {
-        public string EnrollmentNo { get; set; }
-        public string StudentID { get; set; } // from DB
-        public string StudentName { get; set; }
-        public string Department { get; set; }
-        public double FeeAmount { get; set; }
-        public string FeeDate { get; set; }
+        public int StudentID { get; set; }         // From DB
+        public string EnrollmentNo { get; set; }   // From Excel
+        public double FeeAmount { get; set; }      // From Excel
+        public string FeeDate { get; set; }        // From Excel
+    }
+
+    public class FeeValidationViewModel
+    {
+        public List<FeeExcelValidationResult> InvalidRecords { get; set; }
+        public List<ValidatedFeeRecord> ValidRecords { get; set; }
     }
 
 

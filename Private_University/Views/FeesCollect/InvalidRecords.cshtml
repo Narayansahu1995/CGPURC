@@ -1,11 +1,11 @@
-﻿@model List<Private_University.Models.FeeExcelValidationResult>
+﻿@model Private_University.Models.FeeValidationViewModel
 
 @{
-    ViewBag.Title = "Invalid Records";
+    ViewBag.Title = "Validation Result";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Invalid Records</h2>
+<h2>Excel Validation Result</h2>
 
 @if (TempData["msg"] != null)
 {
@@ -13,10 +13,12 @@
         @Html.Raw(TempData["msg"])
     </div>
 }
-else if (Model != null && Model.Any())
+
+<!-- 🔹 Invalid Records -->
+@if (Model.InvalidRecords != null && Model.InvalidRecords.Any())
 {
     <div class="alert alert-danger mt-3">
-        <strong>Oops!</strong> Found <b>@Model.Count</b> invalid record(s). Please fix them and re-upload.
+        <strong>Oops!</strong> Found <b>@Model.InvalidRecords.Count</b> invalid record(s). Please fix them and re-upload.
     </div>
 
     <div class="table-responsive mt-2">
@@ -30,7 +32,7 @@ else if (Model != null && Model.Any())
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.InvalidRecords)
                 {
                     <tr>
                         <td>@item.RowNumber</td>
@@ -42,19 +44,51 @@ else if (Model != null && Model.Any())
             </tbody>
         </table>
     </div>
-
-    <h5 class="text-danger mt-3">
-        ⚠️ Please correct the above records and submit again.
-    </h5>
 }
-else
+
+<!-- 🔹 Valid Records -->
+@if (Model.ValidRecords != null && Model.ValidRecords.Any())
 {
     <div class="alert alert-success mt-3">
-        ✅ No invalid records found.
+        ✅ Found <b>@Model.ValidRecords.Count</b> valid record(s).
     </div>
+
+    <form method="post" action="@Url.Action("SaveValidRecords", "FeesCollect")">
+        <div class="table-responsive mt-2">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Enrollment No</th>
+                        <th>Student ID</th>
+                        <th>Fee Amount</th>
+                        <th>Fee Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.ValidRecords.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.ValidRecords[i].EnrollmentNo</td>
+                            <td>@Model.ValidRecords[i].StudentID</td>
+                            <td>@Model.ValidRecords[i].FeeAmount</td>
+                            <td>@Model.ValidRecords[i].FeeDate</td>
+                        </tr>
+
+                        <!-- Hidden inputs -->
+                        <input type="hidden" name="records[@i].EnrollmentNo" value="@Model.ValidRecords[i].EnrollmentNo" />
+                        <input type="hidden" name="records[@i].StudentID" value="@Model.ValidRecords[i].StudentID" />
+                        <input type="hidden" name="records[@i].FeeAmount" value="@Model.ValidRecords[i].FeeAmount" />
+                        <input type="hidden" name="records[@i].FeeDate" value="@Model.ValidRecords[i].FeeDate" />
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Valid Records</button>
+    </form>
 }
 
 <!-- 🔹 Back button -->
-<a href="@Url.Action("BackToUpload", "FeesCollect", new { status = ViewBag.Status })" class="btn btn-secondary">
+<a href="@Url.Action("BackToUpload", "FeesCollect")" class="btn btn-secondary mt-3">
     ⬅ Back to Upload
 </a>

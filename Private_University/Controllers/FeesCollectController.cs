@@ -556,7 +556,7 @@ namespace Private_University.Controllers
             if (file == null || file.ContentLength == 0)
             {
                 TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
-                return View("InvalidRecords", invalidRecords);
+                return RedirectToAction("BackToUpload");
             }
 
             try
@@ -569,10 +569,11 @@ namespace Private_University.Controllers
                     string[] expectedHeaders = { "Sno.", "Enrollment No", "Fees Amount", "Fees Receiving Date (DD-MM-YYYY)" };
                     IRow headerRow = sheet.GetRow(0);
 
+                    // ✅ Header validation
                     if (headerRow == null || headerRow.LastCellNum != expectedHeaders.Length)
                     {
                         TempData["msg"] = "<div class='alert alert-danger'>Invalid Excel format!</div>";
-                        return View("InvalidRecords", invalidRecords);
+                        return RedirectToAction("BackToUpload");
                     }
 
                     for (int i = 0; i < expectedHeaders.Length; i++)
@@ -581,13 +582,14 @@ namespace Private_University.Controllers
                         if (!string.Equals(actualHeader, expectedHeaders[i], StringComparison.OrdinalIgnoreCase))
                         {
                             TempData["msg"] = $"<div class='alert alert-danger'>Expected '{expectedHeaders[i]}' in column {i + 1}, but found '{actualHeader}'</div>";
-                            return View("InvalidRecords", invalidRecords);
+                            return RedirectToAction("BackToUpload");
                         }
                     }
 
                     HashSet<string> seenRecords = new HashSet<string>();
                     int lastRow = sheet.LastRowNum;
 
+                    // ✅ Row loop
                     for (int row = 1; row <= lastRow; row++)
                     {
                         IRow currentRow = sheet.GetRow(row);
@@ -622,9 +624,9 @@ namespace Private_University.Controllers
                         else issues += "Date missing; ";
 
                         // ===== Enrollment Validation =====
-                        var student = appClass.CheckEnrollmentExists(enrollmentNo); // DB lookup
+                        var student = appClass.GetStudentByEnrollment(enrollmentNo); // DB lookup
                         if (student == null)
-                            issues += "Enrollment No not found; ";
+                            issues += "Enrollment No not found in Database; ";
 
                         // ===== Fee Amount Validation =====
                         double feeAmount = -1;
@@ -643,7 +645,7 @@ namespace Private_University.Controllers
                         else
                             seenRecords.Add(key);
 
-                        // ===== Collect invalid rows =====
+                        // ===== Collect invalid/valid =====
                         if (!string.IsNullOrEmpty(issues))
                         {
                             invalidRecords.Add(new FeeExcelValidationResult
@@ -659,29 +661,27 @@ namespace Private_University.Controllers
                             validRecords.Add(new ValidatedFeeRecord
                             {
                                 EnrollmentNo = enrollmentNo,
-                                StudentID = student.StudentID,
-                                StudentName = student.FullName,
-                                Department = student.Department,
-                                FeeAmount = feeAmount,
-                                FeeDate = parsedDate
+                                StudentID = student.StudentID, // From DB
+                                FeeAmount = feeAmount,         // From Excel
+                                FeeDate = dateStr              // From Excel
                             });
                         }
                     }
                 }
 
-                if (invalidRecords.Any())
-                    return View("InvalidRecords", invalidRecords);
+                // ✅ Pass both lists to view
+                var resultModel = new FeeValidationViewModel
+                {
+                    InvalidRecords = invalidRecords,
+                    ValidRecords = validRecords
+                };
 
-                // All valid -> store valid records in TempData
-                TempData["ValidFeeRecords"] = validRecords;
-                ViewBag.Status = true;
-                TempData["msg"] = "<div class='alert alert-success'>All records are valid!</div>";
-                return View("InvalidRecords");
+                return View("InvalidRecords", resultModel);
             }
             catch (Exception ex)
             {
                 TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
-                return View("InvalidRecords", invalidRecords);
+                return RedirectToAction("BackToUpload");
             }
         }
 
@@ -692,6 +692,11 @@ namespace Private_University.Controllers
             return View("UploadFeesData");
         }
 
+
+        //public ActionResult SaveValidRecords()
+        //{
+
+        //}
 
 
     }
