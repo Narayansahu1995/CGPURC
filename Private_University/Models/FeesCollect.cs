@@ -332,7 +332,7 @@ namespace Private_University.Models
     public class ValidatedFeeRecord
     {
         public string EnrollmentNo { get; set; }
-        public int StudentID { get; set; } // from DB
+        public string StudentID { get; set; } // from DB
         public string StudentName { get; set; }
         public string Department { get; set; }
         public double FeeAmount { get; set; }

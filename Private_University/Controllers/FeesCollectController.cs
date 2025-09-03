@@ -358,7 +358,7 @@ namespace Private_University.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValidateExcelFile(HttpPostedFileBase file)
+        public ActionResult ValidateExcelFile_old(HttpPostedFileBase file)
         {
             AppClass appClass = new AppClass();
             List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
@@ -474,7 +474,7 @@ namespace Private_University.Controllers
                         }
 
                         // ===== Enrollment Validation =====
-                        if (string.IsNullOrWhiteSpace(enrollmentNo) || !appClass.CheckEnrollmentExists(enrollmentNo))
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) ||!appClass.CheckEnrollmentExists(enrollmentNo))
                         {
                             issues += "Enrollment No not found; ";
                         }
@@ -538,6 +538,145 @@ namespace Private_University.Controllers
                 TempData["msg"] = "<div class='alert alert-success'>All records are valid!</div>";
                 return View("InvalidRecords");
             
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
+                return View("InvalidRecords", invalidRecords);
+            }
+        }
+
+
+        public ActionResult ValidateExcelFile(HttpPostedFileBase file)
+        {
+            AppClass appClass = new AppClass();
+            List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
+            List<ValidatedFeeRecord> validRecords = new List<ValidatedFeeRecord>();
+
+            if (file == null || file.ContentLength == 0)
+            {
+                TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
+                return View("InvalidRecords", invalidRecords);
+            }
+
+            try
+            {
+                using (var stream = file.InputStream)
+                {
+                    IWorkbook workbook = new XSSFWorkbook(stream);
+                    ISheet sheet = workbook.GetSheetAt(0);
+
+                    string[] expectedHeaders = { "Sno.", "Enrollment No", "Fees Amount", "Fees Receiving Date (DD-MM-YYYY)" };
+                    IRow headerRow = sheet.GetRow(0);
+
+                    if (headerRow == null || headerRow.LastCellNum != expectedHeaders.Length)
+                    {
+                        TempData["msg"] = "<div class='alert alert-danger'>Invalid Excel format!</div>";
+                        return View("InvalidRecords", invalidRecords);
+                    }
+
+                    for (int i = 0; i < expectedHeaders.Length; i++)
+                    {
+                        string actualHeader = Regex.Replace(headerRow.GetCell(i)?.ToString().Trim() ?? "", @"\s+", " ");
+                        if (!string.Equals(actualHeader, expectedHeaders[i], StringComparison.OrdinalIgnoreCase))
+                        {
+                            TempData["msg"] = $"<div class='alert alert-danger'>Expected '{expectedHeaders[i]}' in column {i + 1}, but found '{actualHeader}'</div>";
+                            return View("InvalidRecords", invalidRecords);
+                        }
+                    }
+
+                    HashSet<string> seenRecords = new HashSet<string>();
+                    int lastRow = sheet.LastRowNum;
+
+                    for (int row = 1; row <= lastRow; row++)
+                    {
+                        IRow currentRow = sheet.GetRow(row);
+                        if (currentRow == null) continue;
+
+                        string enrollmentNo = currentRow.GetCell(1)?.ToString().Trim();
+                        string dateStr = "";
+                        string issues = "";
+                        DateTime parsedDate;
+
+                        ICell feeCell = currentRow.GetCell(2);
+                        ICell dateCell = currentRow.GetCell(3);
+
+                        if (string.IsNullOrWhiteSpace(enrollmentNo) &&
+                            (dateCell == null || string.IsNullOrWhiteSpace(dateCell.ToString())))
+                            break;
+
+                        // ===== Date Validation =====
+                        if (dateCell != null)
+                        {
+                            if (dateCell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(dateCell))
+                                parsedDate = dateCell.DateCellValue;
+                            else if (!DateTime.TryParseExact(dateCell.ToString().Trim(),
+                                    new[] { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" },
+                                    CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
+                            {
+                                issues += "Invalid Date Format; ";
+                                parsedDate = DateTime.MinValue;
+                            }
+                            dateStr = parsedDate != DateTime.MinValue ? parsedDate.ToString("dd/MM/yyyy") : "";
+                        }
+                        else issues += "Date missing; ";
+
+                        // ===== Enrollment Validation =====
+                        var student = appClass.CheckEnrollmentExists(enrollmentNo); // DB lookup
+                        if (student == null)
+                            issues += "Enrollment No not found; ";
+
+                        // ===== Fee Amount Validation =====
+                        double feeAmount = -1;
+                        if (feeCell == null || string.IsNullOrWhiteSpace(feeCell.ToString()))
+                            issues += "Fee Amount missing; ";
+                        else if (feeCell.CellType == CellType.Numeric)
+                            feeAmount = feeCell.NumericCellValue;
+                        else if (!double.TryParse(feeCell.ToString().Trim(), out feeAmount))
+                            issues += "Fee Amount must be numeric; ";
+                        if (feeAmount <= 0) issues += "Fee Amount must be > 0; ";
+
+                        // ===== Duplicate Validation =====
+                        string key = $"{enrollmentNo}|{feeAmount}|{dateStr}";
+                        if (seenRecords.Contains(key))
+                            issues += "Duplicate record in Excel; ";
+                        else
+                            seenRecords.Add(key);
+
+                        // ===== Collect invalid rows =====
+                        if (!string.IsNullOrEmpty(issues))
+                        {
+                            invalidRecords.Add(new FeeExcelValidationResult
+                            {
+                                RowNumber = row + 1,
+                                EnrollmentNo = enrollmentNo,
+                                DateValue = dateStr,
+                                Issues = issues.TrimEnd(' ', ';')
+                            });
+                        }
+                        else
+                        {
+                            validRecords.Add(new ValidatedFeeRecord
+                            {
+                                EnrollmentNo = enrollmentNo,
+                                StudentID = student.StudentID,
+                                StudentName = student.FullName,
+                                Department = student.Department,
+                                FeeAmount = feeAmount,
+                                FeeDate = parsedDate
+                            });
+                        }
+                    }
+                }
+
+                if (invalidRecords.Any())
+                    return View("InvalidRecords", invalidRecords);
+
+                // All valid -> store valid records in TempData
+                TempData["ValidFeeRecords"] = validRecords;
+                ViewBag.Status = true;
+                TempData["msg"] = "<div class='alert alert-success'>All records are valid!</div>";
+                return View("InvalidRecords");
             }
             catch (Exception ex)
             {

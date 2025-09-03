@@ -4020,22 +4020,21 @@ WHERE st.Is_Deleted= 0 and st.Student_Id =@Student_Id and st.University_ID=@Univ
 
         public bool CheckEnrollmentExists(string enrollmentNo)
         {
-         
-          
-            {
-                string Query = "SELECT Student_ID FROM Students WHERE EnrollmentNo = @EnrollmentNo";
-                MySqlCommand cmd = new MySqlCommand(Query);
-                cmd.Parameters.AddWithValue("@EnrollmentNo", enrollmentNo);
-                bool val = Fnc.CURDCommands(cmd);
-                return val;
-            }
+            string query = "SELECT 1 FROM Student_details WHERE Enrollment_Number = @Enrollment_Number";
+            MySqlCommand cmd = new MySqlCommand(query);
+            cmd.Parameters.AddWithValue("@Enrollment_Number", enrollmentNo);
+
+            DataTable dt = Fnc.GetDataTable(cmd);
+
+            return dt.Rows.Count > 0;
         }
+
 
         /*Payment Gateway End*/
 
     }
 
-	public class VerificationCode
+    public class VerificationCode
 	{
 		public string Mobile_Code { get; set; }
 		public string Email_Code { get; set; }
