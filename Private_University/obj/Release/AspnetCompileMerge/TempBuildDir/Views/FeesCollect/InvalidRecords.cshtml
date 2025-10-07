@@ -1,0 +1,127 @@
+﻿@model Private_University.Models.FeeValidationViewModel
+@{
+    ViewBag.Title = "Validation Result";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<h2>Excel Validation Result</h2>
+
+@if (TempData["msg"] != null)
+{
+    <div class="mt-2">
+        @Html.Raw(TempData["msg"])
+    </div>
+}
+
+<!-- 🔹 Invalid Records -->
+@if (Model.InvalidRecords != null && Model.InvalidRecords.Any())
+{
+    <div class="alert alert-danger mt-3">
+        <strong>Oops!</strong> Found <b>@Model.InvalidRecords.Count</b> invalid record(s). Please fix them and re-upload.
+    </div>
+
+    <button class="btn btn-warning mb-2" onclick="exportTableToExcel('invalidTable', 'Invalid_Records')">
+        Export Invalid Records to Excel
+    </button>
+
+    <div class="table-responsive mt-2">
+        <table id="invalidTable" class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Row #</th>
+                    <th>Enrollment No</th>
+                    <th>Date</th>
+                    <th>Fee Amount</th>
+                    <th>Issues</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InvalidRecords)
+                {
+                    <tr>
+                        <td>@item.RowNumber</td>
+                        <td>@item.EnrollmentNo</td>
+                        <td>@item.DateValue</td>
+                        <td>@item.Amount</td>
+                        <td class="text-danger fw-bold">@item.Issues</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<!-- 🔹 Valid Records -->
+@if (Model.ValidRecords != null && Model.ValidRecords.Any())
+{
+    <div class="alert alert-success mt-3">
+        ✅ Found <b>@Model.ValidRecords.Count</b> valid record(s).
+    </div>
+
+    <button class="btn btn-success mb-2" onclick="exportTableToExcel('validTable', 'Valid_Records')">
+        Export Valid Records to Excel
+    </button>
+
+    <form method="post" action="@Url.Action("SaveValidRecords", "FeesCollect")">
+        <div class="table-responsive mt-2">
+            <table id="validTable" class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Enrollment No</th>
+                        <th>Student ID</th>
+                        <th>Fee Amount</th>
+                        <th>Fee Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.ValidRecords.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.ValidRecords[i].EnrollmentNo</td>
+                            <td>@Model.ValidRecords[i].StudentID</td>
+                            <td>@Model.ValidRecords[i].FeeAmount</td>
+                            <td>@Model.ValidRecords[i].FeeDate.ToString("dd/MM/yyyy")</td>
+                        </tr>
+
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="records[@i].EnrollmentNo" value="@Model.ValidRecords[i].EnrollmentNo" />
+                        <input type="hidden" name="records[@i].StudentID" value="@Model.ValidRecords[i].StudentID" />
+                        <input type="hidden" name="records[@i].FeeAmount" value="@Model.ValidRecords[i].FeeAmount" />
+                        <input type="hidden" name="records[@i].FeeDate" value="@Model.ValidRecords[i].FeeDate" />
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">Save Valid Records</button>
+    </form>
+}
+
+<!-- 🔹 Back button -->
+<a href="@Url.Action("BackToUpload", "FeesCollect")" class="btn btn-secondary mt-3">
+    ⬅ Back to Upload
+</a>
+
+<!-- 🔹 SheetJS Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- 🔹 Export Function -->
+<script>
+function exportTableToExcel(tableId, fileName = '') {
+    const table = document.getElementById(tableId);
+
+    if (!table) return;
+
+    // Clone table to remove hidden inputs
+    const clonedTable = table.cloneNode(true);
+
+    // Remove input elements from the cloned table
+    clonedTable.querySelectorAll('input').forEach(input => input.remove());
+
+    // Convert to worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.table_to_sheet(clonedTable);
+
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, fileName + ".xlsx");
+}
+</script>

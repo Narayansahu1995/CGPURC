@@ -355,5 +355,91 @@ namespace Private_University.Models
         public string Remark { get; set; }
     }
 
+    public class ValidatedStudentRecord
+    {
+        public string Sno { get; set; }
+        public string EnrollmentNumber { get; set; }
+        public string StudentName { get; set; }
+        public string FatherName { get; set; }
+        public string Gender { get; set; }
+        public string DateOfBirth { get; set; }
+        public string AadharNumber { get; set; }
+        public string DateOfAdmission { get; set; }
+        public string StudentMobileNumber { get; set; }
+        public string FathersMobileNumber { get; set; }
+        public string EmailID { get; set; }
+        public string PermanentAddress { get; set; }
+        public string CourseName { get; set; }
+        public string CourseBranchName { get; set; }
+        public string YearSemester { get; set; }
+        public string PersuingYearSemester { get; set; }
+     
+
+        public string CourseID { get; set; }
+        public string SubCourseID { get; set; }
+
+        public string CourseModeID { get; set; }
+
+    }
+
+    public class StudentExcelValidationResult
+    {
+        public int RowNumber { get; set; }
+        public string EnrollmentNumber { get; set; }
+        public string StudentName { get; set; }
+        public string FatherName { get; set; }
+        public string ClassName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public DateTime? DateOfAdmission { get; set; }
+        public string AadharNumber { get; set; }
+        public string FatherMobile { get; set; }
+        public string Email { get; set; }
+
+        // ✅ Add these properties
+        public bool IsValid { get; set; }
+        public string ErrorMessage { get; set; }
+        public string Issues { get; set; }
+    }
+
+
+    public class StudentValidationViewModel
+    {
+        public List<StudentExcelValidationResult> InvalidRecords { get; set; }
+        public List<ValidatedStudentRecord> ValidRecords { get; set; }
+    }
+
+
+    public class CourseInfo
+    {
+        public int CourseID { get; set; }
+        public int UniversityCourseID { get; set; }
+        public int SubCourseID { get; set; }
+        public int CourseModeID { get; set; }
+    }
+
+    public class StudentDataRecord
+    {
+        public string EnrollmentNumber { get; set; }
+        public string StudentName { get; set; }
+        public string Gender { get; set; }
+        public string FatherName { get; set; }
+        public String DateOfBirth { get; set; }
+        public string AadharNumber { get; set; }
+        public String DateOfAdmission { get; set; }
+        public string StudentMobileNumber { get; set; }
+        public string FathersMobileNumber { get; set; }
+        public string EmailID { get; set; }
+        public int CourseName { get; set; } // actually CourseID
+        public int CourseBranchName { get; set; } // SubCourseID
+        public int YearSemester { get; set; } // CourseModeID
+        public string PersuingYearSemester { get; set; }
+        public string PermanentAddress { get; set; }
+    }
+
+    public class StudentSaveResult
+{
+    public int InsertedCount { get; set; }
+    public List<string> DuplicateEnrollments { get; set; } = new List<string>();
+}
 
 }

@@ -326,7 +326,7 @@ namespace Private_University.Models
         public string EnrollmentNo { get; set; }
         public int? StudentId { get; set; }
         public string DateValue { get; set; }
-        public decimal? Amount { get; set; }
+        public double? Amount { get; set; }
         public string Issues { get; set; }
     }
     public class ValidatedFeeRecord
@@ -334,7 +334,7 @@ namespace Private_University.Models
         public int StudentID { get; set; }         // From DB
         public string EnrollmentNo { get; set; }   // From Excel
         public double FeeAmount { get; set; }      // From Excel
-        public string FeeDate { get; set; }        // From Excel
+        public DateTime FeeDate { get; set; }        // From Excel
     }
 
     public class FeeValidationViewModel
@@ -342,6 +342,39 @@ namespace Private_University.Models
         public List<FeeExcelValidationResult> InvalidRecords { get; set; }
         public List<ValidatedFeeRecord> ValidRecords { get; set; }
     }
+
+
+    public class FeeRecordDto
+    {
+        public string EnrollmentNo { get; set; }
+        public string StudentID { get; set; }
+        public double FeeAmount { get; set; }
+        public DateTime FeeDate { get; set; }
+        public string University_ID { get; set; }   // ✅ Add this
+        public string Session_ID { get; set; }
+    }
+
+    public class SaveFeeResult
+    {
+        public bool IsSaved { get; set; }
+        public List<string> DuplicateRecords { get; set; } = new List<string>();
+    }
+
+    public class PaymentResultViewModel
+    {
+        public string TxnStatus { get; set; }
+        public string OrderId { get; set; }
+        public string PaymentId { get; set; }
+        public string TxnNumber { get; set; }
+        public string TxnAmt { get; set; }
+        public string Error { get; set; }
+    }
+    public class MonthDataResponse
+    {
+        public bool Exists { get; set; }
+        public string Message { get; set; }
+    }
+
 
 
 }

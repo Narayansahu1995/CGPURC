@@ -429,6 +429,7 @@ namespace Private_University.Controllers
                 // ✅ Create Razorpay order
                 var options = new Dictionary<string, object>();
                 options.Add("amount", Convert.ToInt32(PGTL.Payble_Amt * 100)); // paise
+               // options.Add("amount", Convert.ToInt32(10 * 100)); // paise
                 options.Add("currency", "INR");
                 options.Add("receipt", receiptId);
 
@@ -630,22 +631,78 @@ namespace Private_University.Controllers
 
 
         [HttpPost]
-       
-        public JsonResult RazorPayResponseJson(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature)
+  public JsonResult RazorPayResponseJson(
+    string razorpay_payment_id,
+    string razorpay_order_id,
+    string razorpay_signature,
+    string error_description = null // from frontend in case of failure
+)
         {
-            string TxnStatus_ID = "2"; // default failed
+            string TxnStatus_ID = "2"; // default = Failed
             AppClass appClass = new AppClass();
-
             TxnCheck TC = appClass.PGTxnCheck(razorpay_order_id);
 
             string razorpayKey = ConfigurationManager.AppSettings["RazorpayKey"];
             string razorpaySecret = ConfigurationManager.AppSettings["RazorpaySecret"];
             RazorpayClient client = new RazorpayClient(razorpayKey, razorpaySecret);
 
-            string generated_signature = appClass.HMAC_Sha256(razorpay_order_id + "|" + razorpay_payment_id, razorpaySecret);
+            // 🚪 Case 1: Cancelled by user (no payment attempt)
+            if (string.IsNullOrEmpty(razorpay_payment_id) && string.IsNullOrEmpty(razorpay_signature))
+            {
+                TxnStatus_ID = "4"; // Cancelled
+                RazorPG_Update RPU = new RazorPG_Update
+                {
+                    OrderId = razorpay_order_id,
+                    PG_Status_id = TxnStatus_ID,
+                    razorpay_payment_id = null,
+                    RP_signature = null,
+                 
+                };
+                appClass.Update_RP_Txn_Details(RPU);
 
+                return Json(new
+                {
+                    TxnStatus = "Cancelled",
+                    OrderId = razorpay_order_id,
+                    PaymentId = "",
+                    TxnNumber = TC?.TxnNumber ?? "",
+                    TxnAmt = TC?.TxnAmount ?? ""
+                });
+            }
+
+            // ❌ Case 2: Failed (payment created but not successful)
+            if (!string.IsNullOrEmpty(razorpay_payment_id) && string.IsNullOrEmpty(razorpay_signature))
+            {
+                TxnStatus_ID = "2"; // Failed
+                RazorPG_Update RPU = new RazorPG_Update
+                {
+                    OrderId = razorpay_order_id,
+                    PG_Status_id = TxnStatus_ID,
+                    razorpay_payment_id = razorpay_payment_id,
+                    RP_signature = null,
+                   
+                };
+                appClass.Update_RP_Txn_Details(RPU);
+
+                return Json(new
+                {
+                    TxnStatus = "Failed",
+                    OrderId = razorpay_order_id,
+                    PaymentId = razorpay_payment_id,
+                    TxnNumber = TC?.TxnNumber ?? "",
+                    TxnAmt = TC?.TxnAmount ?? "",
+                    Error = error_description
+                });
+            }
+
+            // ✅ Case 3: Success (signature present)
             try
             {
+                string generated_signature = appClass.HMAC_Sha256(
+                    razorpay_order_id + "|" + razorpay_payment_id,
+                    razorpaySecret
+                );
+
                 Dictionary<string, string> options = new Dictionary<string, string>
         {
             { "razorpay_order_id", razorpay_order_id },
@@ -654,59 +711,193 @@ namespace Private_University.Controllers
         };
 
                 Utils.verifyPaymentSignature(options);
-            }
-            catch
-            {
-                TxnStatus_ID = "2";
-                return Json(new
-                {
-                    TxnStatus = "Failed (Signature Mismatch)",
-                    OrderId = razorpay_order_id,
-                    TxnNumber = TC?.TxnNumber ?? "",
-                    TxnAmt = TC?.TxnAmount ?? ""
-                });
-            }
 
-            try
-            {
                 Payment payment = client.Payment.Fetch(razorpay_payment_id);
                 decimal paidAmount = Convert.ToDecimal(payment["amount"]) / 100;
                 decimal expectedAmount = Convert.ToDecimal(TC.TxnAmount);
 
                 if (generated_signature == razorpay_signature && paidAmount == expectedAmount)
                 {
-                    TxnStatus_ID = "3";
+                    TxnStatus_ID = "3"; // Success
                     appClass.Update_Fees_txn(TC.UniversityId, TC.FMonth, TC.FYear);
                 }
                 else
                 {
-                    TxnStatus_ID = "2";
+                    TxnStatus_ID = "2"; // Failed
                 }
             }
             catch
             {
-                TxnStatus_ID = "2";
+                TxnStatus_ID = "2"; // Failure in validation/fetch
             }
 
-            // Save transaction log
-            RazorPG_Update RPU = new RazorPG_Update
+            // Save final transaction log
+            RazorPG_Update FinalRPU = new RazorPG_Update
             {
                 OrderId = razorpay_order_id,
                 PG_Status_id = TxnStatus_ID,
                 razorpay_payment_id = razorpay_payment_id,
                 RP_signature = razorpay_signature,
+               
             };
-            appClass.Update_RP_Txn_Details(RPU);
+            appClass.Update_RP_Txn_Details(FinalRPU);
 
             return Json(new
             {
                 TxnStatus = TxnStatus_ID == "3" ? "Success" : "Failed",
                 OrderId = razorpay_order_id,
+                PaymentId = razorpay_payment_id,
                 TxnNumber = TC?.TxnNumber ?? "",
-                TxnAmt = TC?.TxnAmount ?? ""
+                TxnAmt = TC?.TxnAmount ?? "",
+                Error = TxnStatus_ID == "3" ? null : "Signature mismatch or amount mismatch"
             });
         }
-   
+
+        [HttpPost]
+        public ActionResult RazorPayResponse(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature)
+        {
+            string TxnStatus_ID = "2"; // Default = Failed
+            string errorMessage = "Unknown failure";
+            AppClass appClass = new AppClass();
+            TxnCheck TC = appClass.PGTxnCheck(razorpay_order_id);
+
+            if (TC == null)
+            {
+                // Transaction/order not found in DB
+                appClass.Update_RP_Txn_Details(new RazorPG_Update
+                {
+                    OrderId = razorpay_order_id,
+                    PG_Status_id = TxnStatus_ID,
+                    razorpay_payment_id = razorpay_payment_id,
+                    RP_signature = razorpay_signature,
+                    ErrorMessage = "Transaction not found in system"
+                });
+
+                return View("RazorPayresponse", new PaymentResultViewModel
+                {
+                    TxnStatus = "Failed",
+                    OrderId = razorpay_order_id,
+                    PaymentId = razorpay_payment_id,
+                    TxnNumber = "",
+                    TxnAmt = "",
+                    Error = "Transaction not found"
+                });
+            }
+
+            try
+            {
+                string razorpaySecret = ConfigurationManager.AppSettings["RazorpaySecret"];
+                string generated_signature = appClass.HMAC_Sha256(razorpay_order_id + "|" + razorpay_payment_id, razorpaySecret);
+
+                if (!string.Equals(generated_signature, razorpay_signature, StringComparison.Ordinal))
+                {
+                    // Signature mismatch
+                    errorMessage = "Signature mismatch";
+                }
+                else
+                {
+                    // Signature verified - now check payment details from Razorpay
+                    RazorpayClient client = new RazorpayClient(
+                        ConfigurationManager.AppSettings["RazorpayKey"],
+                        razorpaySecret
+                    );
+
+                    Payment payment = client.Payment.Fetch(razorpay_payment_id);
+                    string paymentStatus = payment["status"];
+                    decimal paidAmount = Convert.ToDecimal(payment["amount"]) / 100;
+                    decimal expectedAmount = Convert.ToDecimal(TC.TxnAmount);
+
+                    if (paymentStatus != "captured" && paymentStatus != "authorized")
+                    {
+                        errorMessage = $"Payment status is {paymentStatus}";
+                    }
+                    else if (paidAmount != expectedAmount)
+                    {
+                        errorMessage = $"Amount mismatch: Expected {expectedAmount}, but got {paidAmount}";
+                    }
+                    else
+                    {
+                        // ✅ All good - mark as success
+                        TxnStatus_ID = "3"; // Success
+                        errorMessage = null;
+
+                        // Update internal fee transaction
+                        appClass.Update_Fees_txn(TC.UniversityId, TC.FMonth, TC.FYear);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Exception: " + ex.Message;
+                TxnStatus_ID = "2";
+                RazorPG_Update FinalFailedRPU = new RazorPG_Update
+                {
+                    OrderId = razorpay_order_id,
+                    PG_Status_id = TxnStatus_ID,
+                    razorpay_payment_id = razorpay_payment_id,
+                    ErrorMessage = errorMessage
+                };
+                appClass.Update_RP_Txn_Details(FinalFailedRPU);
+            }
+
+            // ✅ Update Razorpay transaction details in DB — always
+            RazorPG_Update FinalRPU = new RazorPG_Update
+            {
+                OrderId = razorpay_order_id,
+                PG_Status_id = TxnStatus_ID,
+                razorpay_payment_id = razorpay_payment_id,
+                RP_signature = razorpay_signature,
+                ErrorMessage = errorMessage
+            };
+            appClass.Update_RP_Txn_Details(FinalRPU);
+
+            // ✅ Prepare response model
+            var result = new PaymentResultViewModel
+            {
+                TxnStatus = TxnStatus_ID == "3" ? "Success" : "Failed",
+                OrderId = razorpay_order_id,
+                PaymentId = razorpay_payment_id,
+                TxnNumber = TC?.TxnNumber ?? "",
+                TxnAmt = TC?.TxnAmount ?? "",
+                Error = TxnStatus_ID == "3" ? null : errorMessage
+            };
+
+            return View("RazorPayresponse", result);
+        }
+        public ActionResult PaymentFailed(string orderId, string paymentId)
+        {
+            const string STATUS_FAILED = "2"; // Failed status ID
+
+            var appClass = new AppClass();
+            var TC = appClass.PGTxnCheck(orderId);
+
+            // Update the transaction details in DB for failed payment
+            appClass.Update_RP_Txn_Details(new RazorPG_Update
+            {
+                OrderId = orderId,
+                PG_Status_id = STATUS_FAILED,
+                razorpay_payment_id = paymentId,
+                RP_signature = null,
+                ErrorMessage = "Payment was cancelled or failed before authorization"
+            });
+
+            // Prepare the view model for UI display
+            var model = new PaymentResultViewModel
+            {
+                TxnStatus = "Failed",
+                OrderId = orderId,
+                PaymentId = paymentId,
+                TxnNumber = TC?.TxnNumber ?? "",
+                TxnAmt = TC?.TxnAmount ?? "",
+                Error = "Payment was cancelled or failed before authorization"
+            };
+
+            return View("RazorPayresponse", model);
+        }
+
+
+
+
         public ActionResult PGtxnRpt()
         {
             AppClass appClass = new AppClass();

@@ -10,12 +10,20 @@ using System.Data.SqlClient;
 using System.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 
 namespace Private_University.Controllers
 {
     public class StudentController : Controller
     {
+
+        private static readonly Regex MobileRegex = new Regex(@"^\d{10}$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex AadhaarRegex = new Regex(@"^\d{12}$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex EmailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         FunctionClass Fnc = new FunctionClass();
         // GET: Student
         [SessionCheck]
@@ -408,6 +416,353 @@ namespace Private_University.Controllers
             }
             return View(appClass.Get_Files_List_for_University(ARespo.University_ID, ARespo.Session_ID));
         }
+
+
+        // new function to upload student data 16092025 //
+
+        [HttpGet]
+        public ActionResult UploadStudentData_new()
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            ModelState.Clear();
+            return View(appClass.Get_Files_List_for_University(ARespo.University_ID, ARespo.Session_ID));
+        }
+
+
+        [HttpPost]
+
+
+        public ActionResult UploadStudentData_new(HttpPostedFileBase file)
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+           
+
+            if (file == null || file.ContentLength == 0)
+            {
+                TempData["msg"] = "<div class='alert alert-danger'>No file selected!</div>";
+                return RedirectToAction("UploadStudentData");
+            }
+
+            var invalidRecords = new List<StudentExcelValidationResult>();
+            var validRecords = new List<ValidatedStudentRecord>();
+
+            try
+            {
+                using (var stream = file.InputStream)
+                {
+                    IWorkbook workbook = new XSSFWorkbook(stream);
+                    ISheet sheet = workbook.GetSheetAt(0);
+                    var formatter = new DataFormatter();
+
+                    // ✅ Validate headers
+                    string[] expectedHeaders = {
+                                    "Sno.",
+                                    "Enrollment Number",
+                                    "Student Name",
+                                    "Father Name",
+                                    "Gender",
+                                    "Date Of Birth (DD-MM-YYYY)",
+                                    "Aadhar Number",
+                                    "Date of Addmission (DD-MM-YYYY)",
+                                    "Student Mobile Number",
+                                    "Father's Mobile Number",
+                                    "E-Mail ID",
+                                    "Permanent Address",
+                                    "Course Name",
+                                    "Course Branch Name",
+                                    "Persuing Year/Semester"
+                                };
+
+
+
+                    IRow headerRow = sheet.GetRow(0);
+                    if (headerRow == null || headerRow.LastCellNum < expectedHeaders.Length)
+                    {
+                        TempData["msg"] = "<div class='alert alert-danger'>Invalid Excel format!</div>";
+                        return RedirectToAction("UploadStudentData_new");
+                    }
+
+                    for (int i = 0; i < expectedHeaders.Length; i++)
+                    {
+                        string actualHeader = Regex.Replace(formatter.FormatCellValue(headerRow.GetCell(i)).Trim(), @"\s+", " ");
+                        if (!string.Equals(actualHeader, expectedHeaders[i], StringComparison.OrdinalIgnoreCase))
+                        {
+                            TempData["msg"] = $"<div class='alert alert-danger'>Expected '{expectedHeaders[i]}' in column {i + 1}, but found '{actualHeader}'</div>";
+                            return RedirectToAction("UploadStudentData_new");
+                        }
+                    }
+
+                    var seenEnrollmentNumbers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    var seenMobileNumbers = new HashSet<string>();
+           
+
+                    for (int row = 1; row <= sheet.LastRowNum; row++)
+                    {
+                        IRow currentRow = sheet.GetRow(row);
+                        if (currentRow == null) continue;
+
+                        // ✅ Skip completely empty rows
+                        bool isRowEmpty = true;
+                        for (int col = 0; col < currentRow.LastCellNum; col++)
+                        {
+                            if (!string.IsNullOrWhiteSpace(formatter.FormatCellValue(currentRow.GetCell(col))))
+                            {
+                                isRowEmpty = false;
+                                break;
+                            }
+                        }
+                        if (isRowEmpty) continue;
+
+                        string issues = "";
+                        var student = new ValidatedStudentRecord
+                        {
+                            Sno = formatter.FormatCellValue(currentRow.GetCell(0)).Trim(),
+                            EnrollmentNumber = formatter.FormatCellValue(currentRow.GetCell(1)).Trim(),
+                            StudentName = formatter.FormatCellValue(currentRow.GetCell(2)).Trim(),
+                            FatherName = formatter.FormatCellValue(currentRow.GetCell(3)).Trim(),
+                            Gender = formatter.FormatCellValue(currentRow.GetCell(4)).Trim(),
+                            AadharNumber = formatter.FormatCellValue(currentRow.GetCell(6)).Trim(),
+                            StudentMobileNumber = formatter.FormatCellValue(currentRow.GetCell(8)).Trim(),
+                            FathersMobileNumber = formatter.FormatCellValue(currentRow.GetCell(9)).Trim(),
+                            EmailID = formatter.FormatCellValue(currentRow.GetCell(10)).Trim(),
+                            PermanentAddress = formatter.FormatCellValue(currentRow.GetCell(11)).Trim(),
+                            CourseName = formatter.FormatCellValue(currentRow.GetCell(12)).Trim(),
+                            CourseBranchName = formatter.FormatCellValue(currentRow.GetCell(13)).Trim(),
+                            PersuingYearSemester = formatter.FormatCellValue(currentRow.GetCell(14)).Trim()
+                        };
+
+                        // ✅ Duplicate check
+                        if (!string.IsNullOrWhiteSpace(student.EnrollmentNumber))
+                        {
+                            if (seenEnrollmentNumbers.Contains(student.EnrollmentNumber))
+                                issues += "Duplicate Enrollment Number; ";
+                            else
+                                seenEnrollmentNumbers.Add(student.EnrollmentNumber);
+                        }
+
+
+                        // ✅ Duplicate check for Student Mobile Number
+                        if (!string.IsNullOrWhiteSpace(student.StudentMobileNumber))
+                        {
+                            if (seenMobileNumbers.Contains(student.StudentMobileNumber))
+                                issues += "Duplicate Student Mobile Number; ";
+                            else
+                                seenMobileNumbers.Add(student.StudentMobileNumber);
+                        }
+                        // ✅ Date of Birth (required)
+                        string[] allowedDateFormats = { "dd-MM-yyyy","dd/MM/yyyy"};
+                        DateTime dob;
+                        DateTime doa;
+                        ICell dobCell = currentRow.GetCell(5);
+
+                        if (dobCell != null)
+                        {
+                            if (dobCell.CellType == NPOI.SS.UserModel.CellType.Numeric && DateUtil.IsCellDateFormatted(dobCell))
+                            {
+                                dob = dobCell.DateCellValue;
+                                student.DateOfBirth = dob.ToString("dd-MM-yyyy");
+                            }
+                            else
+                            {
+                                string dobValue = formatter.FormatCellValue(dobCell).Trim();
+                                if (DateTime.TryParseExact(dobValue, allowedDateFormats,
+                                        CultureInfo.InvariantCulture, DateTimeStyles.None, out dob))
+                                {
+                                    student.DateOfBirth = dob.ToString("dd-MM-yyyy");
+                                }
+                                else
+                                {
+                                    issues += "Invalid Date of Birth (use DD-MM-YYYY or DD/MM/YYYY); ";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            issues += "Date of Birth is required; ";
+                        }
+
+
+                        ICell doaCell = currentRow.GetCell(7);
+                      
+
+                        if (doaCell != null)
+                        {
+                            if (doaCell.CellType == NPOI.SS.UserModel.CellType.Numeric && DateUtil.IsCellDateFormatted(doaCell))
+                            {
+                                doa = doaCell.DateCellValue;
+                                student.DateOfAdmission = doa.ToString("dd-MM-yyyy");
+                            }
+                            else
+                            {
+                                string doaValue = formatter.FormatCellValue(doaCell).Trim();
+                                if (DateTime.TryParseExact(doaValue, allowedDateFormats,
+                                        CultureInfo.InvariantCulture, DateTimeStyles.None, out doa))
+                                {
+                                    student.DateOfBirth = doa.ToString("dd-MM-yyyy");
+                                }
+                                else
+                                {
+                                    issues += "Invalid Date of Admission (use DD-MM-YYYY or DD/MM/YYYY); ";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            issues += "Date of Admission is required; ";
+                        }
+
+                        // ✅ Mobile number validation
+                        // Required fields check (except Aadhar, Father's Mobile, Email)
+                        if (string.IsNullOrWhiteSpace(student.Sno))
+                            issues += "Sno is required; ";
+                        if (string.IsNullOrWhiteSpace(student.EnrollmentNumber))
+                            issues += "Enrollment Number is required; ";
+                        if (string.IsNullOrWhiteSpace(student.StudentName))
+                            issues += "Student Name is required; ";
+                        if (string.IsNullOrWhiteSpace(student.FatherName))
+                            issues += "Father Name is required; ";
+                        if (string.IsNullOrWhiteSpace(student.Gender))
+                        {
+                            issues += "Gender is required; ";
+                        }
+                        else
+                        {
+                            if (student.Gender.Equals("M", StringComparison.OrdinalIgnoreCase) ||
+                                student.Gender.Equals("Male", StringComparison.OrdinalIgnoreCase))
+                            {
+                                student.Gender = "1"; // ✅ Male
+                            }
+                            else if (student.Gender.Equals("F", StringComparison.OrdinalIgnoreCase) ||
+                                     student.Gender.Equals("Female", StringComparison.OrdinalIgnoreCase))
+                            {
+                                student.Gender = "2"; // ✅ Female
+                            }
+                            else
+                            {
+                                issues += "Invalid Gender (only M/F allowed); ";
+                            }
+                        }
+
+
+                        if (string.IsNullOrWhiteSpace(student.StudentMobileNumber))
+                        {
+                            issues += "Student Mobile Number is required; ";
+                        }
+                       
+                        if (string.IsNullOrWhiteSpace(student.PermanentAddress))
+                            issues += "Permanent Address is required; ";
+                        if (!string.IsNullOrWhiteSpace(student.CourseName))
+                        {
+                            var course = appClass.GetCourseIDByUnvCourse(
+                                student.CourseName,
+                                ARespo.University_ID,
+                                student.CourseBranchName
+                            );
+
+                            if (course == null)
+                            {
+                                issues += $"Course '{student.CourseName}' not found for this university; ";
+                            }
+                            else
+                            {
+                                student.CourseID = course.CourseID.ToString();
+                                student.SubCourseID = course.SubCourseID.ToString();
+                                student.CourseModeID = course.CourseModeID.ToString();
+                            }
+                        }
+                        else
+                        {
+                            issues += "Course Name is required; ";
+                        }
+                        if (string.IsNullOrWhiteSpace(student.CourseBranchName))
+                            issues += "Course Branch Name is required; ";
+
+                     
+                        if (string.IsNullOrWhiteSpace(student.PersuingYearSemester))
+                            issues += "Persuing Year/Semester is required; ";
+
+
+                        // ✅ Add to invalid or valid list
+                        if (!string.IsNullOrEmpty(issues))
+                        {
+                            invalidRecords.Add(new StudentExcelValidationResult
+                            {
+                                RowNumber = row + 1,
+                                EnrollmentNumber = student.EnrollmentNumber,
+                                StudentName = student.StudentName,
+                                Issues = issues.TrimEnd(' ', ';')
+                            });
+                        }
+                        else
+                        {
+                            validRecords.Add(student);
+                        }
+                    }
+                }
+
+                var resultModel = new StudentValidationViewModel
+                {
+                    InvalidRecords = invalidRecords,
+                    ValidRecords = validRecords
+                };
+
+                return View("Uploadresult", resultModel);
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = $"<div class='alert alert-danger'>Error reading Excel: {ex.Message}</div>";
+                return RedirectToAction("UploadStudentData_new");
+            }
+        }
+
+
+        // save valid student data
+
+
+        [HttpPost]
+
+        public ActionResult SaveValidStudents(List<StudentDataRecord> records)
+        {
+            foreach (var rec in records)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Enrollment: {rec.EnrollmentNumber}, Name: {rec.StudentName}, DOB: {rec.DateOfBirth}, DOA: {rec.DateOfAdmission}, Address: {rec.PermanentAddress}"
+                );
+            }
+
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+
+            if (records == null || records.Count == 0)
+            {
+                TempData["msg"] = @"<div class='alert alert-danger' role='alert'>No Record Updated</div>";
+                return RedirectToAction("UploadStudentData_new");
+            }
+
+            // ✅ Now we get full result (insert count + duplicates)
+            StudentSaveResult result = appClass.SaveValidStudents(records, ARespo.University_ID, ARespo.Session_ID);
+
+            if (result.DuplicateEnrollments.Any())
+            {
+                TempData["Duplicates"] = result.DuplicateEnrollments;
+                TempData["msg"] = $@"<div class='alert alert-warning' role='alert'>
+                                {result.InsertedCount} new records saved. 
+                                Some enrollment numbers already exist.
+                             </div>";
+            }
+            else
+            {
+                TempData["msg"] = $@"<div class='alert alert-success' role='alert'>
+                                {result.InsertedCount} new records saved successfully.
+                             </div>";
+            }
+
+            return RedirectToAction("UploadStudentData_new");
+        }
+
+
 
         public String DeleteDegreeFile(Int32 File_Id, string FPath)
         {

@@ -1,0 +1,25 @@
+﻿@model Private_University.Models.PaymentResultViewModel
+
+<div class="container" style="margin-top:30px;">
+    @if (Model.TxnStatus == "Success")
+    {
+        <h3 style="color:green;">Payment Successful ✅</h3>
+        <p>Order ID: @Model.OrderId</p>
+        <p>Payment ID: @Model.PaymentId</p>
+        <p>Transaction Number: @(Model.TxnNumber ?? "-")</p>
+        <p>Amount: ₹@(Model.TxnAmt ?? "-")</p>
+    }
+    else if (Model.TxnStatus == "Cancelled")
+    {
+        <h3 style="color:orange;">Payment Cancelled 🚪</h3>
+        <p>Order ID: @Model.OrderId</p>
+        <p>Error: @Model.Error ?? "Payment cancelled by user"</p>
+    }
+    else
+    {
+        <h3 style="color:red;">Payment Failed ❌</h3>
+        <p>Order ID: @Model.OrderId</p>
+        <p>Payment ID: @Model.PaymentId</p>
+        <p>Error: @Model.Error ?? "Payment failed"</p>
+    }
+</div>
