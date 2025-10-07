@@ -267,4 +267,10 @@
   <data name="CMPost" xml:space="preserve">
     <value>Hon'ble Chief Minister of Chhattisgarh</value>
   </data>
+  <data name="MinisterName" xml:space="preserve">
+    <value>Shri Tankram Verma</value>
+  </data>
+  <data name="MinisterPost" xml:space="preserve">
+    <value>Minister, Higher Education</value>
+  </data>
 </root>

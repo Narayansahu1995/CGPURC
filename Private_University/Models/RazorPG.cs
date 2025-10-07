@@ -32,6 +32,8 @@ namespace Private_University.Models
             public string razorpay_payment_id { get; set; }       
             public string RP_signature { get; set; }
             public string Amount { get; set; }
+            public string ErrorMessage { get; set; }
+
         }
 
         public class TxnCheck
@@ -58,4 +60,12 @@ namespace Private_University.Models
              public string TxnDateTime { get; set; }
              public string Attempts { get; set; }
         }
+
+    public class RazorPayFailureRequest
+    {
+        public string razorpay_payment_id { get; set; }
+        public string razorpay_order_id { get; set; }
+        public string razorpay_signature { get; set; }
+    }
+
 }

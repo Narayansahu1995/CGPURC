@@ -133,7 +133,7 @@ namespace Private_University.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Content Managed by Department &amp; Designed and Developed by CHiPS.
+        ///   Looks up a localized string similar to Content Managed by Department &amp; Designed and Developed by NIC.
         /// </summary>
         public static string FooterCopyName {
             get {

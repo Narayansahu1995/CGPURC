@@ -1,38 +1,25 @@
-﻿
-@{
-    ViewBag.Title = "RazorPayResponse";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿@model Private_University.Models.PaymentResultViewModel
 
-<section class="pop-cour">
-    <div class="container com-sp pad-bot-70">
-        <div class="row">
-            <div class="cor about-sp">
-                <div class="ed-about-tit">
-                    <div class="con-title">
-                        <h2>
-                            <label class="con-title-h2">Payment</label>
-                            <span>
-                                <label class="con-title-h2-span">Response</label>
-                            </span>
-                        </h2>
-                        <p>
-                            Payment status that has done recently
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="cor-p4">
-                    <p>Payment Transaction has been @ViewBag.TxnStatus </p>
-                    <p>Order ID : @ViewBag.OrderId</p>
-                    <p>Transaction Number : @ViewBag.TxnNumber</p>                    
-                    <p>Amount in Rupee : @ViewBag.TxnAmt</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
+<div class="container" style="margin-top:30px;">
+    @if (Model.TxnStatus == "Success")
+    {
+        <h3 style="color:green;">Payment Successful ✅</h3>
+        <p>Order ID: @Model.OrderId</p>
+        <p>Payment ID: @Model.PaymentId</p>
+        <p>Transaction Number: @(Model.TxnNumber ?? "-")</p>
+        <p>Amount: ₹@(Model.TxnAmt ?? "-")</p>
+    }
+    else if (Model.TxnStatus == "Cancelled")
+    {
+        <h3 style="color:orange;">Payment Cancelled 🚪</h3>
+        <p>Order ID: @Model.OrderId</p>
+        <p>Error: @Model.Error ?? "Payment cancelled by user"</p>
+    }
+    else
+    {
+        <h3 style="color:red;">Payment Failed ❌</h3>
+        <p>Order ID: @Model.OrderId</p>
+        <p>Payment ID: @Model.PaymentId</p>
+        <p>Error: @Model.Error ?? "Payment failed"</p>
+    }
+</div>

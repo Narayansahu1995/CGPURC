@@ -44,89 +44,50 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-var options = {
-    "key": "@ViewBag.Key",
-    "amount": "@(Model.Payble_Amt * 100)", // paise
-    "currency": "INR",
-    "name": "CGPURC",
-    "description": "Fees One Percent",
-    "image": "https://cdn.razorpay.com/logos/BUVwvgaqVByGp2_large.jpg",
-    "order_id": "@Model.Order_ID",
-    "prefill": {
-        "name": "@Model.UniversityName",
-        "email": "@Model.UniversityEmail",
-        "contact": "@Model.UniversityMobile"
-    },
-    "notes": {
-        "University_ID": "@Model.UniversityID",
-        "BillingAddress": "@Model.BillingAddress",
-        "Txn_Month": "@Model.BillingMonth",
-        "Txn_Year": "@Model.BillingYear"
-    },
-    "theme": { "color": "#3399cc" },
-    "handler": function (response) {
-        var loader = document.getElementById("loader");
-        var payBtn = document.getElementById("rzp-button");
-        var backBtn = document.querySelector(".btn-success");
+    var options = {
+        "key": "@ViewBag.Key",
+        "amount": "@(Model.Payble_Amt * 100)", // in paise
+        "currency": "INR",
+        "name": "CGPURC",
+        "description": "Fees One Percent",
+        "image": "https://cdn.razorpay.com/logos/BUVwvgaqVByGp2_large.jpg",
+        "order_id": "@Model.Order_ID",
+        "prefill": {
+            "name": "@Model.UniversityName",
+            "email": "@Model.UniversityEmail",
+            "contact": "@Model.UniversityMobile"
+        },
+        "notes": {
+            "University_ID": "@Model.UniversityID",
+            "BillingAddress": "@Model.BillingAddress",
+            "Txn_Month": "@Model.BillingMonth",
+            "Txn_Year": "@Model.BillingYear"
+        },
+        "theme": { "color": "#3399cc" },
+        "callback_url": "@Url.Action("RazorPayResponse", "University", null, Request.Url.Scheme)",
+        "retry": { "enabled": false }
+    };
 
-        // Hide buttons and show loader
-        payBtn.style.display = "none";
-        if(backBtn) backBtn.style.display = "none";
-        loader.style.display = "block";
+    var rzp = new Razorpay(options);
 
-        var startTime = Date.now(); // record start time
+    document.getElementById('rzp-button').onclick = function (e) {
+        rzp.open();
+        e.preventDefault();
+    };
 
-        $.ajax({
-            url: "@Url.Action("RazorPayResponseJson", "University")",
-            type: "POST",
-            data: {
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature
-            },
-            success: function (res) {
-                var elapsed = Date.now() - startTime;
-                var remaining = 5000 - elapsed; // ensure at least 5 seconds
-                if (remaining < 0) remaining = 0;
+    // ❌ Handle payment failures here
+  rzp.on('payment.failed', function (response) {
+    var paymentId = response.error.metadata ? response.error.metadata.payment_id : null;
+    var orderId = response.error.metadata ? response.error.metadata.order_id : null;
 
-                setTimeout(function () {
-                    loader.style.display = "none"; // hide loader
+    alert("Payment failed. Order ID: " + orderId + ", Payment ID: " + paymentId);
 
-                    var resultDiv = document.getElementById("payment-result");
-                    resultDiv.innerHTML = "<h4>Status: " + res.TxnStatus + "</h4>" +
-                                          "<p>Order ID: " + res.OrderId + "</p>" +
-                                          "<p>Transaction Number: " + res.TxnNumber + "</p>" +
-                                          "<p>Amount: " + res.TxnAmt + "</p>";
-                    resultDiv.style.color = res.TxnStatus == "Success" ? "green" : "red";
-
-                    // If failed, show buttons again
-                    if(res.TxnStatus != "Success"){
-                        payBtn.style.display = "inline-block";
-                        if(backBtn) backBtn.style.display = "inline-block";
-                    }
-                }, remaining);
-            },
-            error: function () {
-                var elapsed = Date.now() - startTime;
-                var remaining = 5000 - elapsed;
-                if (remaining < 0) remaining = 0;
-
-                setTimeout(function () {
-                    loader.style.display = "none";
-                    alert("Error processing payment.");
-
-                    payBtn.style.display = "inline-block";
-                    if(backBtn) backBtn.style.display = "inline-block";
-                }, remaining);
-            }
-        });
+    // Redirect including payment id if present
+    var url = '@Url.Action("PaymentFailed", "University")' + '?orderId=' + orderId;
+    if (paymentId) {
+        url += '&paymentId=' + paymentId;
     }
-};
-
-var rzp = new Razorpay(options);
-document.getElementById('rzp-button').onclick = function (e) {
-    rzp.open();
-    e.preventDefault();
-}
+    window.location.href = url;
+});
 </script>
 

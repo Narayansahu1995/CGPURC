@@ -569,7 +569,7 @@ namespace Private_University.Controllers
                     string[] expectedHeaders = { "Sno.", "Enrollment No", "Fees Amount", "Fees Receiving Date (DD-MM-YYYY)" };
                     IRow headerRow = sheet.GetRow(0);
 
-                    // ✅ Header validation
+                    // Header validation
                     if (headerRow == null || headerRow.LastCellNum != expectedHeaders.Length)
                     {
                         TempData["msg"] = "<div class='alert alert-danger'>Invalid Excel format!</div>";
@@ -589,16 +589,16 @@ namespace Private_University.Controllers
                     HashSet<string> seenRecords = new HashSet<string>();
                     int lastRow = sheet.LastRowNum;
 
-                    // ✅ Row loop
+                    // Row loop
                     for (int row = 1; row <= lastRow; row++)
                     {
                         IRow currentRow = sheet.GetRow(row);
                         if (currentRow == null) continue;
 
                         string enrollmentNo = currentRow.GetCell(1)?.ToString().Trim();
-                        string dateStr = "";
+                        DateTime parsedDate = DateTime.MinValue;
                         string issues = "";
-                        DateTime parsedDate;
+                        string dateKey = "";
 
                         ICell feeCell = currentRow.GetCell(2);
                         ICell dateCell = currentRow.GetCell(3);
@@ -608,23 +608,53 @@ namespace Private_University.Controllers
                             break;
 
                         // ===== Date Validation =====
-                        if (dateCell != null)
+                        if (dateCell != null && !string.IsNullOrWhiteSpace(dateCell.ToString()))
                         {
+                            string rawDate = dateCell.ToString().Trim();
+
                             if (dateCell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(dateCell))
+                            {
                                 parsedDate = dateCell.DateCellValue;
-                            else if (!DateTime.TryParseExact(dateCell.ToString().Trim(),
+                            }
+                            else if (!DateTime.TryParseExact(rawDate,
                                     new[] { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" },
                                     CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
                             {
-                                issues += "Invalid Date Format; ";
-                                parsedDate = DateTime.MinValue;
+                                issues += $"Invalid Date Format ({rawDate}); ";
                             }
-                            dateStr = parsedDate != DateTime.MinValue ? parsedDate.ToString("dd/MM/yyyy") : "";
+
+                            // Assign dateKey after parsing
+                            dateKey = parsedDate != DateTime.MinValue ? parsedDate.ToString("dd/MM/yyyy") : "";
                         }
-                        else issues += "Date missing; ";
+                        else
+                        {
+                            issues += "Date missing; ";
+                        }
+
+                        // ===== Rule 1: Reject current month =====
+                        // ===== Rule 1: Allow only past months =====
+                        if (parsedDate != DateTime.MinValue)
+                        {
+                            DateTime today = DateTime.Today;
+
+                            // Get first day of current month
+                            DateTime firstDayCurrentMonth = new DateTime(today.Year, today.Month, 1);
+
+                            // Get previous month start and end dates
+                            DateTime firstDayPreviousMonth = firstDayCurrentMonth.AddMonths(-1);
+                            DateTime lastDayPreviousMonth = firstDayCurrentMonth.AddDays(-1);
+
+                            // ✅ Allow only previous month range (e.g., 1-Aug to 31-Aug)
+                            if (parsedDate < firstDayPreviousMonth || parsedDate > lastDayPreviousMonth)
+                            {
+                                issues += $"Only previous month data is allowed; data for {parsedDate:MMM yyyy} is not allowed; ";
+                            }
+                        }
+
+
 
                         // ===== Enrollment Validation =====
-                        var student = appClass.GetStudentByEnrollment(enrollmentNo); // DB lookup
+                        var student = appClass.GetStudentByEnrollment(enrollmentNo);
                         if (student == null)
                             issues += "Enrollment No not found in Database; ";
 
@@ -639,7 +669,7 @@ namespace Private_University.Controllers
                         if (feeAmount <= 0) issues += "Fee Amount must be > 0; ";
 
                         // ===== Duplicate Validation =====
-                        string key = $"{enrollmentNo}|{feeAmount}|{dateStr}";
+                        string key = $"{enrollmentNo}|{feeAmount}|{dateKey}";
                         if (seenRecords.Contains(key))
                             issues += "Duplicate record in Excel; ";
                         else
@@ -652,7 +682,8 @@ namespace Private_University.Controllers
                             {
                                 RowNumber = row + 1,
                                 EnrollmentNo = enrollmentNo,
-                                DateValue = dateStr,
+                                DateValue = dateKey,
+                                Amount = feeAmount,
                                 Issues = issues.TrimEnd(' ', ';')
                             });
                         }
@@ -661,15 +692,14 @@ namespace Private_University.Controllers
                             validRecords.Add(new ValidatedFeeRecord
                             {
                                 EnrollmentNo = enrollmentNo,
-                                StudentID = student.StudentID, // From DB
-                                FeeAmount = feeAmount,         // From Excel
-                                FeeDate = dateStr              // From Excel
+                                StudentID = student.StudentID,
+                                FeeAmount = feeAmount,
+                                FeeDate = parsedDate
                             });
                         }
                     }
                 }
 
-                // ✅ Pass both lists to view
                 var resultModel = new FeeValidationViewModel
                 {
                     InvalidRecords = invalidRecords,
@@ -685,6 +715,8 @@ namespace Private_University.Controllers
             }
         }
 
+
+
         public ActionResult BackToUpload(bool? status)
         {
             // put it in ViewBag so the view can use it
@@ -693,10 +725,33 @@ namespace Private_University.Controllers
         }
 
 
-        //public ActionResult SaveValidRecords()
-        //{
+        [HttpPost]
+        public ActionResult SaveValidRecords(List<ValidatedFeeRecord> records)
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            int universityId = Convert.ToInt32(ARespo.University_ID);
+            int sessionId = Convert.ToInt32(ARespo.Session_ID);
 
-        //}
+            SaveFeeResult result = appClass.SaveFeeRecords(records, universityId, sessionId);
+
+            if (result.DuplicateRecords.Any())
+            {
+                string duplicateList = string.Join(", ", result.DuplicateRecords);
+                TempData["msg"] = $"<div class='alert alert-warning'>⚠️ The following records already exist: {duplicateList}</div>";
+            }
+            else
+            {
+                TempData["msg"] = result.IsSaved
+                    ? "<div class='alert alert-success'>✅ Fee records saved successfully!</div>"
+                    : "<div class='alert alert-warning'>⚠️ No records were saved.</div>";
+            }
+
+            return RedirectToAction("UploadFeesData");
+        }
+
+
+
 
 
     }

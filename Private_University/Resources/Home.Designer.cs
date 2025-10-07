@@ -349,6 +349,24 @@ namespace Private_University.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shri Tankram Verma.
+        /// </summary>
+        public static string MinisterName {
+            get {
+                return ResourceManager.GetString("MinisterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minister, Higher Education.
+        /// </summary>
+        public static string MinisterPost {
+            get {
+                return ResourceManager.GetString("MinisterPost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to More.
         /// </summary>
         public static string More {

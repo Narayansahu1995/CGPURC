@@ -55,6 +55,14 @@
     <Reference Include="ckeditor.net">
       <HintPath>..\..\.NET Material\ckeditor.net\ckeditor.net.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.3.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.3.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.3.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.3.0\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.19.4.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.19.4\lib\net45\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
@@ -154,6 +162,7 @@
       <HintPath>..\packages\MySql.Data.8.0.29\lib\net452\Ubiety.Dns.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.8.0.29\lib\net452\ZstdNet.dll</HintPath>
       <Private>True</Private>
@@ -821,7 +830,7 @@
     <Content Include="Views\Home\Feedback.cshtml" />
     <Content Include="Views\Home\AntiRagging.cshtml" />
     <Content Include="Views\Home\AntiHarassment.cshtml" />
-    <Content Include="Views\University\PaymentResponse.cshtml" />
+    <Content Include="Views\University\RazorPayResponse.cshtml" />
     <Content Include="Views\ChangePassword\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Student\EditStudent.cshtml" />
@@ -845,12 +854,14 @@
     <Content Include="Views\Student\UploadInternshipData.cshtml" />
     <Content Include="Views\Student\UploadAcademicCalendar.cshtml" />
     <Content Include="Views\University\FCLforHDFCPG.cshtml" />
-    <Content Include="Views\University\PaymentResult.cshtml" />
     <Content Include="Views\University\GoToPay.cshtml" />
     <Content Include="Views\Home\AppPrivacyPolicy.cshtml" />
     <Content Include="Views\FeesCollect\RptUploadedFeesData.cshtml" />
     <Content Include="Views\University\PGtxnRpt.cshtml" />
     <Content Include="Views\FeesCollect\InvalidRecords.cshtml" />
+    <Content Include="Views\Student\Uploadresult.cshtml" />
+    <Content Include="Views\Student\UploadStudentData_new.cshtml" />
+    <Content Include="Views\Commission\StudentFeesReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

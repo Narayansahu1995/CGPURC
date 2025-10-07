@@ -1,0 +1,152 @@
+﻿@model Private_University.Models.StudentValidationViewModel
+
+@{
+    ViewBag.Title = "Student Upload Validation";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Student Upload Validation</h2>
+
+@if (TempData["msg"] != null)
+{
+    <div class="mt-2">
+        @Html.Raw(TempData["msg"])
+    </div>
+}
+
+<!-- 🔹 Invalid Records -->
+@if (Model.InvalidRecords != null && Model.InvalidRecords.Any())
+{
+    <div class="alert alert-danger mt-3">
+        <strong>Oops!</strong> Found <b>@Model.InvalidRecords.Count</b> invalid student record(s). Please fix them and re-upload.
+    </div>
+
+    <button class="btn btn-warning mb-2" onclick="exportTableToExcel('invalidTable', 'Invalid_Students')">
+        Export Invalid Records to Excel
+    </button>
+
+    <div class="table-responsive mt-2">
+        <table id="invalidTable" class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Row #</th>
+                    <th>Enrollment No</th>
+                    <th>Student Name</th>
+                    <th>Issues</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InvalidRecords)
+                {
+                    <tr class="table-danger">
+                        <td>@item.RowNumber</td>
+                        <td>@item.EnrollmentNumber</td>
+                        <td>@item.StudentName</td>
+                        <td class="text-danger fw-bold">@item.Issues</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<!-- 🔹 Valid Records -->
+@if (Model.ValidRecords != null && Model.ValidRecords.Any())
+{
+    <div class="alert alert-success mt-3">
+        ✅ Found <b>@Model.ValidRecords.Count</b> valid student record(s).
+    </div>
+
+    <button class="btn btn-success mb-2" onclick="exportTableToExcel('validTable', 'Valid_Students')">
+        Export Valid Records to Excel
+    </button>
+
+    <form method="post" action="@Url.Action("SaveValidStudents", "Student")">
+        <div class="table-responsive mt-2">
+            <table id="validTable" class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Enrollment No</th>
+                        <th>Student Name</th>
+                        <th>Gender</th>
+                        <th>Father's Name</th>
+                        <th>Date of Birth</th>
+                        <th>Aadhar</th>
+                        <th>Date OF Admission</th>
+                        <th>Student Mobile</th>
+                        <th>Father's Mobile</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Branch</th>
+                        <th>Year/Semester</th>
+                        <th>Pursuing Year/Semester</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.ValidRecords.Count; i++)
+                    {
+                        <tr class="table-success">
+                            <td>@Model.ValidRecords[i].EnrollmentNumber</td>
+                            <td>@Model.ValidRecords[i].StudentName</td>
+                            <td>@Model.ValidRecords[i].Gender</td>
+                            <td>@Model.ValidRecords[i].FatherName</td>
+                            <td>@Model.ValidRecords[i].DateOfBirth</td>
+                            <td>@Model.ValidRecords[i].AadharNumber</td>
+                            <td>@Model.ValidRecords[i].DateOfAdmission</td>
+                            <td>@Model.ValidRecords[i].StudentMobileNumber</td>
+                            <td>@Model.ValidRecords[i].FathersMobileNumber</td>
+                            <td>@Model.ValidRecords[i].EmailID</td>
+                            <td>@Model.ValidRecords[i].CourseName</td>
+                            <td>@Model.ValidRecords[i].CourseBranchName</td>
+                            <td>@Model.ValidRecords[i].YearSemester</td>
+                            <td>@Model.ValidRecords[i].PersuingYearSemester</td>
+                        </tr>
+
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="records[@i].EnrollmentNumber" value="@Model.ValidRecords[i].EnrollmentNumber" />
+                        <input type="hidden" name="records[@i].StudentName" value="@Model.ValidRecords[i].StudentName" />
+                        <input type="hidden" name="records[@i].Gender" value="@Model.ValidRecords[i].Gender" />
+                        <input type="hidden" name="records[@i].FatherName" value="@Model.ValidRecords[i].FatherName" />
+                        <input type="hidden" name="records[@i].DateOfBirth" value="@Model.ValidRecords[i].DateOfBirth" />
+                        <input type="hidden" name="records[@i].AadharNumber" value="@Model.ValidRecords[i].AadharNumber" />
+                        <input type="hidden" name="records[@i].DateOfAdmission" value="@Model.ValidRecords[i].DateOfAdmission" />
+                        <input type="hidden" name="records[@i].StudentMobileNumber" value="@Model.ValidRecords[i].StudentMobileNumber" />
+                        <input type="hidden" name="records[@i].FathersMobileNumber" value="@Model.ValidRecords[i].FathersMobileNumber" />
+                        <input type="hidden" name="records[@i].EmailID" value="@Model.ValidRecords[i].EmailID" />
+                        <input type="hidden" name="records[@i].PermanentAddress" value="@Model.ValidRecords[i].PermanentAddress" />
+                        <input type="hidden" name="records[@i].CourseName" value="@Model.ValidRecords[i].CourseID" />
+                        <input type="hidden" name="records[@i].CourseBranchName" value="@Model.ValidRecords[i].SubCourseID" />
+                        <input type="hidden" name="records[@i].YearSemester" value="@Model.ValidRecords[i].CourseModeID" />
+                        <input type="hidden" name="records[@i].PersuingYearSemester" value="@Model.ValidRecords[i].PersuingYearSemester" />
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">Save Valid Records</button>
+    </form>
+}
+
+<!-- 🔹 Back button -->
+<a href="@Url.Action("BackToUpload", "Student")" class="btn btn-secondary mt-3">
+    ⬅ Back to Upload
+</a>
+
+<!-- 🔹 SheetJS Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- 🔹 Export Function -->
+<script>
+function exportTableToExcel(tableId, fileName = '') {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+
+    const clonedTable = table.cloneNode(true);
+    clonedTable.querySelectorAll('input').forEach(input => input.remove());
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.table_to_sheet(clonedTable);
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, fileName + ".xlsx");
+}
+</script>
