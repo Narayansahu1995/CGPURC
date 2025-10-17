@@ -247,13 +247,22 @@ namespace Private_University.Controllers
         }
         [HttpGet]
         [SessionCheck]
+        //public ActionResult UploadFeesData()
+        //{
+        //    AppClass appClass = new AppClass();
+        //    AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+        //    ModelState.Clear();
+        //    return View(appClass.Fees_Files_for_University(ARespo.University_ID, ARespo.Session_ID));
+        //}
         public ActionResult UploadFeesData()
         {
             AppClass appClass = new AppClass();
             AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
             ModelState.Clear();
-            return View(appClass.Fees_Files_for_University(ARespo.University_ID, ARespo.Session_ID));
+            return View(appClass.Get_Student_FeesCount_for_University(ARespo.University_ID, ARespo.Session_ID));
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SessionCheck]
@@ -549,6 +558,7 @@ namespace Private_University.Controllers
 
         public ActionResult ValidateExcelFile(HttpPostedFileBase file)
         {
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
             AppClass appClass = new AppClass();
             List<FeeExcelValidationResult> invalidRecords = new List<FeeExcelValidationResult>();
             List<ValidatedFeeRecord> validRecords = new List<ValidatedFeeRecord>();
@@ -631,25 +641,44 @@ namespace Private_University.Controllers
                             issues += "Date missing; ";
                         }
 
-                        // ===== Rule 1: Reject current month =====
-                        // ===== Rule 1: Allow only past months =====
                         if (parsedDate != DateTime.MinValue)
                         {
                             DateTime today = DateTime.Today;
-
-                            // Get first day of current month
                             DateTime firstDayCurrentMonth = new DateTime(today.Year, today.Month, 1);
 
-                            // Get previous month start and end dates
-                            DateTime firstDayPreviousMonth = firstDayCurrentMonth.AddMonths(-1);
-                            DateTime lastDayPreviousMonth = firstDayCurrentMonth.AddDays(-1);
-
-                            // ✅ Allow only previous month range (e.g., 1-Aug to 31-Aug)
-                            if (parsedDate < firstDayPreviousMonth || parsedDate > lastDayPreviousMonth)
+                            if (ARespo.University_ID == 20)
                             {
-                                issues += $"Only previous month data is allowed; data for {parsedDate:MMM yyyy} is not allowed; ";
+                                Console.WriteLine("Rungta");
+                                // === Existing logic for university_id == 17 ===
+                                if (parsedDate.Year == today.Year)
+                                {
+                                    // Check if month is before the current month
+                                    if (parsedDate.Month >= today.Month)
+                                    {
+                                        issues += $"Only past months of {today:yyyy} are allowed; data for {parsedDate:MMM yyyy} is not allowed; ";
+                                    }
+                                }
+                                else
+                                {
+                                    // Disallow previous or next years
+                                    issues += $"Only data within the current year ({today:yyyy}) is allowed; data for {parsedDate:MMM yyyy} is not allowed; ";
+                                }
+                            }
+                            else
+                            {
+                                // === Simplified rule: allow only the previous month ===
+                                Console.WriteLine("other");
+                                DateTime previousMonth = today.AddMonths(-1);
+
+                                if (parsedDate.Year != previousMonth.Year || parsedDate.Month != previousMonth.Month)
+                                {
+                                    issues += $"Only data for the previous month ({previousMonth:MMM yyyy}) is allowed; data for {parsedDate:MMM yyyy} is not allowed; ";
+                                }
                             }
                         }
+
+
+
 
 
 

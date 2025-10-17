@@ -862,6 +862,7 @@
     <Content Include="Views\Student\Uploadresult.cshtml" />
     <Content Include="Views\Student\UploadStudentData_new.cshtml" />
     <Content Include="Views\Commission\StudentFeesReport.cshtml" />
+    <Content Include="Views\Commission\StudentEnrolledReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

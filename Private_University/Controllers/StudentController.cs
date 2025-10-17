@@ -426,7 +426,7 @@ namespace Private_University.Controllers
             AppClass appClass = new AppClass();
             AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
             ModelState.Clear();
-            return View(appClass.Get_Files_List_for_University(ARespo.University_ID, ARespo.Session_ID));
+            return View(appClass.Get_Student_Count_for_University(ARespo.University_ID, ARespo.Session_ID));
         }
 
 
@@ -679,9 +679,20 @@ namespace Private_University.Controllers
                         if (string.IsNullOrWhiteSpace(student.CourseBranchName))
                             issues += "Course Branch Name is required; ";
 
-                     
+
                         if (string.IsNullOrWhiteSpace(student.PersuingYearSemester))
-                            issues += "Persuing Year/Semester is required; ";
+                        {
+                            issues += "Pursuing Year/Semester is required; ";
+                        }
+                        else
+                        {
+                            int temp;
+                            if (!int.TryParse(student.PersuingYearSemester, out temp))
+                            {
+                                issues += "Pursuing Year/Semester must be a number; ";
+                            }
+                        }
+
 
 
                         // ✅ Add to invalid or valid list

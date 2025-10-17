@@ -340,6 +340,18 @@ namespace Private_University.Models
         public string Remark { get; set; }
     }
 
+    public class Uploaded_Student_data_count
+    {
+
+        public int count { get; set; }
+        public int FeesAmount { get; set; }
+        public int studentCount { get; set; }
+        public String EntryDate { get; set; }
+        public String MonthName { get; set; }
+
+    }
+
+
     public class Uploaded_data_files
     {
         public int count { get; set; }

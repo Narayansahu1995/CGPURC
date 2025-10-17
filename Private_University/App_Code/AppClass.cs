@@ -1989,13 +1989,98 @@ Case When Remark IS Null then '' Else Remark End As Remark FROM Uploaded_Student
             return USDF_List;
         }
 
+        //get student enrolled count by Laxmi Narayan//09102025
+
+        public List<Uploaded_Student_data_count> Get_Student_Count_for_University(int university_id, int Sid)
+        {
+            List<Uploaded_Student_data_count> enrolled_List = new List<Uploaded_Student_data_count>();
+            string ListQuery = @"SELECT
+                            DATE_FORMAT(student_details.Entry_DateTime, '%Y-%m-%d') AS month,
+                            COUNT(*) AS student_count
+                        FROM student_details where student_details.University_ID = @UID and student_details.Session_ID = @SID
+                        GROUP BY DATE_FORMAT(student_details.Entry_DateTime, '%Y-%m')
+                        ORDER BY month";
+            MySqlCommand cmd = new MySqlCommand(ListQuery);
+            cmd.Parameters.AddWithValue("@UID", university_id);
+            cmd.Parameters.AddWithValue("@SID", Sid);
+            DataTable dt = Fnc.GetDataTable(cmd);
+            if (dt.Rows.Count > 0)
+            {
+                int i = 1;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    enrolled_List.Add(
+                       new Uploaded_Student_data_count
+                       {
+                           count = i,
+                           studentCount = Convert.ToInt32(dr["student_count"]),
+                           EntryDate = dr["month"].ToString().Trim(),
+                         
+                       });
+                    i++;
+                }
+            }
+            return enrolled_List;
+        }
+
+        //----------------- get student  fees collection count Laxmi Narayan 09102025--------------------------//
+
+        public List<Uploaded_Student_data_count> Get_Student_FeesCount_for_University(int university_id, int Sid)
+        {
+            List<Uploaded_Student_data_count> student_fees_List = new List<Uploaded_Student_data_count>();
+
+            int year = 0;
+            if (Sid == 6)
+                year = 2025;
+            else if (Sid == 5)
+                year = 2024;
+            else if (Sid == 4)
+                year = 2023;
+            else if (Sid == 3)
+                year = 2022;
+
+
+            string ListQuery = @"SELECT count(student_fees_collection.Student_ID) as student_cnt,Entry_DateTime,
+                                DATE_FORMAT(Txn_Date, '%M') AS month_name,
+                                SUM(student_fees_collection.Fees_Amount) AS total_amount
+                            FROM student_fees_collection
+                            WHERE University_ID =@UID
+                            AND YEAR(Txn_Date) = @year
+                            GROUP BY MONTH(Txn_Date)
+                            ORDER BY MONTH(Txn_Date)";
+            MySqlCommand cmd = new MySqlCommand(ListQuery);
+            cmd.Parameters.AddWithValue("@UID", university_id);
+                cmd.Parameters.AddWithValue("@Year", year);
+
+
+            DataTable dt = Fnc.GetDataTable(cmd);
+            if (dt.Rows.Count > 0)
+            {
+                int i = 1;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    student_fees_List.Add(
+                       new Uploaded_Student_data_count
+                       {
+                           count = i,
+                           studentCount = Convert.ToInt32(dr["student_cnt"]),
+                           FeesAmount = Convert.ToInt32(dr["total_amount"]),
+                           MonthName = dr["month_name"].ToString().Trim(),
+                           EntryDate = dr["Entry_DateTime"].ToString().Trim(),
+
+                       });
+                    i++;
+                }
+            }
+            return student_fees_List;
+        }
 
         public List<Uploaded_Student_data_files> Fees_Files_for_University(int university_id, int Sid)
         {
             List<Uploaded_Student_data_files> USDF_List = new List<Uploaded_Student_data_files>();
             string ListQuery = @"SELECT File_ID, University_ID, File_Name, DATE_FORMAT(Uploaded_DateTime, '%d-%m-%Y %h:%i:%s %p') As Uploaded_DateTime, 
-File_path, Records_exported_to_Server, Records_left, Case When Processed = 1 Then 'Yes' Else 'No' END As Processed, 
-Case When Remark IS Null then '' Else Remark End As Remark FROM uploaded_fees_data WHERE Is_Deleted = 0 AND University_ID = @UID AND Session_ID = @SID";
+                        File_path, Records_exported_to_Server, Records_left, Case When Processed = 1 Then 'Yes' Else 'No' END As Processed, 
+                        Case When Remark IS Null then '' Else Remark End As Remark FROM uploaded_fees_data WHERE Is_Deleted = 0 AND University_ID = @UID AND Session_ID = @SID";
             MySqlCommand cmd = new MySqlCommand(ListQuery);
             cmd.Parameters.AddWithValue("@UID", university_id);
             cmd.Parameters.AddWithValue("@SID", Sid);
@@ -2025,6 +2110,7 @@ Case When Remark IS Null then '' Else Remark End As Remark FROM uploaded_fees_da
             }
             return USDF_List;
         }
+
 
         public List<Uploaded_data_files> PU_Uploaded_Fees_Files(int Sid)
         {
@@ -2394,6 +2480,112 @@ Where UD.University_ID > 0";
             }
             return WorkStatus;
         }
+
+
+        //------------get Student Fees Report Laxmi Narayan 17102025-----------//
+
+        public List<UniversityWorkDetail> GetFeesReportByMonth(int year)
+        {
+            List<UniversityWorkDetail> studentFeesReport = new List<UniversityWorkDetail>();
+
+            // Pivot query: month-wise fees per university
+            string QRY = $@"
+        SELECT 
+            UD.University_ID,
+            UD.University_Name,
+            SUM(CASE WHEN Fees_Month = 1 THEN payble_amt ELSE 0 END) AS `Jan-{year}`,
+            SUM(CASE WHEN Fees_Month = 2 THEN payble_amt ELSE 0 END) AS `Feb-{year}`,
+            SUM(CASE WHEN Fees_Month = 3 THEN payble_amt ELSE 0 END) AS `Mar-{year}`,
+            SUM(CASE WHEN Fees_Month = 4 THEN payble_amt ELSE 0 END) AS `Apr-{year}`,
+            SUM(CASE WHEN Fees_Month = 5 THEN payble_amt ELSE 0 END) AS `May-{year}`,
+            SUM(CASE WHEN Fees_Month = 6 THEN payble_amt ELSE 0 END) AS `Jun-{year}`,
+            SUM(CASE WHEN Fees_Month = 7 THEN payble_amt ELSE 0 END) AS `Jul-{year}`,
+            SUM(CASE WHEN Fees_Month = 8 THEN payble_amt ELSE 0 END) AS `Aug-{year}`,
+            SUM(CASE WHEN Fees_Month = 9 THEN payble_amt ELSE 0 END) AS `Sep-{year}`,
+            SUM(CASE WHEN Fees_Month = 10 THEN payble_amt ELSE 0 END) AS `Oct-{year}`,
+            SUM(CASE WHEN Fees_Month = 11 THEN payble_amt ELSE 0 END) AS `Nov-{year}`,
+            SUM(CASE WHEN Fees_Month = 12 THEN payble_amt ELSE 0 END) AS `Dec-{year}`,
+            SUM(payble_amt) AS Total
+        FROM razorpay_txns RT
+        LEFT JOIN University_Details UD 
+            ON UD.University_ID = RT.University_ID
+        WHERE RT.Fees_Year = @Year
+          AND UD.University_ID > 0
+         and RT.PG_Status_Id = 3
+        GROUP BY UD.University_ID, UD.University_Name
+        ORDER BY UD.University_Name;
+    ";
+
+            MySqlCommand CMD = new MySqlCommand(QRY);
+            CMD.Parameters.AddWithValue("@Year", year);
+
+            DataTable DT = Fnc.GetDataTable(CMD);
+            if (DT.Rows.Count > 0)
+            {
+                int i = 1;
+                foreach (DataRow DR in DT.Rows)
+                {
+                    var uni = new UniversityWorkDetail
+                    {
+                        count = i,
+                        UniversityName = DR["University_Name"].ToString().Trim(),
+                        MonthWiseAmounts = new Dictionary<string, decimal>()
+                    };
+
+                    // Populate month-wise amounts dynamically
+                    string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+                    foreach (var m in months)
+                    {
+                        string col = $"{m}-{year}";
+                        uni.MonthWiseAmounts[col] = DR[col] != DBNull.Value ? Convert.ToDecimal(DR[col]) : 0;
+                    }
+
+                    // Total
+                    uni.MonthWiseAmounts["Total"] = DR["Total"] != DBNull.Value ? Convert.ToDecimal(DR["Total"]) : 0;
+
+                    studentFeesReport.Add(uni);
+                    i++;
+                }
+            }
+
+            return studentFeesReport;
+        }
+
+
+
+        //-------get Session Student enrolled data----------// laxmi narayan 09102025
+        public List<UniversityWorkDetail> UniversityEnrolledStudentData(int Sid)
+        {
+            List<UniversityWorkDetail> EnrolledStudent = new List<UniversityWorkDetail>();
+            String QRY = @"SELECT COUNT(student_details.Student_Id) as NoOfTotalStudents, university_details.University_Name,university_details.University_ID FROM `student_details`
+                             join university_details on university_details.University_ID = student_details.University_ID
+                            where student_details.Session_ID = @SID and  student_details.Is_Deleted = 0 group by University_Details.University_ID";
+            MySqlCommand cmd = new MySqlCommand(QRY);
+          
+            cmd.Parameters.AddWithValue("@SID", Sid);
+            DataTable dt = Fnc.GetDataTable(cmd);
+            if (dt.Rows.Count > 0)
+            {
+                int i = 1;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    EnrolledStudent.Add(
+                       new UniversityWorkDetail
+                       {
+                           count = i,
+                           UniversityName = dr["University_Name"].ToString().Trim(),
+                           NoOfStudents = Convert.ToInt32(dr["NoOfTotalStudents"]),
+
+                       });
+                    i++;
+                }
+            }
+            return EnrolledStudent;
+        }
+
+
         public List<UniversityFrontShow> UniversityFrontShow()
         {
             List<UniversityFrontShow> ListNotify = new List<UniversityFrontShow>();

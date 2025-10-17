@@ -4,6 +4,21 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<style>
+
+
+    .highlighted-msg {
+        background-color: #ffeb3b; /* yellow highlight */
+        padding: 15px 20px;
+        border-left: 5px solid #f57c00; /* colored accent */
+        font-weight: bold;
+        font-size: 18px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+</style>
+
+
 <div class="sb2-2-2">
     <ul>
         @*<li>
@@ -65,6 +80,10 @@
                     </div>
                 </div>
             </div>*@
+
+        <div class="highlighted-msg">
+            Upload Bulk Student Data. Please choose 'Upload Student Data New' from the New submenu.
+        </div>
         </div>
 </div>
 

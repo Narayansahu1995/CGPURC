@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Private_University.Models.Uploaded_Student_data_files>
+﻿@model IEnumerable<Private_University.Models.Uploaded_Student_data_count>
 @using Private_University.Models;
 @{
     ViewBag.Title = "UploadFeesData";
@@ -58,14 +58,10 @@
                                 <thead>
                                     <tr>
                                         <th>SNo </th>
-                                        <th>File Name</th>
-                                        <th>Uploaded Date</th>
-                                        @*<th>Delete</th>*@
-                                        <th>Processed</th>
-                                        <th>Records Exported to server</th>
-                                        <th>Records Left</th>
-                                        <th>Remark</th>
-                                        <th>Download</th>
+                                        <th>Student Count</th>
+                                        <th>Total Fees Amount</th>
+                                        <th>Month Name</th>
+                                        <th>Entry Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -75,19 +71,11 @@
                                         {
                                             <tr>
                                                 <td>@Html.DisplayFor(modelItem => item.count)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.File_Name)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.Uploaded_DateTime)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.Processed)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.Records_exported_to_Server)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.Records_left)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.Remark)</td>
-                                                <td style="text-align: center;">
-                                                    <a href="@Html.DisplayFor(modelItem => item.File_path).ToString()">
-                                                        <img id="DW" alt='DWbtn'
-                                                             src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAA7GUAAOxlAc4u8ggAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAABpklEQVRoQ+3YzysEYRzH8SG5UMrJj4PiIIr8AYoif4Crm8OWq+Li4C4nP26ilKMDJTk7OrhQlHJykBQhF+H9He32NH2zs9bOfJ/t+dSrtu1p+36a2ZlnJqpRNvBVxi68yDm0Aq4rNMJ80pS5RiiTdUIZqwllrCaUsZpQxmpCGasJZawmTRl5BPAiZ9AKuEyVacE8FrGQcAetgOsdUjrpAM3INK24hTZoNfaQy3+pB/fQhvoLOTJNyC2j+IA2XCWe0YvcMwttwEpMw0xWoA2ZxirM5RDasL85RQPMRa5wF9CG1jygG2bTh0dowydNwXwm8AmtQNESvMkctBJC7vLeZQ3JIjdog5c5QbGI7MeG4W3kKFxCymRyY2xHFzoV/7FXkt8f+vlYVWQ3rc0os5dO3X284VXRDyuRfaA2p3y3iTjueZ00CCsZhzaj2EGcI2gLxACsZAzajGILcUKZHBLKuEKZGiWUcdVVmQ5YyQi0GUWqMssoGCEvPrQZRaoyvqjPMsfQFvhkG3HkEUBb4JN1xJmBtsAnkyhFmr2g3CsiS2TWJ3DFjaJv0m0vUFXJCQIAAAAASUVORK5CYII='
-                                                             height='30' style='cursor: pointer;' />
-                                                    </a>
-                                                </td>
+                                                <td>@Html.DisplayFor(modelItem => item.studentCount)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.FeesAmount)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.MonthName)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.EntryDate)</td>
+                                              
                                             </tr>
                                         }
                                     }

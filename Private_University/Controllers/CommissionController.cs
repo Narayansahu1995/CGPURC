@@ -180,6 +180,18 @@ namespace Private_University.Controllers
             return View(appClass.GetUniversityWorkStatus());
         }
 
+        [HttpGet]
+        [SessionCheck]
+        public ActionResult StudentEnrolledReport()
+        {
+            AppClass appClass = new AppClass();
+            AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            ViewBag.SessionID = ARespo?.Session_ID;
+            ModelState.Clear();
+            return View(appClass.UniversityEnrolledStudentData(ARespo.Session_ID));
+        }
+
+
 
         [HttpGet]
         [SessionCheck]
@@ -187,12 +199,47 @@ namespace Private_University.Controllers
         {
             AppClass appClass = new AppClass();
             AuthenticationResponse ARespo = (AuthenticationResponse)Session["AuthResponse"];
+            int year;
+
+            // Map session_ID to year
+            switch (ARespo.Session_ID)
+            {
+                case 6:
+                    year = 2025;
+                    break;
+                case 5:
+                    year = 2024;
+                    break;
+                case 4:
+                    year = 2023;
+                    break;
+                case 3:
+                    year = 2022;
+                    break;
+                default:
+                    year = DateTime.Now.Year; // fallback
+                    break;
+            }
+
             ModelState.Clear();
-            return View(appClass.GetUniversityWorkStatus());
+
+            // Get month-wise fees report for the correct year
+            var list = appClass.GetFeesReportByMonth(year);
+
+            // Prepare month headers dynamically for Razor table
+            ViewBag.Months = new List<string>
+    {
+        $"Jan-{year}", $"Feb-{year}", $"Mar-{year}", $"Apr-{year}",
+        $"May-{year}", $"Jun-{year}", $"Jul-{year}", $"Aug-{year}",
+        $"Sep-{year}", $"Oct-{year}", $"Nov-{year}", $"Dec-{year}"
+    };
+
+            return View(list);
         }
+
 
     }
 
 
-   
+
 }

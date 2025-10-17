@@ -342,7 +342,10 @@ namespace Private_University.Models
 
         public Int32 NoOfOfficeBearers { get; set; }
         public Int32 FeesEnteredBranches { get; set; }
-        
+        public Dictionary<string, decimal> MonthWiseAmounts { get; set; } = new Dictionary<string, decimal>();
     }
+
+
+
 
 }
